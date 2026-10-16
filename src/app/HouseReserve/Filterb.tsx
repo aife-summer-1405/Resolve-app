@@ -1,8 +1,33 @@
+
 "use client";
 
-import { ChevronDown } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronDown } from "lucide-react";
+import type { IHouseFilters } from "@/src/types/house";
 
-export const Filterbottom = () => {
+interface FilterbottomProps {
+    filters: IHouseFilters;
+}
+
+export const Filterbottom = ({ filters }: FilterbottomProps) => {
+    const [draft, setDraft] = useState({
+        minPrice: filters.minPrice ?? "",
+        maxPrice: filters.maxPrice ?? "",
+        propertyType: filters.propertyType ?? "",
+    });
+
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        setDraft({
+            minPrice: filters.minPrice ?? "",
+            maxPrice: filters.maxPrice ?? "",
+            propertyType: filters.propertyType ?? "",
+        });
+    }, [filters.minPrice, filters.maxPrice, filters.propertyType]);
+
     const fieldClass =
         "w-full rounded-2xl border border-gray-500 bg-[#303030] px-3 py-3 pr-10 pl-10 text-right text-gray-400 outline-none transition-colors focus:border-white focus:text-white";
 
@@ -11,16 +36,38 @@ export const Filterbottom = () => {
 
     const labelClass =
         "absolute right-6 top-0 -translate-y-1/2 bg-[#303030] px-1 text-sm text-gray-400 transition-colors group-focus-within:text-white";
+
+    const updateDraft = (key: keyof typeof draft, value: string) => {
+        setDraft((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const applyFilters = () => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        Object.entries(draft).forEach(([key, value]) => {
+            if (value !== "") {
+                params.set(key, String(value));
+            } else {
+                params.delete(key);
+            }
+        });
+
+        params.set("page", "1");
+
+        router.push(`?${params.toString()}`);
+    };
+
     return (
-
-        <div className="grid  grid-cols-3 gap-4 border-b-2 border-[#4E4E4E] pb-6">
-
-            <div className="group relative min-w-56 flex-1">
+        <div className="grid gap-4 border-b-2 border-[#4E4E4E] pb-6 md:grid-cols-3">
+            <div className="group relative min-w-0">
                 <input
                     id="min-price"
-
+                    type="number"
                     min="0"
-                    defaultValue="0"
+                    value={draft.minPrice}
+                    onChange={(event) =>
+                        updateDraft("minPrice", event.target.value)
+                    }
                     dir="rtl"
                     className={`${fieldClass} pl-16`}
                 />
@@ -29,19 +76,20 @@ export const Filterbottom = () => {
                     تومان
                 </span>
 
-                <label
-                    htmlFor="min-price"
-                    className={labelClass}
-                >
+                <label htmlFor="min-price" className={labelClass}>
                     حداقل قیمت:
                 </label>
             </div>
 
-            <div className="group relative min-w-56 flex-1">
+            <div className="group relative min-w-0">
                 <input
                     id="max-price"
+                    type="number"
                     min="0"
-                    defaultValue="0"
+                    value={draft.maxPrice}
+                    onChange={(event) =>
+                        updateDraft("maxPrice", event.target.value)
+                    }
                     dir="rtl"
                     className={`${fieldClass} pl-16`}
                 />
@@ -50,26 +98,26 @@ export const Filterbottom = () => {
                     تومان
                 </span>
 
-                <label
-                    htmlFor="max-price"
-                    className={labelClass}
-                >
+                <label htmlFor="max-price" className={labelClass}>
                     حداکثر قیمت:
                 </label>
             </div>
-            <div className="group relative min-w-56 flex-1">
+
+            <div className="group relative min-w-0">
                 <select
-                    id="destination"
-                    defaultValue=""
+                    id="propertyType"
+                    value={draft.propertyType}
+                    onChange={(event) =>
+                        updateDraft("propertyType", event.target.value)
+                    }
                     dir="rtl"
                     className={`${fieldClass} appearance-none`}
                 >
-                    <option value="" disabled>
-                        انتخاب کنید                                    </option>
-                    <option value="tehran">تهران</option>
-                    <option value="mashhad">مشهد</option>
-                    <option value="kish">کیش</option>
-                    <option value="isfahan">اصفهان</option>
+                    <option value="">همه انواع ملک</option>
+                    <option value="apartment">آپارتمان</option>
+                    <option value="villa">ویلا</option>
+                    <option value="land">زمین</option>
+                    <option value="commercial">تجاری</option>
                 </select>
 
                 <ChevronDown
@@ -77,15 +125,18 @@ export const Filterbottom = () => {
                     className={`${iconClass} left-3`}
                 />
 
-
-
-                <label
-                    htmlFor="destination"
-                    className={labelClass}
-                >
-                    : امکانات هتل
+                <label htmlFor="propertyType" className={labelClass}>
+                    نوع ملک:
                 </label>
             </div>
+
+            <button
+                type="button"
+                onClick={applyFilters}
+                className="rounded-2xl bg-white px-5 py-3 font-semibold text-black md:col-span-3 md:justify-self-start"
+            >
+                اعمال فیلترها
+            </button>
         </div>
-    )
-}
+    );
+};
