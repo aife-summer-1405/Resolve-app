@@ -20,7 +20,7 @@ interface HouseMapProps {
 
 const MAP_KEY = process.env.NEXT_PUBLIC_NESHAN_MAP_KEY;
 
-const INITIAL_CENTER: [number, number] = [53.688, 32.4279]; // [lng, lat]
+const INITIAL_CENTER: [number, number] = [53.688, 32.4279]; 
 const INITIAL_ZOOM = 5;
 const SINGLE_MARKER_ZOOM = 14;
 
@@ -31,7 +31,6 @@ export const HouseMap = ({ markers }: HouseMapProps) => {
 
     const [map, setMap] = useState<NmpMap | null>(null);
 
-    // ساخت نقشه (فقط یک بار)
     useEffect(() => {
         let cancelled = false;
         let instance: NmpMap | null = null;

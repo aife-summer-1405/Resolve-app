@@ -1,7 +1,7 @@
 import type { IHouseFilters } from "@/src/types/house";
 import { getMockHouses } from "@/src/mocks/houses";
 
-const USE_MOCK = true; // وقتی API آماده شد false کن
+const USE_MOCK = true; 
 export interface House {
   id: string;
   title: string;

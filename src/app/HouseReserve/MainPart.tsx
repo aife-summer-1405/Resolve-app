@@ -12,7 +12,6 @@ interface MainPartProps {
 export const MainPart = async ({ filters }: MainPartProps) => {
     const result = await getHouses(filters);
 
-    // تا وقتی شکل جواب API قطعی نشده، هر دو حالت (آرایه یا { data }) رو قبول می‌کنه
     const houses: House[] = Array.isArray(result) ? result : (result.data ?? []);
 
     const markers: MapMarker[] = houses

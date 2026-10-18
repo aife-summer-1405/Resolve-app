@@ -14,11 +14,9 @@ const DEFAULT_SORT = "last_updated";
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
 
-// اگه پارامتر تکراری باشه (?a=1&a=2) اولین مقدار رو برمی‌داره
 const getString = (value: SearchParamValue): string =>
     (Array.isArray(value) ? value[0] : value) ?? "";
 
-// عدد صحیح مثبت، وگرنه مقدار پیش‌فرض (برای page و limit)
 const getPositiveInt = (
     value: SearchParamValue,
     fallback: number,
@@ -28,7 +26,6 @@ const getPositiveInt = (
     return Number.isInteger(n) && n >= 1 ? Math.min(n, max) : fallback;
 };
 
-// عدد غیرمنفی، وگرنه undefined (برای قیمت، متراژ و...)
 const getNumber = (value: SearchParamValue): number | undefined => {
     const str = getString(value).trim();
     if (str === "") return undefined;
@@ -37,7 +34,6 @@ const getNumber = (value: SearchParamValue): number | undefined => {
     return Number.isFinite(n) && n >= 0 ? n : undefined;
 };
 
-// ?transactionType=sale,rent  یا  ?transactionType=sale&transactionType=rent
 const getList = (value: SearchParamValue): string[] => {
     const items = Array.isArray(value) ? value : value ? [value] : [];
 
@@ -47,7 +43,6 @@ const getList = (value: SearchParamValue): string[] => {
         .filter(Boolean);
 };
 
-// کامپوننت async: اینجا await میشه
 async function HouseReserveContent({ searchParams }: PageProps) {
     const params = await searchParams;
 
@@ -87,7 +82,6 @@ async function HouseReserveContent({ searchParams }: PageProps) {
     );
 }
 
-// صفحه‌ی اصلی: sync و بدون await
 export default function HouseReserve({ searchParams }: PageProps) {
     return (
         <Suspense

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation"; // تغییر: useSearchParams حذف شد، usePathname اضافه شد
+import { usePathname, useRouter } from "next/navigation"; 
 import {
     ChevronDown,
     LocationEdit,
