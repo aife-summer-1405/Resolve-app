@@ -3,6 +3,7 @@ import { getHouses, type House } from "@/src/services/houseService";
 import type { IHouseFilters } from "@/src/types/house";
 import { Filterbottom } from "./Filterb";
 import { HouseMap, MapMarker } from "./HouseMap";
+import HotelCard from "./HotelCard";
 
 interface MainPartProps {
     filters: IHouseFilters;
@@ -33,13 +34,11 @@ export const MainPart = async ({ filters }: MainPartProps) => {
                 <div className="shrink-0">
                     <Filterbottom filters={filters} />
                 </div>
-
-                {/* کارت‌ها از همون houses ساخته میشن، پس همیشه با پین‌ها یکی‌ان
-                <div className="mt-4 min-h-0 flex-1 space-y-4 overflow-y-auto">
-                    {houses.map((house) => (
-                        <HotelCard key={house.id} house={house} />
-                    ))}
-                </div> */}
+<div className="mt-4 min-h-0 flex-1 space-y-4 overflow-y-auto">
+    {houses.map((house) => (
+        <HotelCard key={house.id} house={house} />
+    ))}
+</div>
             </div>
 
             <div className="w-2/5 overflow-hidden rounded-2xl">
