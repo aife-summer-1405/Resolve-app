@@ -83,13 +83,16 @@ async function HouseReserveContent({ searchParams }: PageProps) {
 }
 
 export default function HouseReserve({ searchParams }: PageProps) {
-    return (
+    return ( 
+        <>
+
         <Suspense
             fallback={
-                <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#303030]" />
+                <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#eb0808]" />
             }
         >
             <HouseReserveContent searchParams={searchParams} />
         </Suspense>
+        </>
     );
 }
