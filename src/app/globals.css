@@ -5,12 +5,27 @@
   --foreground: #171717;
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+} */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: #91ff45;
+  --color-primary-hover: #a1ff60;
+  --color-surface: #222222;
+  --color-card: #303030;
+  --color-timer: #7862ff;
+  --color-border: #ffffff;
+  --color-muted: #ffffff80;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
