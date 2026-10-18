@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation"; // تغییر: useSearchParams حذف شد، usePathname اضافه شد
 import {
     ChevronDown,
     LocationEdit,
@@ -11,14 +11,25 @@ import {
     X,
     SlidersHorizontal,
 } from "lucide-react";
+import { IHouseFilters } from "@/src/types/house";
 
 interface FilterTopProps {
-    filters: {
-        location?: string;
-        sort?: string;
-        order?: "ASC" | "DESC";
-        search?: string;
-    };
+    filters: IHouseFilters;
+}
+
+
+type FilterState = {
+    location: string;
+    sort: string;
+    order: "ASC" | "DESC";
+    search: string;
+};
+
+interface FiltersProps {
+    draft: FilterState;
+    onLocationChange: (location: string) => void;
+    onSortChange: (sort: string, order: "ASC" | "DESC") => void;
+    onSearchChange: (search: string) => void;
 }
 
 const fieldClass =
@@ -30,65 +41,18 @@ const iconClass =
 const labelClass =
     "absolute right-6 top-0 -translate-y-1/2 bg-[#303030] px-1 text-sm text-gray-400 transition-colors group-focus-within:text-white";
 
-export const FilterTop = ({ filters }: FilterTopProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const [draft, setDraft] = useState({
-        location: filters.location ?? "",
-        sort: filters.sort ?? "last_updated",
-        order: filters.order ?? "DESC",
-        search: filters.search ?? "",
-    });
-
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    useEffect(() => {
-        setDraft({
-            location: filters.location ?? "",
-            sort: filters.sort ?? "last_updated",
-            order: filters.order ?? "DESC",
-            search: filters.search ?? "",
-        });
-    }, [filters.location, filters.sort, filters.order, filters.search]);
-
-    const updateDraft = (key: string, value: string) => {
-        setDraft((prev) => ({ ...prev, [key]: value }));
-    };
-
-    const applyFilters = () => {
-        const params = new URLSearchParams(searchParams.toString());
-
-        const values = {
-            location: draft.location,
-            sort: draft.sort,
-            order: draft.order,
-            search: draft.search.trim(),
-        };
-
-        Object.entries(values).forEach(([key, value]) => {
-            if (value) {
-                params.set(key, value);
-            } else {
-                params.delete(key);
-            }
-        });
-
-        params.set("page", "1");
-
-        const query = params.toString();
-        router.push(query ? `?${query}` : window.location.pathname);
-        setIsOpen(false);
-    };
-
-    const Filters = () => (
+const Filters = ({
+    draft,
+    onLocationChange,
+    onSortChange,
+    onSearchChange,
+}: FiltersProps) => {
+    return (
         <>
             <div className="group relative min-w-0 flex-1">
                 <select
                     value={draft.location}
-                    onChange={(event) =>
-                        updateDraft("location", event.target.value)
-                    }
+                    onChange={(event) => onLocationChange(event.target.value)}
                     dir="rtl"
                     className={`${fieldClass} appearance-none`}
                 >
@@ -111,11 +75,7 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
                     onChange={(event) => {
                         const [sort, order] = event.target.value.split(":");
 
-                        setDraft((prev) => ({
-                            ...prev,
-                            sort,
-                            order: order as "ASC" | "DESC",
-                        }));
+                        onSortChange(sort, order as "ASC" | "DESC");
                     }}
                     dir="rtl"
                     className={`${fieldClass} appearance-none`}
@@ -136,12 +96,7 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
                 <input
                     type="text"
                     value={draft.search}
-                    onChange={(event) =>
-                        updateDraft("search", event.target.value)
-                    }
-                    onKeyDown={(event) => {
-                        if (event.key === "Enter") applyFilters();
-                    }}
+                    onChange={(event) => onSearchChange(event.target.value)}
                     placeholder=" "
                     dir="rtl"
                     className={fieldClass}
@@ -153,20 +108,124 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
             </div>
         </>
     );
+};
+
+export const FilterTop = ({ filters }: FilterTopProps) => {
+    const router = useRouter();
+    const pathname = usePathname(); 
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const [draft, setDraft] = useState<FilterState>({
+        location: filters.location ?? "",
+        sort: filters.sort ?? "last_updated",
+        order: filters.order ?? "DESC",
+        search: filters.search ?? "",
+    });
+
+    const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const clearSearchTimeout = () => {
+        if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+            searchTimeout.current = null;
+        }
+    };
+
+    const applyFilters = (values: FilterState) => {
+        const params = new URLSearchParams(window.location.search);
+
+        const valuesToApply = {
+            location: values.location,
+            sort: values.sort,
+            order: values.order,
+            search: values.search.trim(),
+        };
+
+        Object.entries(valuesToApply).forEach(([key, value]) => {
+            if (value) {
+                params.set(key, value);
+            } else {
+                params.delete(key);
+            }
+        });
+
+        params.set("page", "1");
+
+        setDraft(values);
+
+  
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    const handleLocationChange = (location: string) => {
+        clearSearchTimeout();
+
+        applyFilters({
+            ...draft,
+            location,
+        });
+
+        setIsOpen(false); 
+    };
+
+    const handleSortChange = (
+        sort: string,
+        order: "ASC" | "DESC",
+    ) => {
+        clearSearchTimeout();
+
+        applyFilters({
+            ...draft,
+            sort,
+            order,
+        });
+
+        setIsOpen(false); 
+    };
+
+    const handleSearchChange = (search: string) => {
+        const nextDraft = {
+            ...draft,
+            search,
+        };
+
+        setDraft(nextDraft);
+        clearSearchTimeout();
+
+        searchTimeout.current = setTimeout(() => {
+            applyFilters(nextDraft);
+            searchTimeout.current = null;
+        }, 500); 
+    };
+
+    useEffect(() => {
+        if (searchTimeout.current) return;
+
+        setDraft({
+            location: filters.location ?? "",
+            sort: filters.sort ?? "last_updated",
+            order: filters.order ?? "DESC",
+            search: filters.search ?? "",
+        });
+    }, [filters.location, filters.sort, filters.order, filters.search]);
+
+    useEffect(() => {
+        return () => {
+            clearSearchTimeout();
+        };
+    }, []);
 
     return (
         <>
             <div className="flex flex-row-reverse flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#303030] px-6 py-6">
                 <div className="hidden w-2/3 flex-row-reverse gap-4 md:flex">
-                    <Filters />
-
-                    <button
-                        type="button"
-                        onClick={applyFilters}
-                        className="shrink-0 rounded-2xl bg-white px-5 py-3 font-semibold text-black"
-                    >
-                        جستجو
-                    </button>
+                    <Filters
+                        draft={draft}
+                        onLocationChange={handleLocationChange}
+                        onSortChange={handleSortChange}
+                        onSearchChange={handleSearchChange}
+                    />
                 </div>
 
                 <div className="hidden items-center gap-2 rounded-2xl border border-gray-500 p-3 text-gray-400 md:flex">
@@ -226,20 +285,17 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
                         </div>
 
                         <div className="flex flex-col gap-7">
-                            <Filters />
+                            <Filters
+                                draft={draft}
+                                onLocationChange={handleLocationChange}
+                                onSortChange={handleSortChange}
+                                onSearchChange={handleSearchChange}
+                            />
 
                             <div className="flex items-center justify-between rounded-2xl border border-gray-500 p-4 text-gray-300">
                                 <span>تعداد آگهی</span>
                                 <span>33</span>
                             </div>
-
-                            <button
-                                type="button"
-                                onClick={applyFilters}
-                                className="w-full rounded-2xl bg-white py-3 font-semibold text-black"
-                            >
-                                نمایش نتایج
-                            </button>
                         </div>
                     </div>
                 </div>

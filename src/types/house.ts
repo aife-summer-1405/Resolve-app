@@ -7,12 +7,12 @@ export interface IHouseFilters {
     sort?: string;
     propertyType?: string;
     location?: string;
-    minPrice?: number | "";
-    maxPrice?: number | "";
-    minRent?: number | "";
-    maxRent?: number | "";
-    minMortgage?: number | "";
-    maxMortgage?: number | "";
-    minArea?: number | "";
-    maxArea?: number | "";
+    minPrice?: number;
+    maxPrice?: number;
+    minRent?: number;
+    maxRent?: number;
+    minMortgage?: number;
+    maxMortgage?: number;
+    minArea?: number;
+    maxArea?: number;
 }
