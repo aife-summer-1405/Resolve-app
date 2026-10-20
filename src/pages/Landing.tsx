@@ -1,9 +1,18 @@
+import AboutUsSection from "../components/landing/AboutUsSection";
 import HeroSection from "../components/landing/HeroSection";
+import PropertyCategoriesSection from "../components/landing/PropertyCategoriesSection";
+import TestimonialsSection from "../components/landing/TestimonialsSection";
 
 const Landing = () => {
   return (
-    <div className={`flex flex-col items-center gap-25 md:pb-30 pb-10`}>
+    <div
+      dir="rtl"
+      className={`flex flex-col items-center md:pb-30 pb-10 bg-[#232323] `}
+    >
       <HeroSection />
+      <PropertyCategoriesSection />
+      <AboutUsSection />
+      <TestimonialsSection />
     </div>
   );
 };
