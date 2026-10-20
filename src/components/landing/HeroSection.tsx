@@ -171,24 +171,35 @@ export default function HeroSection() {
         </div>
       </div>
       <div className="absolute bottom-4.5 left-1/2 z-40 w-286.25 max-w-[calc(100%-16px)] -translate-x-1/2">
-        {/* <div className="mb-3 flex items-center gap-4 pe-2 text-xs">
-          {tabs.map((tab, index) => (
-            <div key={tab} className="flex items-center gap-4">
-              {index > 0 && <span className="h-3 w-px bg-white/40" />}
-              <button
-                type="button"
-                onClick={() => setActiveTab(index)}
-                className={`transition-colors ${
-                  activeTab === index
-                    ? "font-medium text-white"
-                    : "text-white/50 hover:text-white/80"
-                }`}
-              >
-                {tab}
-              </button>
-            </div>
-          ))}
-        </div> */}
+        <div className="mb-3 flex items-center gap-4 pe-2 text-xs cursor-pointer">
+          <div className=" border-l-1  w-23.75 h-6.25 flex gap-3 items-center">
+            <Image
+              src="/icons/booking (1).png"
+              alt="ایکن"
+              width={20}
+              height={20}
+            />
+            <p> رزرو ملک</p>
+          </div>
+          <div className=" border-l-1 w-23.75 h-6.25 flex gap-3 items-center ">
+            <Image
+              src="/icons/house-building (1).png"
+              alt="ایکن"
+              width={20}
+              height={20}
+            />
+            <p className="text-[#8C8C8C]">رهن و اجاره</p>
+          </div>
+          <div className=" w-23.75 h-6.25 flex gap-3 items-center">
+            <Image
+              src="/icons/money-check-edit.png"
+              alt="ایکن"
+              width={20}
+              height={20}
+            />
+            <p className="text-[#8C8C8C]"> خرید و فروش</p>
+          </div>
+        </div>
         <div
           id="search"
           className="grid h-29.25 w-full grid-cols-[1.4fr_1fr_1fr_1fr_auto] items-center gap-3
