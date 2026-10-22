@@ -17,7 +17,7 @@ const PropertyCategoriesSection = () => {
   ];
 
   return (
-    <section className="relative w-full overflow-hidden px-5 pb-16 pt-30 text-white">
+    <section className="relative w-full overflow-hidden px-5 pb-16 pt-30 text-white mb-30">
       <div className="pointer-events-none absolute -left-16 top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px]" />
 
       <div className="relative z-10 mx-auto max-w-344">
@@ -53,7 +53,7 @@ const PropertyCategoriesSection = () => {
         </div>
 
         <div className="mt-8 overflow-x-auto pb-3 scrollbar-hide">
-          <div className="flex min-w-max items-center gap-3 px-1 pt-0">
+          <div className="flex min-w-max items-center gap-4 px-1 pt-0">
             {categories.map((category) => {
               const isActive = activeCategory === category.label;
 
