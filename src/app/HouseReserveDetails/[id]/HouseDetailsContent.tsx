@@ -35,16 +35,16 @@ const HouseDetailsContent = async ({ params }: IpageProps) => {
       console.log("result",result)
     return (
         <div className="flex flex-col gap-14">
-            <div className="w-full"> <Header /></div>
+            <div className="w-full"> <Header result={result} /></div>
 
             <div className="flex gap-10">
                 <div className="w-1/5">
-                    <ReservationBox />
+                    <ReservationBox result={result}/>
                 </div>
 
                 <TabInfoBox
-                    about={<AboutHouse />}
-                    facilities={<HouseFacilities />}
+                    about={<AboutHouse result={result}/>}
+                    facilities={<HouseFacilities result={result} />}
                     reviews={<UserReviews />}
                 />
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
@@ -14,54 +14,51 @@ import {
     Plus,
     Users,
 } from "lucide-react";
+import type { IHouseDetails } from "@/src/types/HouseDetailType";
 
-export interface PriceRow {
-    nights: number;
-    pricePerNight: number;
-}
-
-export type ReservationData = {
-    checkIn: string; 
-    checkOut: string; 
-    checkInDate: Date; 
-    checkOutDate: Date; 
+export interface ReservationData {
+    checkIn: string;
+    checkOut: string;
+    checkInDate: Date;
+    checkOutDate: Date;
     nights: number;
     guests: number;
     total: number;
-};
+}
 
-interface ReservationBoxProps {
-    priceRows?: PriceRow[];
-    discountPercent?: number;
-    maxGuests?: number;
+interface IReservationBoxProps {
+    result: IHouseDetails;
     onReserve?: (data: ReservationData) => void;
 }
 
-interface FieldProps {
+interface IFieldProps {
     legend: string;
     children: ReactNode;
 }
 
-const defaultRows: PriceRow[] = [
-    { nights: 5, pricePerNight: 3_600_000 },
-    { nights: 1, pricePerNight: 3_600_000 },
-    { nights: 3, pricePerNight: 3_600_000 },
-];
-
-const toman = (n: number) => `${n.toLocaleString("fa-IR")} ت`;
+const toman = (value: number) =>
+    `${value.toLocaleString("fa-IR")} تومان`;
 
 const DAY_MS = 86_400_000;
 
-function diffInDays(from: DateObject | null, to: DateObject | null): number {
+function diffInDays(
+    from: DateObject | null,
+    to: DateObject | null,
+): number {
     if (!from || !to) return 0;
-    const ms = to.toDate().getTime() - from.toDate().getTime();
-    return Math.max(0, Math.round(ms / DAY_MS));
+
+    const difference =
+        to.toDate().getTime() - from.toDate().getTime();
+
+    return Math.max(0, Math.round(difference / DAY_MS));
 }
 
-function Field({ legend, children }: FieldProps) {
+function Field({ legend, children }: IFieldProps) {
     return (
-        <fieldset className="rounded-xl border border-neutral-600 px-3 pb-1.5 pt-0 transition-colors focus-within:border-[#a6ff2e]">
-            <legend className="px-1.5 text-[0.65rem] text-neutral-400">{legend}</legend>
+        <fieldset className="rounded-xl border border-neutral-600 px-3 pb-1.5 pt-0 transition-colors focus-within:border-primary">
+            <legend className="px-1.5 text-[0.65rem] text-muted">
+                {legend}
+            </legend>
             {children}
         </fieldset>
     );
@@ -74,36 +71,46 @@ const sectionTitleCls =
     "m-auto flex w-2/3 flex-row-reverse items-center justify-center gap-1 rounded-b-full bg-[#646464] px-4 py-2 text-xs font-bold text-white";
 
 const stepperBtnCls =
-    "grid size-6 place-items-center rounded-md bg-[#a6ff2e] text-neutral-900 transition-opacity hover:opacity-90 disabled:opacity-40";
+    "grid size-6 place-items-center rounded-md bg-primary text-neutral-900 transition-opacity hover:opacity-90 disabled:opacity-40";
 
 export default function ReservationBox({
-    priceRows = defaultRows,
-    discountPercent = 15,
-    maxGuests = 10,
+    result,
     onReserve,
-}: ReservationBoxProps) {
+}: IReservationBoxProps) {
     const [checkIn, setCheckIn] = useState<DateObject | null>(null);
     const [checkOut, setCheckOut] = useState<DateObject | null>(null);
-    const [guests, setGuests] = useState(2);
-    const [minDate, setMinDate] = useState<DateObject | undefined>(undefined);
-useEffect(() => {
-    setMinDate(new DateObject({ calendar: persian }));
-}, []);
-    const nights = diffInDays(checkIn, checkOut);
+    const [guests, setGuests] = useState(1);
+    const [minDate, setMinDate] = useState<DateObject | undefined>();
 
-    const { oldTotal, finalTotal } = useMemo(() => {
-        const old = priceRows.reduce((sum, r) => sum + r.nights * r.pricePerNight, 0);
-        return {
-            oldTotal: old,
-            finalTotal: Math.round(old * (1 - discountPercent / 100)),
-        };
-    }, [priceRows, discountPercent]);
+    useEffect(() => {
+        setMinDate(new DateObject({ calendar: persian }));
+    }, []);
+
+    const nights = diffInDays(checkIn, checkOut);
+    const originalPrice = Math.max(0, Number(result.price) || 0);
+    const discountedPrice =
+        result.discounted_price != null
+            ? Math.max(0, Number(result.discounted_price) || 0)
+            : originalPrice;
+
+    const pricePerNight = discountedPrice;
+    const discountPercent =
+        originalPrice > 0 && discountedPrice < originalPrice
+            ? Math.round(
+                ((originalPrice - discountedPrice) / originalPrice) *
+                100,
+            )
+            : 0;
+
+    const maxGuests = Math.max(1, Number(result.capacity) || 1);
+    const oldTotal = nights * originalPrice;
+    const finalTotal = nights * pricePerNight;
 
     function handleCheckIn(value: DateObject | DateObject[] | null) {
         const date = Array.isArray(value) ? value[0] ?? null : value;
+
         setCheckIn(date);
 
-        // اگر برگشت قبل یا هم‌روز با ورود جدید بود، پاک شود
         if (date && checkOut && checkOut.toDate() <= date.toDate()) {
             setCheckOut(null);
         }
@@ -114,7 +121,7 @@ useEffect(() => {
     }
 
     function handleReserve() {
-        if (!checkIn || !checkOut) return;
+        if (!checkIn || !checkOut || nights < 1) return;
 
         onReserve?.({
             checkIn: checkIn.format("YYYY/MM/DD"),
@@ -134,14 +141,16 @@ useEffect(() => {
     return (
         <aside
             aria-label="رزرو خانه"
-            className="relative w-full space-y-4 rounded-3xl border border-neutral-700 bg-[#393939] px-4 pb-4 text-white"
+            className="relative w-full space-y-4 rounded-3xl border border-neutral-700 bg-card px-4 pb-4 text-white"
+            dir="rtl"
         >
             <div className={sectionTitleCls}>
+                <span className="line-clamp-1">{result.title}</span>
                 <HousesIcon size={15} />
-                <span>رزرو خونه برای</span>
+
             </div>
 
-            <div className="relative space-y-3">
+            <div className="space-y-3">
                 <Field legend="تاریخ ورود">
                     <div className="flex items-center gap-2">
                         <DatePicker
@@ -153,19 +162,18 @@ useEffect(() => {
                             inputClass={dateInputCls}
                             containerClassName="w-full"
                             placeholder="انتخاب تاریخ"
-                           minDate={minDate}
+                            minDate={minDate}
                             className="bg-dark"
                             editable={false}
                         />
                         <CalendarDays
                             size={14}
                             className="shrink-0 text-neutral-400"
-                            aria-hidden
                         />
                     </div>
                 </Field>
 
-                <Field legend="تاریخ برگشت">
+                <Field legend="تاریخ خروج">
                     <div className="flex items-center gap-2">
                         <DatePicker
                             value={checkOut}
@@ -176,7 +184,7 @@ useEffect(() => {
                             inputClass={dateInputCls}
                             containerClassName="w-full"
                             placeholder="انتخاب تاریخ"
-                            minDate={minCheckOut}
+                            minDate={minCheckOut ?? minDate}
                             disabled={!checkIn}
                             className="bg-dark"
                             editable={false}
@@ -184,100 +192,123 @@ useEffect(() => {
                         <CalendarDays
                             size={14}
                             className="shrink-0 text-neutral-400"
-                            aria-hidden
                         />
                     </div>
                 </Field>
 
                 {nights > 0 && (
-                    <span
-                        aria-live="polite"
-                        className="absolute left-6 top-1/2 -translate-y-1/2 rounded-lg bg-[#7c4dff] px-2.5 py-0.5 text-[0.7rem] font-bold shadow-lg"
-                    >
-                        {nights.toLocaleString("fa-IR")} شب
+                    <span className="block text-left text-xs text-white">
+                        {nights.toLocaleString("fa-IR")} شب اقامت
                     </span>
                 )}
             </div>
 
-            <Field legend="تعداد مسافرات">
+            <Field legend="تعداد مسافران">
                 <div className="flex items-center justify-between py-1">
                     <div className="flex items-center gap-3">
                         <button
                             type="button"
                             aria-label="افزودن مسافر"
                             disabled={guests >= maxGuests}
-                            onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
+                            onClick={() =>
+                                setGuests((current) =>
+                                    Math.min(maxGuests, current + 1),
+                                )
+                            }
                             className={stepperBtnCls}
                         >
-                            <Plus size={14} aria-hidden />
+                            <Plus size={14} />
                         </button>
-                        <span
-                            aria-live="polite"
-                            className="min-w-4 text-center text-sm font-bold"
-                        >
+
+                        <span className="min-w-4 text-center text-sm font-bold">
                             {guests.toLocaleString("fa-IR")}
                         </span>
+
                         <button
                             type="button"
                             aria-label="کم کردن مسافر"
                             disabled={guests <= 1}
-                            onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                            onClick={() =>
+                                setGuests((current) =>
+                                    Math.max(1, current - 1),
+                                )
+                            }
                             className={stepperBtnCls}
                         >
-                            <Minus size={14} aria-hidden />
+                            <Minus size={14} />
                         </button>
                     </div>
-                    <span className="flex items-center gap-1 text-xs text-neutral-400">
-                        <Users size={14} aria-hidden />
+
+                    <span className="flex items-center gap-1 text-xs text-muted">
+                        <Users size={14} />
                         نفر
                     </span>
                 </div>
+
+                <p className="pb-1 text-[0.65rem] text-muted">
+                    ظرفیت اقامتگاه: {maxGuests.toLocaleString("fa-IR")} نفر
+                </p>
             </Field>
 
-            <div className="">
+            <div>
                 <hr className="border-[#646464]" />
                 <div className={sectionTitleCls}>
-                    <BadgeDollarSign size={15} />
+
                     <span>قیمت رزرو</span>
+                    <BadgeDollarSign size={15} />
                 </div>
             </div>
 
             <ul className="space-y-2.5 text-[0.7rem] text-neutral-300">
-                {priceRows.map(({ nights: n, pricePerNight }, i) => (
-                    <li key={i} className="flex items-center justify-between gap-2">
+                <li className="flex items-center justify-between gap-2">
+                    <span>قیمت هر شب</span>
+                    <span className="font-bold text-white">
+                        {toman(pricePerNight)}
+                    </span>
+                </li>
+
+                {nights > 0 && (
+                    <li className="flex items-center justify-between gap-2">
                         <span>
-                            {n.toLocaleString("fa-IR")} شب × {toman(pricePerNight)}
+                            {nights.toLocaleString("fa-IR")} شب × قیمت هر شب
                         </span>
                         <span className="font-bold text-white">
-                            {toman(n * pricePerNight)}
+                            {toman(finalTotal)}
                         </span>
                     </li>
-                ))}
+                )}
             </ul>
 
             <hr className="border-neutral-700" />
 
             <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                    <span className="rounded-md bg-red-500 px-1.5 py-0.5 text-[0.65rem] font-bold">
-                        %{discountPercent.toLocaleString("fa-IR")}
-                    </span>
-                    <span className="text-[0.7rem] text-neutral-400 line-through">
-                        {toman(oldTotal)}
-                    </span>
-                </div>
-                <p className="text-lg font-extrabold text-[#a6ff2e]">
-                    {toman(finalTotal)}
+                {discountPercent > 0 && (
+                    <div className="flex items-center justify-between">
+                        <span className="rounded-md bg-red-500 px-1.5 py-0.5 text-[0.65rem] font-bold">
+                            {discountPercent.toLocaleString("fa-IR")}٪ تخفیف
+                        </span>
+                        {nights > 0 && (
+                            <span className="text-[0.7rem] text-muted line-through">
+                                {toman(oldTotal)}
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                <p className="text-lg font-extrabold text-primary">
+                    {nights > 0
+                        ? toman(finalTotal)
+                        : `${toman(pricePerNight)} / شب`}
                 </p>
             </div>
 
             <button
                 type="button"
                 onClick={handleReserve}
-                disabled={nights < 1}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#a6ff2e] py-2.5 text-xs font-extrabold text-neutral-900 transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a6ff2e] disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={nights < 1 || guests > maxGuests}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-extrabold text-neutral-900 transition-opacity hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
-                <ChevronLeft size={14} aria-hidden />
+                <ChevronLeft size={14} />
                 همین الان رزرو کن
             </button>
         </aside>

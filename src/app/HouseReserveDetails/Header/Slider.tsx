@@ -6,19 +6,20 @@ import type { Swiper as SwiperType } from "swiper";
 import { Pagination, Thumbs } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { IHouseDetails } from "@/src/types/HouseDetailType";
 
-
-interface HotelAdSliderProps {
-    images: string[];
+interface Isliderprops{
+    result: IHouseDetails;
 }
 
-const HeaderSlider = ({ images }: HotelAdSliderProps) => {
+
+const HeaderSlider = ({ result }: Isliderprops) => {
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
     return (
         <div className="flex h-[400px] w-full gap-3">
             <div className="grid grid-cols-2 w-48  gap-2">
-                {images.map((image, index) => (
+                {result.photos.map((image, index) => (
                     <button
                         key={`${image}-${index}`}
                         type="button"
@@ -40,7 +41,7 @@ const HeaderSlider = ({ images }: HotelAdSliderProps) => {
     pagination={{ clickable: true }}
     className="house-swiper h-full min-w-0 flex-1 overflow-hidden rounded-2xl"
 >
-    {images.map((image, index) => (
+    {result.photos.map((image, index) => (
         <SwiperSlide key={`${image}-${index}`}>
             <img
                 src={image}
