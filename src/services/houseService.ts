@@ -1,5 +1,5 @@
 
-import type { IHouseFilters } from "@/src/types/house";
+import type { IHouseFilters } from "@/src/types/HouseFilterType";
 
 export interface HouseLocation {
   lat: number;

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import type { IHouseFilters } from "@/src/types/house";
+import type { IHouseFilters } from "@/src/types/HouseFilterType";
 import { FilterTop } from "./FilterTop";
 import { MainPart } from "./MainPart";
 import Footer from "@/src/components/footer";
@@ -84,17 +84,17 @@ async function HouseReserveContent({ searchParams }: PageProps) {
 }
 
 export default function HouseReserve({ searchParams }: PageProps) {
-    return ( 
+    return (
         <>
 
-        <Suspense
-            fallback={
-                <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#eb0808]" />
-            }
-        >
-            <HouseReserveContent searchParams={searchParams} />
-        </Suspense>
-        <Footer/>
+            <Suspense
+                fallback={
+                    <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#eb0808]" />
+                }
+            >
+                <HouseReserveContent searchParams={searchParams} />
+            </Suspense>
+            <Footer />
         </>
     );
 }
