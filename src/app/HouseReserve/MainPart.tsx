@@ -10,22 +10,23 @@ interface MainPartProps {
 }
 
 export const MainPart = async ({ filters }: MainPartProps) => {
+
+
+    console.log("filters", filters)
     const result = await getHouses(filters);
 
-    const houses: House[] = Array.isArray(result)
-        ? result
-        : (result.data ?? []);
-
+    console.log("result", result)
+    const houses: House[] = result.houses;
     const markers: MapMarker[] = houses
         .filter(
             (house) =>
-                Number.isFinite(Number(house.lat)) &&
-                Number.isFinite(Number(house.lng)),
+                Number.isFinite(house.location.lat) &&
+                Number.isFinite(house.location.lng),
         )
         .map((house) => ({
             id: house.id,
-            lat: Number(house.lat),
-            lng: Number(house.lng),
+            lat: house.location.lat,
+            lng: house.location.lng,
             title: house.title,
         }));
 
@@ -43,7 +44,7 @@ export const MainPart = async ({ filters }: MainPartProps) => {
                 </div>
             </div>
 
-            <div className="h-52 w-full shrink-0 overflow-hidden rounded-2xl sm:h-64 lg:h-auto lg:min-h-0 lg:w-2/5 lg:flex-none">
+            <div className="h-200 w-full shrink-0 overflow-hidden rounded-2xl sm:h-64 lg:h-auto lg:min-h-0 lg:w-2/5 lg:flex-none">
                 <HouseMap markers={markers} />
             </div>
         </div>

@@ -1,3 +1,10 @@
+export type PropertyType =
+    | "apartment"
+    | "villa"
+    | "house"
+    | "land"
+    | "commercial";
+
 export interface IHouseFilters {
     page?: number;
     limit?: number;
@@ -5,7 +12,7 @@ export interface IHouseFilters {
     search?: string;
     order?: "ASC" | "DESC";
     sort?: string;
-    propertyType?: string;
+    propertyType?: PropertyType;
     location?: string;
     minPrice?: number;
     maxPrice?: number;
