@@ -1,23 +1,51 @@
-import type { IHouseFilters } from "@/src/types/house";
-import { getMockHouses } from "@/src/mocks/houses";
 
-const USE_MOCK = true; 
+import type { IHouseFilters } from "@/src/types/house";
+
+export interface HouseLocation {
+  lat: number;
+  lng: number;
+}
+
+export interface HouseCategory {
+  name: string;
+}
+
 export interface House {
   id: string;
   title: string;
-  price?: number;
-  area?: number;
-  images?: string[];
-  lat?: number | string;
-  lng?: number | string;
-  address?: string;
-  location?: string;
-  propertyType?: string;
-  last_updated?: string;
+  address: string;
+  photos: string[];
+  rate: string;
+  discounted_price: string | null;
+  price: string;
+  tags: string[];
+  last_updated: string;
+  capacity: number;
+  location: HouseLocation;
+  categories: HouseCategory;
+  bathrooms: number;
+  parking: number;
+  rooms: number;
+  yard_type: string;
+  num_comments: number;
+  discount_id: string | null;
+  transaction_type: string;
+  sellerId: string;
+  sellerName: string;
+  caption: string | null;
+  bookings: number;
+  favoriteId: string | null;
+  isFavorite: boolean;
 }
-export async function getHouses(filters: IHouseFilters = {}) {
-  if (USE_MOCK) return getMockHouses(filters);
-  console.log(111, filters)
+
+export interface HousesResponse {
+  houses: House[];
+  totalCount: number;
+}
+
+export async function getHouses(
+  filters: IHouseFilters = {},
+): Promise<HousesResponse> {
   const params = new URLSearchParams();
 
   const query = {
@@ -39,12 +67,12 @@ export async function getHouses(filters: IHouseFilters = {}) {
   });
 
   const response = await fetch(
-    `https://aife-api.hexorix.net/api/houses?${params.toString()}`
+    `https://aife-api.hexorix.net/api/houses?${params.toString()}`,
   );
+
   if (!response.ok) {
     throw new Error("Failed to fetch houses");
   }
-  console.log(333, response)
 
-  return response.json();
+  return (await response.json()) as HousesResponse;
 }

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { IHouseFilters } from "@/src/types/house";
 import { FilterTop } from "./FilterTop";
 import { MainPart } from "./MainPart";
+import Footer from "@/src/components/footer";
 
 type SearchParamValue = string | string[] | undefined;
 
@@ -93,6 +94,7 @@ export default function HouseReserve({ searchParams }: PageProps) {
         >
             <HouseReserveContent searchParams={searchParams} />
         </Suspense>
+        <Footer/>
         </>
     );
 }

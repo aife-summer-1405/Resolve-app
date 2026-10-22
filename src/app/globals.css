@@ -22,6 +22,7 @@
   --color-timer: #7862ff;
   --color-border: #ffffff;
   --color-muted: #ffffff80;
+  --color-green: #8CFF45;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -38,4 +39,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+
+  .house-swiper .swiper-pagination-bullet {
+    background-color: #ffffff;
+    opacity: 1;
+  }
+
+  .house-swiper .swiper-pagination-bullet-active {
+    background-color: #91ff45;
+    opacity: 1;
+  }
 }

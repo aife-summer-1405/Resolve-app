@@ -25,18 +25,23 @@ interface PriceFieldProps {
     value: string;
     onChange: (value: string) => void;
 }
-
+const formatPrice = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 const PriceField = ({ id, label, value, onChange }: PriceFieldProps) => (
     <div className="group relative min-w-0">
         <input
             id={id}
-            type="number"
             min="0"
             inputMode="numeric"
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
+            value={formatPrice(value)}
+            onChange={(event) =>
+                onChange(event.target.value.replace(/\D/g, ""))
+            }
             dir="rtl"
-            className={`${fieldClass} pl-16`}
+            className={`${fieldClass} pl-16 text-left`}
+            placeholder="قیمت را به انگلیسی وارد نمایید."
         />
 
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white">
