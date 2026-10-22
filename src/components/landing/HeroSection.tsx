@@ -39,9 +39,7 @@ export default function HeroSection() {
   return (
     <section
       dir="rtl"
-      className="relative flex h-225.25 w-full flex-col items-center overflow-hidden
-      bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323]
-      px-2 pt-6 text-white"
+      className="relative flex h-225.25 w-full flex-col items-center overflow-hidden bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323] px-2 pt-6 text-white"
     >
       <header className="relative z-50 mx-auto flex h-12 w-full max-w-334 items-center justify-between rounded-2xl bg-[#363636] ps-2 pe-4 text-xs text-white shadow-[inset_-2px_2px_12px_0_rgba(255,255,255,0.16),0_8px_6px_0_rgba(0,0,0,0.12)]">
         <div className="flex h-full items-center gap-5">
@@ -97,10 +95,8 @@ export default function HeroSection() {
         </Link>
       </header>
 
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-35 h-105
-        bg-gradient-to-t from-[#232323] via-[#232323]/80 to-transparent"
-      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-35 h-105 bg-gradient-to-t from-[#232323] via-[#232323]/80 to-transparent" />
+
       <div className="relative mt-6 h-196.25 w-321 max-w-full">
         <div className="absolute left-0 top-0 z-10 h-71.5 w-321">
           <Image src="/images/landing2.png" alt="DELTA" fill />
@@ -111,32 +107,35 @@ export default function HeroSection() {
         </div>
 
         <div className="absolute right-235 top-68 z-30 w-95 space-y-4">
-          <p className="text-[20px] font-normal  text-white">
+          <p className="text-[20px] font-normal text-white">
             رزرو، رهن، اجاره و حتی خرید و فروش ملک مورد
           </p>
-          <div className=" flex w-100 justify-center items-center gap-5">
-            <p className="text-[20px] font-normal  text-white ">
+
+          <div className="flex w-100 items-center justify-center gap-5">
+            <p className="text-[20px] font-normal text-white">
               نظرتون مثل آب خوردن فقط در دلتا
             </p>
-            <span className="block h-px solid w-32 bg-white" />
+            <span className="block h-px w-32 bg-white" />
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <a
+            <Link
               href="#search"
               className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-[#363636]"
             >
               آسون رزرو کن
               <ChevronLeft size={12} />
-            </a>
-            <a
+            </Link>
+
+            <Link
               href="#rent"
               className="flex items-center gap-2 rounded-lg bg-[#363636] px-4 py-2 text-xs transition hover:bg-[#474747]"
             >
               رهن و اجاره ملک
               <ChevronLeft size={12} />
-            </a>
+            </Link>
           </div>
+
           <div className="flex items-center gap-4 pt-6">
             <div>
               <p className="text-lg font-bold">+۸۵۰۰</p>
@@ -144,7 +143,9 @@ export default function HeroSection() {
                 منطقه برای رزرو، ویلا و کلبه ها
               </p>
             </div>
+
             <span className="h-10 w-px bg-white" />
+
             <div>
               <p className="text-lg font-bold">+۵۶۰۰</p>
               <p className="text-[16px] text-white">
@@ -153,6 +154,7 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+
         <div className="absolute top-80 z-30 flex flex-col gap-2">
           <div>
             <Image
@@ -162,49 +164,52 @@ export default function HeroSection() {
               height={50}
             />
           </div>
+
           <div className="text-white">
-            <p className="text-[32px] font-semibold ">بیش از ۷۰۰۰ +</p>
+            <p className="text-[32px] font-semibold">بیش از ۷۰۰۰ +</p>
             <p className="text-[20px] font-normal">
               رضایت مشتریانی که به دلتا اعتماد کرده اند
             </p>
           </div>
         </div>
       </div>
+
       <div className="absolute bottom-4.5 left-1/2 z-40 w-286.25 max-w-[calc(100%-16px)] -translate-x-1/2">
-        <div className="mb-3 flex items-center gap-4 pe-2 text-xs cursor-pointer">
-          <div className=" border-l-1  w-23.75 h-6.25 flex gap-3 items-center">
+        <div className="mb-3 flex cursor-pointer items-center gap-4 pe-2 text-xs">
+          <div className="flex h-6.25 w-23.75 items-center gap-3 border-l-1">
             <Image
               src="/icons/booking (1).png"
-              alt="ایکن"
+              alt="آیکون رزرو"
               width={20}
               height={20}
             />
-            <p> رزرو ملک</p>
+            <p>رزرو ملک</p>
           </div>
-          <div className=" border-l-1 w-23.75 h-6.25 flex gap-3 items-center ">
+
+          <div className="flex h-6.25 w-23.75 items-center gap-3 border-l-1">
             <Image
               src="/icons/house-building (1).png"
-              alt="ایکن"
+              alt="آیکون رهن و اجاره"
               width={20}
               height={20}
             />
             <p className="text-[#8C8C8C]">رهن و اجاره</p>
           </div>
-          <div className=" w-23.75 h-6.25 flex gap-3 items-center">
+
+          <div className="flex h-6.25 w-23.75 items-center gap-3">
             <Image
               src="/icons/money-check-edit.png"
-              alt="ایکن"
+              alt="آیکون خرید و فروش"
               width={20}
               height={20}
             />
-            <p className="text-[#8C8C8C]"> خرید و فروش</p>
+            <p className="text-[#8C8C8C]">خرید و فروش</p>
           </div>
         </div>
+
         <div
           id="search"
-          className="grid h-29.25 w-full grid-cols-[1.4fr_1fr_1fr_1fr_auto] items-center gap-3
-          rounded-3xl border border-white/10 bg-[#292929]/80 p-4
-          shadow-xl backdrop-blur-md max-md:h-auto max-md:grid-cols-2"
+          className="grid h-29.25 w-full grid-cols-[1.4fr_1fr_1fr_1fr_auto] items-center gap-3 rounded-3xl border border-white/10 bg-[#292929]/80 p-4 shadow-xl backdrop-blur-md max-md:h-auto max-md:grid-cols-2"
         >
           {fields.map((field) => (
             <label
@@ -216,6 +221,7 @@ export default function HeroSection() {
               <span className="absolute -top-2 right-3 bg-[#2f2f2f] px-1 text-[10px] text-white">
                 {field.label}
               </span>
+
               <input
                 type="text"
                 placeholder={field.placeholder}
