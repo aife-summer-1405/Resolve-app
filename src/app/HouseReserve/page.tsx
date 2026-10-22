@@ -3,6 +3,7 @@ import type { IHouseFilters } from "@/src/types/HouseFilterType";
 import { FilterTop } from "./FilterTop";
 import Footer from "@/src/components/footer";
 import MainPart from "./MainPart/MainPart";
+import Loading from "@/src/Loading";
 
 type SearchParamValue = string | string[] | undefined;
 
@@ -104,7 +105,7 @@ export default function HouseReserve({ searchParams }: PageProps) {
 
             <Suspense
                 fallback={
-                    <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#eb0808]" />
+                   <Loading/>
                 }
             >
                 <HouseReserveContent searchParams={searchParams} />
