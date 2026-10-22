@@ -1,15 +1,15 @@
 
 import { getHouses, type House } from "@/src/services/houseService";
 import type { IHouseFilters } from "@/src/types/HouseFilterType";
-import { Filterbottom } from "./Filterb";
-import { HouseMap, type MapMarker } from "./HouseMap";
-import HotelCard from "./HotelCard";
+import { Filterbottom } from "../Filterb";
+import { HouseMap, type MapMarker } from "../HouseMap";
+import HotelCard from "../HotelCard";
 
 interface MainPartProps {
     filters: IHouseFilters;
 }
 
-export const MainPart = async ({ filters }: MainPartProps) => {
+export const MainPartContent = async ({ filters }: MainPartProps) => {
 
 
     console.log("filters", filters)
