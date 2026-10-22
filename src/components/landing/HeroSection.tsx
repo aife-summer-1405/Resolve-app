@@ -13,7 +13,7 @@ import Link from "next/link";
 
 const links = [
   { label: "رزرو سریع", href: "#search", hasMenu: true },
-  { label: "رهن و اجاره", href: "#rent", hasMenu: true },
+  { label: "رهن و اجاره", href: "HouseReserve", hasMenu: true },
   { label: "درباره دلتا", href: "#about" },
   { label: "مقالات ما", href: "#blog" },
   { label: "تماس با ما", href: "#contact" },

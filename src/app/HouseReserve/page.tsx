@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import type { IHouseFilters } from "@/src/types/house";
+import type { IHouseFilters } from "@/src/types/HouseFilterType";
 import { FilterTop } from "./FilterTop";
-import { MainPart } from "./MainPart";
 import Footer from "@/src/components/footer";
+import MainPart from "./MainPart/MainPart";
 
 type SearchParamValue = string | string[] | undefined;
 
@@ -43,7 +43,22 @@ const getList = (value: SearchParamValue): string[] => {
         .map((item) => item.trim())
         .filter(Boolean);
 };
+const ALLOWED_PROPERTY_TYPES = [
+    "apartment",
+    "villa",
+] as const;
 
+type PropertyType = (typeof ALLOWED_PROPERTY_TYPES)[number];
+
+const getPropertyType = (
+    value: SearchParamValue,
+): PropertyType | undefined => {
+    const type = getString(value);
+
+    return ALLOWED_PROPERTY_TYPES.includes(type as PropertyType)
+        ? (type as PropertyType)
+        : undefined;
+};
 async function HouseReserveContent({ searchParams }: PageProps) {
     const params = await searchParams;
 
@@ -56,7 +71,7 @@ async function HouseReserveContent({ searchParams }: PageProps) {
         search: getString(params.search).trim(),
         order: params.order === "ASC" ? "ASC" : "DESC",
         sort: ALLOWED_SORTS.includes(sort) ? sort : DEFAULT_SORT,
-        propertyType: getString(params.propertyType),
+        propertyType: getPropertyType(params.propertyType),
         location: getString(params.location),
         minPrice: getNumber(params.minPrice),
         maxPrice: getNumber(params.maxPrice),
@@ -84,17 +99,17 @@ async function HouseReserveContent({ searchParams }: PageProps) {
 }
 
 export default function HouseReserve({ searchParams }: PageProps) {
-    return ( 
+    return (
         <>
 
-        <Suspense
-            fallback={
-                <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#eb0808]" />
-            }
-        >
-            <HouseReserveContent searchParams={searchParams} />
-        </Suspense>
-        <Footer/>
+            <Suspense
+                fallback={
+                    <div className="mt-10 h-[calc(100dvh-40px)] animate-pulse rounded-3xl bg-[#eb0808]" />
+                }
+            >
+                <HouseReserveContent searchParams={searchParams} />
+            </Suspense>
+            <Footer />
         </>
     );
 }

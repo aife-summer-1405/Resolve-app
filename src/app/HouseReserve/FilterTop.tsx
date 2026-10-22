@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation"; 
+import { usePathname, useRouter } from "next/navigation";
 import {
     ChevronDown,
     LocationEdit,
@@ -11,7 +11,7 @@ import {
     X,
     SlidersHorizontal,
 } from "lucide-react";
-import { IHouseFilters } from "@/src/types/house";
+import { IHouseFilters } from "@/src/types/HouseFilterType";
 
 interface FilterTopProps {
     filters: IHouseFilters;
@@ -112,7 +112,7 @@ const Filters = ({
 
 export const FilterTop = ({ filters }: FilterTopProps) => {
     const router = useRouter();
-    const pathname = usePathname(); 
+    const pathname = usePathname();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -154,7 +154,7 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
 
         setDraft(values);
 
-  
+
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
@@ -166,7 +166,7 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
             location,
         });
 
-        setIsOpen(false); 
+        setIsOpen(false);
     };
 
     const handleSortChange = (
@@ -181,7 +181,7 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
             order,
         });
 
-        setIsOpen(false); 
+        setIsOpen(false);
     };
 
     const handleSearchChange = (search: string) => {
@@ -196,7 +196,7 @@ export const FilterTop = ({ filters }: FilterTopProps) => {
         searchTimeout.current = setTimeout(() => {
             applyFilters(nextDraft);
             searchTimeout.current = null;
-        }, 500); 
+        }, 500);
     };
 
     useEffect(() => {
