@@ -1,9 +1,8 @@
-
-import AuthLayout from "@/src/components/auth/AuthLayout";
-import SocialLogin from "@/src/components/auth/SocialLogin";
-import AuthDivider from "@/src/components/auth/AuthDivider";
-import AuthInput from "@/src/components/auth/AuthInput";
-import AuthButton from "@/src/components/auth/AuthButton";
+import AuthLayout from "@/src/components/organisms/auth/AuthLayout";
+import SocialLogin from "@/src/components/organisms/auth/SocialLogin";
+import AuthDivider from "@/src/components/organisms/auth/AuthDivider";
+import AuthInput from "@/src/components/organisms/auth/AuthInput";
+import AuthButton from "@/src/components/organisms/auth/AuthButton";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,10 +11,7 @@ export default function RegisterPage() {
     <AuthLayout>
       <div className="text-right">
         <div className="text-xs text-white/50">
-          خانه　 ‹　{" "}
-          <span className="text-[#91FF45]">
-            ساخت حساب کاربری
-          </span>
+          خانه　 ‹　 <span className="text-[#91FF45]">ساخت حساب کاربری</span>
         </div>
 
         <div className="mt-8 text-sm font-medium text-[#91FF45]">
@@ -34,7 +30,8 @@ export default function RegisterPage() {
         </h1>
 
         <p className="mt-5 text-sm leading-7 text-white/75">
-          ! با وارد کردن اطلاعات خود به راحتی وارد پنل خودتون بشید و از پروژه هاتون خبر بگیرید 
+          ! با وارد کردن اطلاعات خود به راحتی وارد پنل خودتون بشید و از پروژه
+          هاتون خبر بگیرید
         </p>
 
         <div
@@ -60,11 +57,7 @@ export default function RegisterPage() {
 
         <AuthDivider />
 
-        <form
-          className="space-y-5"
-          action="/verify"
-          method="get"
-        >
+        <form className="space-y-5" action="/verify" method="get">
           <AuthInput
             id="email"
             label="ایمیل شما"
@@ -75,9 +68,7 @@ export default function RegisterPage() {
           />
 
           <div className="mt-8">
-            <AuthButton>
-              ارسال کد تأیید
-            </AuthButton>
+            <AuthButton>ارسال کد تأیید</AuthButton>
           </div>
         </form>
       </div>

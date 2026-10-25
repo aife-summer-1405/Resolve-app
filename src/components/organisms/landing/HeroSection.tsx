@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "../Header";
+import Header from "../../molecules/Header";
 
 const tabs = ["رزرو ملک", "رهن و اجاره", "خرید و فروش"];
 
