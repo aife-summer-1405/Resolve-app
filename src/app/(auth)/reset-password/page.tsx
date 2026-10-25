@@ -1,9 +1,8 @@
-
-import AuthLayout from "@/src/components/auth/AuthLayout";
-import AuthButton from "@/src/components/auth/AuthButton";
-import AuthInput from "@/src/components/auth/AuthInput";
-import AuthDivider from "@/src/components/auth/AuthDivider";
-import SocialLogin from "@/src/components/auth/SocialLogin";
+import AuthLayout from "@/src/components/organisms/auth/AuthLayout";
+import AuthButton from "@/src/components/organisms/auth/AuthButton";
+import AuthInput from "@/src/components/organisms/auth/AuthInput";
+import AuthDivider from "@/src/components/organisms/auth/AuthDivider";
+import SocialLogin from "@/src/components/organisms/auth/SocialLogin";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,10 +11,7 @@ export default function ResetPasswordPage() {
     <AuthLayout>
       <div dir="rtl" className="text-right">
         <div className="text-xs text-white/50">
-          خانه　 ‹　{" "}
-          <span className="text-[#91FF45]">
-            ورود به حساب کاربری
-          </span>
+          خانه　 ‹　 <span className="text-[#91FF45]">ورود به حساب کاربری</span>
         </div>
 
         <div className="relative mt-7 text-sm font-medium text-[#91FF45]">
@@ -34,7 +30,8 @@ export default function ResetPasswordPage() {
         </h1>
 
         <p className="mt-5 text-sm leading-7 text-white/75">
-          با وارد کردن اطلاعات خود به راحتی وارد پنل خودتون بشید و از پروژه‌هاتون خبر بگیرید!
+          با وارد کردن اطلاعات خود به راحتی وارد پنل خودتون بشید و از
+          پروژه‌هاتون خبر بگیرید!
         </p>
 
         <div className="mt-8 grid grid-cols-2 gap-2 rounded-2xl bg-[#303030] p-1.5">
@@ -57,11 +54,7 @@ export default function ResetPasswordPage() {
 
         <AuthDivider />
 
-        <form
-            action="/login"
-            method="post"
-            className="space-y-5"
-        >
+        <form action="/login" method="post" className="space-y-5">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <AuthInput
               id="phone"
@@ -83,9 +76,7 @@ export default function ResetPasswordPage() {
           </div>
 
           <div className="pt-5">
-            <AuthButton>
-               ساخت حساب کاربری
-            </AuthButton>
+            <AuthButton>ساخت حساب کاربری</AuthButton>
           </div>
         </form>
       </div>

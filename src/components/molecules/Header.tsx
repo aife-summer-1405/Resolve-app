@@ -1,7 +1,12 @@
 "use client";
+
 import { ChevronDown, Megaphone, User } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+
+interface HeaderProps {
+  isOverlay?: boolean;
+}
 
 const links = [
   { label: "رزرو سریع", href: "HouseReserve", hasMenu: true },
@@ -10,10 +15,19 @@ const links = [
   { label: "مقالات ما", href: "#blog" },
   { label: "تماس با ما", href: "#contact" },
 ];
-const Header = () => {
+
+const Header = ({ isOverlay = false }: HeaderProps) => {
   const [activeLink, setActiveLink] = useState("");
+
   return (
-    <header className="relative z-50 mx-auto flex h-12 w-full max-w-334 items-center justify-between rounded-2xl bg-[#363636] ps-2 pe-4 text-xs text-white shadow-[inset_-2px_2px_12px_0_rgba(255,255,255,0.16),0_8px_6px_0_rgba(0,0,0,0.12)]">
+    <header
+      dir="rtl"
+      className={`${
+        isOverlay
+          ? "absolute left-1/2 top-4 z-50 -translate-x-1/2"
+          : "relative mx-auto mt-4"
+      } flex h-12 w-full max-w-334 items-center justify-between rounded-2xl bg-[#363636] ps-2 pe-4 text-xs text-white shadow-[inset_-2px_2px_12px_0_rgba(255,255,255,0.16),0_8px_6px_0_rgba(0,0,0,0.12)]`}
+    >
       <div className="flex h-full items-center gap-5">
         <Link
           href="/"
