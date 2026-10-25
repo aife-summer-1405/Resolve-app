@@ -85,18 +85,18 @@ async function HouseReserveContent({ searchParams }: PageProps) {
     };
 
     return (
-        <div className="mt-10 flex h-[calc(100dvh-40px)] flex-col overflow-hidden">
-            <div className="flex min-h-0 flex-1 flex-col gap-6">
+        <div className="mt-10 flex flex-col lg:h-[calc(100dvh-40px)] lg:overflow-hidden">
+            <div className="flex flex-col gap-6 lg:min-h-0 lg:flex-1">
                 <div className="shrink-0">
                     <FilterTop filters={filters} />
                 </div>
 
-                <div className="min-h-0 flex-1">
+                <div className="lg:min-h-0 lg:flex-1">
                     <MainPart filters={filters} />
                 </div>
             </div>
         </div>
-    );
+    );  
 }
 
 export default function HouseReserve({ searchParams }: PageProps) {
@@ -105,12 +105,12 @@ export default function HouseReserve({ searchParams }: PageProps) {
 
             <Suspense
                 fallback={
-                   <Loading/>
+                    <Loading />
                 }
             >
                 <HouseReserveContent searchParams={searchParams} />
             </Suspense>
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 }

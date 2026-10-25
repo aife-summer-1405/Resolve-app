@@ -33,22 +33,23 @@ const TabInfoBox = ({
     return (
         <section
             dir="rtl"
-            className="w-4/5 overflow-hidden rounded-2xl  p-6 text-white"
+            className="md:w-4/5 overflow-hidden rounded-2xl  p-6 text-white"
         >
-            <div className="flex gap-8 rounded-2xl py-1 px-2 bg-card mb-4">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex w-40 shrink-0 items-center justify-center rounded-2xl border-b-2 p-2  transition-colors ${activeTab === tab.id
-                                ? "bg-lime-400 text-black"
-                                : "border-transparent text-gray-400 hover:text-white"
-                            }`}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
-            </div>
+          <div className="mb-4 flex flex-nowrap gap-2 overflow-x-auto rounded-2xl bg-card px-2 py-1">
+    {tabs.map((tab) => (
+        <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex shrink-0 items-center justify-center whitespace-nowrap rounded-2xl border-b-2 p-2 transition-colors ${
+                activeTab === tab.id
+                    ? "bg-lime-400 text-black"
+                    : "border-transparent text-gray-400 hover:text-white"
+            }`}
+        >
+            {tab.label}
+        </button>
+    ))}
+</div>
 
             <div className="pt-6">{content[activeTab]}</div>
         </section>
