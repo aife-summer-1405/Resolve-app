@@ -1,9 +1,9 @@
-import AboutUsSection from "../components/organisms/landing/AboutUsSection";
-import HeroSection from "../components/organisms/landing/HeroSection";
-import OffersSection from "../components/organisms/landing/OffersSection";
-import PopularDestinationsSection from "../components/organisms/landing/PopularDestinationsSection";
-import PropertyCategoriesSection from "../components/organisms/landing/PropertyCategoriesSection";
-import TestimonialsSection from "../components/organisms/landing/TestimonialsSection";
+import AboutUsSection from "../components/landing/AboutUsSection";
+import HeroSection from "../components/landing/HeroSection";
+import OffersSection from "../components/landing/OffersSection";
+import PopularDestinationsSection from "../components/landing/PopularDestinationsSection";
+import PropertyCategoriesSection from "../components/landing/PropertyCategoriesSection";
+import TestimonialsSection from "../components/landing/TestimonialsSection";
 
 const Landing = () => {
   return (
