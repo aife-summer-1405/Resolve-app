@@ -13,7 +13,6 @@ const Landing = () => {
     >
       <HeroSection />
       <PropertyCategoriesSection />
-
       <OffersSection />
       <PopularDestinationsSection />
       <AboutUsSection />
