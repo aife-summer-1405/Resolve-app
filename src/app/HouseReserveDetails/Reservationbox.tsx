@@ -1,9 +1,10 @@
 "use client";
-
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
+import gregorian from "react-date-object/calendars/gregorian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import {
     BadgeDollarSign,
@@ -15,20 +16,18 @@ import {
     Users,
 } from "lucide-react";
 import type { IHouseDetails } from "@/src/types/HouseDetailType";
-
-export interface ReservationData {
-    checkIn: string;
-    checkOut: string;
-    checkInDate: Date;
-    checkOutDate: Date;
-    nights: number;
-    guests: number;
-    total: number;
-}
+import type { IBookingData } from "@/src/types/BookingType";
+import { useCreateBooking } from "@/src/hooks/useBooking";
 
 interface IReservationBoxProps {
     result: IHouseDetails;
-    onReserve?: (data: ReservationData) => void;
+    onReserve?: (
+        data: IBookingData & {
+            guests: number;
+            nights: number;
+            total: number;
+        },
+    ) => void;
 }
 
 interface IFieldProps {
@@ -36,10 +35,21 @@ interface IFieldProps {
     children: ReactNode;
 }
 
+const DAY_MS = 86_400_000;
+
 const toman = (value: number) =>
     `${value.toLocaleString("fa-IR")} تومان`;
 
-const DAY_MS = 86_400_000;
+const formatApiDate = (date: DateObject | null): string => {
+    if (!date) return "";
+
+    const convertedDate = date.convert(gregorian);
+    const year = convertedDate.year;
+    const month = String(convertedDate.month).padStart(2, "0");
+    const day = String(convertedDate.day).padStart(2, "0");
+
+    return new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString();
+};
 
 function diffInDays(
     from: DateObject | null,
@@ -47,10 +57,22 @@ function diffInDays(
 ): number {
     if (!from || !to) return 0;
 
-    const difference =
-        to.toDate().getTime() - from.toDate().getTime();
+    const fromDate = from.convert(gregorian).toDate();
+    const toDate = to.convert(gregorian).toDate();
 
-    return Math.max(0, Math.round(difference / DAY_MS));
+    const fromUtc = Date.UTC(
+        fromDate.getFullYear(),
+        fromDate.getMonth(),
+        fromDate.getDate(),
+    );
+
+    const toUtc = Date.UTC(
+        toDate.getFullYear(),
+        toDate.getMonth(),
+        toDate.getDate(),
+    );
+
+    return Math.max(0, Math.round((toUtc - fromUtc) / DAY_MS));
 }
 
 function Field({ legend, children }: IFieldProps) {
@@ -77,28 +99,56 @@ export default function ReservationBox({
     result,
     onReserve,
 }: IReservationBoxProps) {
+    const [minDate, setMinDate] = useState<DateObject | undefined>();
     const [checkIn, setCheckIn] = useState<DateObject | null>(null);
     const [checkOut, setCheckOut] = useState<DateObject | null>(null);
-    const [guests, setGuests] = useState(1);
-    const [minDate, setMinDate] = useState<DateObject | undefined>();
+
+    const [bookingData, setBookingData] = useState<IBookingData>({
+        houseId: Number(result.id),
+        reservedDates: [],
+        traveler_details: [
+            {
+                firstName: "sadaf",
+                lastName: "tabari",
+                gender: "female",
+                birthDate: "1996-05-20",
+                nationalId: "2080655869",
+            },
+        ],
+        sharedEmail: "tabarisadaf75@gmail.com",
+        sharedMobile: "09335391111",
+    });
+
+    const {
+        mutate: createBooking,
+        isPending,
+        isError,
+        error,
+        isSuccess,
+    } = useCreateBooking();
+
+    const guests = bookingData.traveler_details.length;
 
     useEffect(() => {
-        setMinDate(new DateObject({ calendar: persian }));
+        setMinDate(
+            new DateObject({ calendar: persian }).add(1, "day"),
+        );
     }, []);
 
     const nights = diffInDays(checkIn, checkOut);
     const originalPrice = Math.max(0, Number(result.price) || 0);
+
     const discountedPrice =
         result.discounted_price != null
             ? Math.max(0, Number(result.discounted_price) || 0)
             : originalPrice;
 
     const pricePerNight = discountedPrice;
+
     const discountPercent =
         originalPrice > 0 && discountedPrice < originalPrice
             ? Math.round(
-                ((originalPrice - discountedPrice) / originalPrice) *
-                100,
+                ((originalPrice - discountedPrice) / originalPrice) * 100,
             )
             : 0;
 
@@ -106,31 +156,77 @@ export default function ReservationBox({
     const oldTotal = nights * originalPrice;
     const finalTotal = nights * pricePerNight;
 
+    function updateReservedDates(
+        nextCheckIn: DateObject | null,
+        nextCheckOut: DateObject | null,
+    ) {
+        setBookingData((prev) => ({
+            ...prev,
+            reservedDates: [
+                formatApiDate(nextCheckIn),
+                formatApiDate(nextCheckOut),
+            ].filter(Boolean),
+        }));
+    }
+
     function handleCheckIn(value: DateObject | DateObject[] | null) {
         const date = Array.isArray(value) ? value[0] ?? null : value;
 
         setCheckIn(date);
 
-        if (date && checkOut && checkOut.toDate() <= date.toDate()) {
+        if (
+            date &&
+            checkOut &&
+            date.convert(gregorian).toDate().getTime() >=
+            checkOut.convert(gregorian).toDate().getTime()
+        ) {
             setCheckOut(null);
+            updateReservedDates(date, null);
+            return;
         }
+
+        updateReservedDates(date, checkOut);
     }
 
     function handleCheckOut(value: DateObject | DateObject[] | null) {
-        setCheckOut(Array.isArray(value) ? value[0] ?? null : value);
+        const date = Array.isArray(value) ? value[0] ?? null : value;
+
+        setCheckOut(date);
+        updateReservedDates(checkIn, date);
     }
 
-    function handleReserve() {
-        if (!checkIn || !checkOut || nights < 1) return;
+    function updateGuestCount(nextCount: number) {
+        const count = Math.max(1, Math.min(maxGuests, nextCount));
 
-        onReserve?.({
-            checkIn: checkIn.format("YYYY/MM/DD"),
-            checkOut: checkOut.format("YYYY/MM/DD"),
-            checkInDate: checkIn.toDate(),
-            checkOutDate: checkOut.toDate(),
-            nights,
-            guests,
-            total: finalTotal,
+        setBookingData((prev) => {
+            const travelers = [...prev.traveler_details];
+
+            while (travelers.length < count) {
+                travelers.push({
+                    firstName: "",
+                    lastName: "",
+                    gender: "",
+                    birthDate: "",
+                    nationalId: "",
+                });
+            }
+
+            return {
+                ...prev,
+                traveler_details: travelers.slice(0, count),
+            };
+        });
+    }
+    function handleReserve() {
+        if (!checkIn || !checkOut || nights < 1 || isPending) return;
+
+        createBooking(bookingData, {
+            onSuccess: () => {
+                toast.success("درخواست رزرو با موفقیت ثبت شد");
+            },
+            onError: () => {
+                toast.error("ثبت رزرو ناموفق بود");
+            },
         });
     }
 
@@ -147,7 +243,6 @@ export default function ReservationBox({
             <div className={sectionTitleCls}>
                 <span className="line-clamp-1">{result.title}</span>
                 <HousesIcon size={15} />
-
             </div>
 
             <div className="space-y-3">
@@ -210,11 +305,7 @@ export default function ReservationBox({
                             type="button"
                             aria-label="افزودن مسافر"
                             disabled={guests >= maxGuests}
-                            onClick={() =>
-                                setGuests((current) =>
-                                    Math.min(maxGuests, current + 1),
-                                )
-                            }
+                            onClick={() => updateGuestCount(guests + 1)}
                             className={stepperBtnCls}
                         >
                             <Plus size={14} />
@@ -228,11 +319,7 @@ export default function ReservationBox({
                             type="button"
                             aria-label="کم کردن مسافر"
                             disabled={guests <= 1}
-                            onClick={() =>
-                                setGuests((current) =>
-                                    Math.max(1, current - 1),
-                                )
-                            }
+                            onClick={() => updateGuestCount(guests - 1)}
                             className={stepperBtnCls}
                         >
                             <Minus size={14} />
@@ -253,7 +340,6 @@ export default function ReservationBox({
             <div>
                 <hr className="border-[#646464]" />
                 <div className={sectionTitleCls}>
-
                     <span>قیمت رزرو</span>
                     <BadgeDollarSign size={15} />
                 </div>
@@ -305,12 +391,15 @@ export default function ReservationBox({
             <button
                 type="button"
                 onClick={handleReserve}
-                disabled={nights < 1 || guests > maxGuests}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-extrabold text-neutral-900 transition-opacity hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isPending || nights < 1 || guests > maxGuests}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-extrabold text-neutral-900 transition-opacity hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <ChevronLeft size={14} />
-                همین الان رزرو کن
+                {isPending ? "در حال ثبت رزرو..." : "همین الان رزرو کن"}
             </button>
+
+            
+
         </aside>
     );
 }

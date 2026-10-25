@@ -6,13 +6,14 @@ import type { Swiper as SwiperType } from "swiper";
 
 import "swiper/css";
 
-import UserRevireCard, { type UserReviewCardProps } from "./UserRevireCard";
+import UserRevireCard from "./UserRevireCard";
+import { IHouseCommentsResponse } from "@/src/types/HouseCommentsType";
 
-interface UserReviewListProps {
-    reviews: UserReviewCardProps[];
+interface IPageProps {
+    reviews: IHouseCommentsResponse;
 }
 
-const UserReviewList = ({ reviews }: UserReviewListProps) => {
+const UserReviewList = ({ reviews }: IPageProps) => {
     const [swiper, setSwiper] = useState<SwiperType | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -62,11 +63,19 @@ const UserReviewList = ({ reviews }: UserReviewListProps) => {
                 onUpdate={updatePagination}
                 className="w-full"
             >
-                {reviews.map((review) => (
-                    <SwiperSlide key={review.id} className="h-auto">
-                        <UserRevireCard {...review} />
-                    </SwiperSlide>
-                ))}
+                {reviews.comments
+                    .filter((review) => review.parent_comment_id === null)
+                    .map((review) => (
+                        <SwiperSlide key={review.id} className="h-auto">
+                            <UserRevireCard
+                                review={review}
+                                replies={reviews.comments.filter(
+                                    (comment) =>
+                                        comment.parent_comment_id === review.id
+                                )}
+                            />
+                        </SwiperSlide>
+                    ))}
             </Swiper>
 
             {totalPages > 1 && (
@@ -78,11 +87,10 @@ const UserReviewList = ({ reviews }: UserReviewListProps) => {
                             onClick={() => goToPage(index)}
                             aria-label={`رفتن به صفحه ${index + 1}`}
                             aria-current={activeIndex === index ? "page" : undefined}
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                                activeIndex === index
-                                    ? "w-2 bg-primary"
-                                    : "w-2 bg-muted/40"
-                            }`}
+                            className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
+                                ? "w-2 bg-primary"
+                                : "w-2 bg-muted/40"
+                                }`}
                         />
                     ))}
                 </div>

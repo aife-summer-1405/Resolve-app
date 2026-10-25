@@ -60,7 +60,7 @@ const HotelCard = ({ house }: HotelCardProps) => {
                 </p>
 
                 <Link
-                    href={`/HouseReserveDetails/${house.id}`}
+                    href={`/HouseReserve/${house.id}`}
                     className="flex items-center justify-center gap-2 rounded-xl border border-lime-400 px-5 py-3 font-bold text-lime-400 transition-colors duration-300 hover:bg-lime-400 hover:text-gray-900"
                 >
                     <Building2 size={20} />

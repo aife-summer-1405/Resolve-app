@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import QueryProvider from "@/src/providers/QueryProvider";
 import "./globals.css";
-
+import { Toaster } from "@/components/ui/sonner";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -26,7 +26,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
             <body className="min-h-full flex flex-col">
-                <QueryProvider>{children}</QueryProvider>
+                <QueryProvider>{children}
+
+                    <Toaster
+    position="top-center"
+    richColors
+    dir="rtl"
+    toastOptions={{
+        classNames: {
+            toast: "text-right",
+            title: "text-right",
+            description: "text-right",
+    
+        },
+    }}
+/>
+                </QueryProvider>
             </body>
         </html>
     );
