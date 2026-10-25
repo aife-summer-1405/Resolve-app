@@ -1,7 +1,7 @@
 import { ChevronLeft, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "../../molecules/Header";
+import Header from "@/src/components/molecules/Header";
 
 const tabs = ["رزرو ملک", "رهن و اجاره", "خرید و فروش"];
 
@@ -19,8 +19,6 @@ const fields = [
 export default function HeroSection() {
   return (
     <section className="relative flex h-225.25 w-full flex-col items-center overflow-hidden bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323] px-2 pt-6 text-white">
-      <Header />
-
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-35 h-105 bg-gradient-to-t from-[#232323] via-[#232323]/80 to-transparent" />
 
       <div className="relative mt-6 h-196.25 w-321 max-w-full">
