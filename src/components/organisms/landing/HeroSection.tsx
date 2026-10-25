@@ -1,10 +1,4 @@
-import {
-  ChevronDown,
-  ChevronLeft,
-  Megaphone,
-  Search,
-  User,
-} from "lucide-react";
+import { ChevronLeft, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "../../molecules/Header";
