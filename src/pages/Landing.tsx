@@ -9,7 +9,7 @@ const Landing = () => {
   return (
     <div
       dir="rtl"
-      className={`flex flex-col items-center gap-10 md:pb-30 pb-10 bg-[#232323] `}
+      className={`flex flex-col items-center gap-10 md:pb-30 pb-10 bg-ba `}
     >
       <HeroSection />
       <PropertyCategoriesSection />

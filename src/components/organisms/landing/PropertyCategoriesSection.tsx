@@ -15,8 +15,8 @@ const PropertyCategoriesSection = () => {
     <section className="relative mb-30 w-full overflow-hidden px-5 pb-16 pt-30 text-white">
       <div className="pointer-events-none absolute -left-16 top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px]" />
 
-      <div className="relative z-10 mx-auto max-w-344">
-        <div className="flex flex-col items-center text-center text-white">
+      <div className="relative z-10 mx-auto max-w-344 text-foreground">
+        <div className="flex flex-col items-center text-center text-foreground">
           <div className="mb-3 flex items-center gap-3">
             <Image
               src="/icons/Group 33.png"

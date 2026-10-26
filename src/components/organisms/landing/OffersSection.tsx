@@ -122,15 +122,15 @@ const OffersSection = () => {
         aria-hidden="true"
         className="pointer-events-none absolute -right-[141px] -top-[151px] z-0 h-[218px] w-[218px] rounded-full bg-[#7569FF]/32 blur-[128px]"
       />
-      <div className="absolute -top-[75px] right-0 z-10 h-[75px] w-[225px] rounded-t-[40px] bg-[#2D2D2D]">
-        <span
-          aria-hidden="true"
-          className="absolute -left-10 bottom-0 h-10 w-10"
-          style={{
-            background:
-              "radial-gradient(circle at 0 0, transparent 39px, #2D2D2D 40px)",
-          }}
-        />
+      <div className="absolute -top-[75px] right-0 z-10 h-[75px] w-[225px] rounded-t-[40px] bg-big-box ">
+   <span
+  aria-hidden="true"
+  className="absolute -left-10 bottom-0 h-10 w-10"
+  style={{
+    background:
+      "radial-gradient(circle at 0 0, transparent 39px, var(--big-box) 40px)",
+  }}
+/>
 
         <div
           dir="ltr"
@@ -143,7 +143,7 @@ const OffersSection = () => {
           </span>
         </div>
       </div>
-      <div className="relative z-[1] overflow-hidden rounded-[40px] rounded-tr-none bg-[#2D2D2D] px-5 pb-8 pt-7 sm:px-8">
+      <div className="relative z-[1] overflow-hidden rounded-[40px] rounded-tr-none bg-big-box px-5 pb-8 pt-7 sm:px-8">
         <div className="mb-3 flex items-center gap-3">
           <span className="text-[16px] font-medium text-[#8CFF45]">
             بهترین تخفیف
