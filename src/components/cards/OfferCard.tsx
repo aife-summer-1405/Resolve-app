@@ -10,25 +10,18 @@ interface IOfferCardProps {
   onClick?: () => void;
 }
 
-const OfferCard: FC<IOfferCardProps> = ({
-  offer,
-  isActive = false,
-  onClick,
-}) => {
+const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
   return (
-    <article onClick={onClick} className="w-[306px] cursor-pointer text-white">
-      <div
-        className={`relative h-[232px] w-[306px] rounded-[24px] p-[14px] transition-colors duration-200 ${
-          isActive ? "bg-[#8CFF45]" : "bg-[#393939]"
-        }`}
-      >
+    <article
+      onClick={onClick}
+      className="group w-[306px] cursor-pointer text-white"
+    >
+      <div className="relative h-[232px] w-[306px] rounded-[24px] bg-[#393939] p-[14px] transition-colors duration-200 group-hover:bg-[#8CFF45]">
         <button
           type="button"
           aria-label="مشاهده اقامتگاه"
           onClick={(event) => event.stopPropagation()}
-          className={`absolute left-[10px] top-[9px] z-20 flex h-[28px] w-[40px] items-center justify-center rounded-[10px] transition-colors ${
-            isActive ? "bg-[#8CFF45] text-[#292929]" : "bg-[#414141] text-white"
-          }`}
+          className="absolute left-[10px] top-[9px] z-20 flex h-[28px] w-[40px] items-center justify-center rounded-[10px] bg-[#414141] text-white transition-colors group-hover:bg-[#8CFF45] group-hover:text-[#292929]"
         >
           <ArrowLeft size={20} />
         </button>
@@ -44,11 +37,7 @@ const OfferCard: FC<IOfferCardProps> = ({
           </div>
         </div>
 
-        <div
-          className={`absolute right-[14px] top-[14px] flex h-[28px] items-center gap-1 rounded-[10px] px-[10px] text-[11px] font-semibold transition-colors ${
-            isActive ? "bg-[#444444] text-white" : "bg-white text-[#292929]"
-          }`}
-        >
+        <div className="absolute right-[14px] top-[14px] flex h-[28px] items-center gap-1 rounded-[10px] bg-white px-[10px] text-[11px] font-semibold text-[#292929] transition-colors group-hover:bg-[#444444] group-hover:text-white">
           <Star size={14} fill="currentColor" />
           <span>{offer.rating.toLocaleString("fa-IR")}</span>
         </div>
@@ -74,27 +63,15 @@ const OfferCard: FC<IOfferCardProps> = ({
         <span>{offer.amenities}</span>
       </div>
 
-      <div
-        className={`mt-[28px] flex h-[36px] w-[306px] items-center justify-between gap-1 rounded-[12px] px-[12px] transition-colors ${
-          isActive ? "bg-[#8CFF45] text-[#292929]" : "bg-[#414141] text-white"
-        }`}
-      >
+      <div className="mt-[28px] flex h-[36px] w-[306px] items-center justify-between gap-1 rounded-[12px] bg-[#414141] px-[12px] text-white transition-colors group-hover:bg-[#8CFF45] group-hover:text-[#292929]">
         <div className="flex min-w-0 items-center gap-[8px]">
           <span className="shrink-0 text-[11px] font-semibold">
             {offer.price.toLocaleString("fa-IR")}ت
           </span>
 
-          <span
-            className={`h-[16px] w-px shrink-0 ${
-              isActive ? "bg-black/20" : "bg-white/25"
-            }`}
-          />
+          <span className="h-[16px] w-px shrink-0 bg-white/25 transition-colors group-hover:bg-black/20" />
 
-          <span
-            className={`truncate text-[10px] line-through ${
-              isActive ? "text-black/40" : "text-white/45"
-            }`}
-          >
+          <span className="truncate text-[10px] text-white/45 line-through transition-colors group-hover:text-black/40">
             {offer.originalPrice.toLocaleString("fa-IR")}ت
           </span>
         </div>

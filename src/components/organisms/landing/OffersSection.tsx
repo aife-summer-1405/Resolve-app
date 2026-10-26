@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, Clock3 } from "lucide-react";
 import { IOffer } from "@/src/core/types/IOffer";
-
 import Image from "next/image";
 import OfferCard from "../../cards/OfferCard";
 
@@ -117,12 +116,13 @@ const OffersSection = () => {
   const seconds = timeLeft % 60;
 
   return (
-    <section className="relative mx-auto mt-[75px] w-full max-w-[1376px] text-white">
+    <section className="relative mx-auto mt-18.75 w-full max-w-[1376px] text-white">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-[141px] -top-[151px] z-0 h-[218px] w-[218px] rounded-full bg-[#7569FF]/32 blur-[128px]"
       />
-      <div className="absolute -top-[75px] right-0 z-10 h-[75px] w-[225px] rounded-t-[40px] bg-[#2D2D2D]">
+
+      <div className="absolute -top-18.75 right-0 z-10 h-[75px] w-[225px] rounded-t-[40px] bg-[#2D2D2D]">
         <span
           aria-hidden="true"
           className="absolute -left-10 bottom-0 h-10 w-10"
@@ -143,6 +143,7 @@ const OffersSection = () => {
           </span>
         </div>
       </div>
+
       <div className="relative z-[1] overflow-hidden rounded-[40px] rounded-tr-none bg-[#2D2D2D] px-5 pb-8 pt-7 sm:px-8">
         <div className="mb-3 flex items-center gap-3">
           <span className="text-[16px] font-medium text-[#8CFF45]">
@@ -173,16 +174,12 @@ const OffersSection = () => {
               transform: `translateX(calc(${activeIndex} * (100% / 4 + 3px)))`,
             }}
           >
-            {offers.map((offer, index) => (
+            {offers.map((offer) => (
               <div
                 key={offer.id}
                 className="w-[306px] min-w-[306px] shrink-0 lg:w-[calc((100%-36px)/4)] lg:min-w-0"
               >
-                <OfferCard
-                  offer={offer}
-                  isActive={index === activeIndex}
-                  onClick={() => setActiveIndex(index)}
-                />
+                <OfferCard offer={offer} />
               </div>
             ))}
           </div>
