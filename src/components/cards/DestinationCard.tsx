@@ -27,9 +27,10 @@ const DestinationCard: FC<IDestinationCardProps> = ({
     <article onClick={onClick} className="w-[306px] cursor-pointer text-white">
       <div
         className={`relative h-[240px] w-[306px] rounded-[24px] transition-colors duration-200 ${
-          isActive ? "bg-[#8CFF45]" : "bg-[#393939]"
+          isActive ? "bg-[#8CFF45]" : "bg-card"
         }`}
       >
+        
         <button
           type="button"
           aria-label="مشاهده مقصد"

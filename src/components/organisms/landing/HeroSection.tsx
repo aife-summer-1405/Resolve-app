@@ -2,6 +2,7 @@ import { ChevronLeft, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/src/components/molecules/Header";
+import Field from "../../Ui/Field";
 
 const tabs = ["رزرو ملک", "رهن و اجاره", "خرید و فروش"];
 
@@ -133,30 +134,21 @@ export default function HeroSection() {
 
         <div
           id="search"
-          className="grid h-29.25 w-full grid-cols-[1.4fr_1fr_1fr_1fr_auto] items-center gap-3 rounded-3xl border border-white/10 bg-[#292929]/80 p-4 shadow-xl backdrop-blur-md max-md:h-auto max-md:grid-cols-2"
+          className="grid h-29.25 w-full grid-cols-[1.4fr_1fr_1fr_1fr_auto] items-center gap-3 rounded-3xl border border-white/10 bg-card p-4 shadow-xl backdrop-blur-md max-md:h-auto max-md:grid-cols-2"
         >
-          {fields.map((field) => (
-            <label
-              key={field.label}
-              className={`relative rounded-xl border px-3 py-3 ${
-                field.wide ? "border-white/40" : "border-white/30"
-              }`}
-            >
-              <span className="absolute -top-2 right-3 bg-[#2f2f2f] px-1 text-[10px] text-white">
-                {field.label}
-              </span>
-
-              <input
-                type="text"
-                placeholder={field.placeholder}
-                className={`w-full min-w-0 bg-transparent text-xs outline-none ${
-                  field.wide
-                    ? "placeholder:text-white"
-                    : "placeholder:text-white/60"
-                }`}
-              />
-            </label>
-          ))}
+    {fields.map((field) => (
+  <Field key={field.label} legend={field.label}>
+    <input
+      type="text"
+      placeholder={field.placeholder}
+      className={`w-full min-w-0 bg-transparent text-xs text-foreground outline-none ${
+        field.wide
+          ? "placeholder:text-foreground"
+          : "placeholder:text-muted"
+      }`}
+    />
+  </Field>
+))}
 
           <button
             type="button"
