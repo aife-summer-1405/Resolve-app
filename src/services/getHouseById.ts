@@ -4,7 +4,7 @@ export const getHouseById = async (
     id: string,
 ): Promise<IHouseDetails> => {
     const response = await fetch(
-        `${process.env.API_URL}/houses/${id}`,
+        `${process.env.API_URL}/api/houses/${id}`,
     );
 
     if (!response.ok) {

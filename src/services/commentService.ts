@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "@/lib/axios";
 
 export interface ICreateComment {
     house_id: string;
@@ -9,10 +9,7 @@ export interface ICreateComment {
 }
 
 export const createComment = async (data: ICreateComment) => {
-    const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/comments`,
-        data
-    );
+    const response = await api.post("/api/comments", data);
 
     return response.data;
 };
