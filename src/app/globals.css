@@ -6,7 +6,8 @@
   --background: #e2e3e5;
   --foreground: #171717;
   --surface: #ffffff;
-  --card: #ffffff;
+  --card:  #ffffff;
+  --card-2: #838383;
   --card-border: #393939;
   --slider: #cfcfcf;
   --border: #d4d4d4;
@@ -25,6 +26,7 @@
   --foreground: #ededed;
   --surface: #222222;
   --card: #393939;
+  --card-2: #303030;
   --card-border: #393939;
   --slider: #444444;
   --border: #ffffff;
@@ -42,6 +44,7 @@
   --color-primary-hover: #a1ff60;
   --color-surface: var(--surface);
   --color-card: var(--card);
+  --color-card-2: var(--card-2);
   --color-card-border: var(--card-border);
   --color-slider: var(--slider);
   --color-border: var(--border);

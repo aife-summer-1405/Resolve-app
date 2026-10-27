@@ -10,7 +10,7 @@ interface IUserReviewCardProps {
 
 const UserRevireCard = ({ review, replies }: IUserReviewCardProps) => {
     const parentComment = review.parent_comment;
-console.log(11111,replies)
+console.log(11111,review)
     return (
         <div className="relative">
             <div className="absolute right-3 top-1 z-10 flex h-7 items-center gap-1 rounded-lg bg-white px-2 text-xs font-bold text-card">

@@ -4,7 +4,7 @@ export async function getHouseComments(
     id: number,
 ): Promise<IHouseCommentsResponse> {
     const response = await fetch(
-        `${process.env.API_URL}/comments?house_id=${id}`,
+        `${process.env.API_URL}/api/comments?house_id=${id}`,
     );
 
     if (!response.ok) {
