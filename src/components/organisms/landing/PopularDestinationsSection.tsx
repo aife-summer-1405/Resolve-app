@@ -100,8 +100,9 @@ const PopularDestinationsSection: FC = () => {
   return (
     <main
       dir="rtl"
-      className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#2D2D2D] text-white"
+     className="relative mx-auto w-full max-w-full overflow-x-clip bg-big-box text-foreground"
     >
+
       <section className="relative px-5 pb-16 pt-20">
         <div className="pointer-events-none absolute left-0 top-0 h-[300px] w-[300px] rounded-full bg-[#8CFF45]/10 blur-[100px]" />
 
@@ -141,11 +142,10 @@ const PopularDestinationsSection: FC = () => {
                 aria-label={`رفتن به مقصد ${index + 1}`}
                 aria-pressed={activeDestinationIndex === index}
                 onClick={() => setActiveDestinationIndex(index)}
-                className={`h-[6px] rounded-full transition-all duration-300 ${
-                  activeDestinationIndex === index
+                className={`h-[6px] rounded-full transition-all duration-300 ${activeDestinationIndex === index
                     ? "w-[18px] bg-[#8CFF45]"
                     : "w-[6px] bg-white/50"
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -195,11 +195,10 @@ const PopularDestinationsSection: FC = () => {
                 aria-label={`انتخاب کارت ${index + 1}`}
                 aria-pressed={activeOfferIndex === index}
                 onClick={() => setActiveOfferIndex(index)}
-                className={`h-[6px] rounded-full transition-all duration-300 ${
-                  activeOfferIndex === index
+                className={`h-[6px] rounded-full transition-all duration-300 ${activeOfferIndex === index
                     ? "w-[18px] bg-[#8CFF45]"
                     : "w-[6px] bg-white/50"
-                }`}
+                  }`}
               />
             ))}
           </div>

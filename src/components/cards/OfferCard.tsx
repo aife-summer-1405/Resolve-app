@@ -16,10 +16,10 @@ const OfferCard: FC<IOfferCardProps> = ({
   onClick,
 }) => {
   return (
-    <article onClick={onClick} className="w-[306px] cursor-pointer text-white">
+    <article onClick={onClick} className="w-[306px] cursor-pointer text-foreground">
       <div
         className={`relative h-[232px] w-[306px] rounded-[24px] p-[14px] transition-colors duration-200 ${
-          isActive ? "bg-[#8CFF45]" : "bg-[#393939]"
+          isActive ? "bg-[#8CFF45]" : "bg-card"
         }`}
       >
         <button
@@ -46,7 +46,7 @@ const OfferCard: FC<IOfferCardProps> = ({
 
         <div
           className={`absolute right-[14px] top-[14px] flex h-[28px] items-center gap-1 rounded-[10px] px-[10px] text-[11px] font-semibold transition-colors ${
-            isActive ? "bg-[#444444] text-white" : "bg-white text-[#292929]"
+            isActive ? "bg-[#444444] text-white" : "bg-foreground text-background"
           }`}
         >
           <Star size={14} fill="currentColor" />
@@ -55,7 +55,7 @@ const OfferCard: FC<IOfferCardProps> = ({
       </div>
 
       <div className="mt-[18px] flex h-[36px] items-center justify-between gap-2">
-        <h3 className="min-w-0 truncate text-[14px] font-medium text-white">
+        <h3 className="min-w-0 truncate text-[14px] font-medium text-foreground">
           {offer.title}
         </h3>
 
@@ -76,7 +76,7 @@ const OfferCard: FC<IOfferCardProps> = ({
 
       <div
         className={`mt-[28px] flex h-[36px] w-[306px] items-center justify-between gap-1 rounded-[12px] px-[12px] transition-colors ${
-          isActive ? "bg-[#8CFF45] text-[#292929]" : "bg-[#414141] text-white"
+          isActive ? "bg-[#8CFF45] text-[#292929]" : "bg-card text-foreground"
         }`}
       >
         <div className="flex min-w-0 items-center gap-[8px]">
@@ -92,7 +92,7 @@ const OfferCard: FC<IOfferCardProps> = ({
 
           <span
             className={`truncate text-[10px] line-through ${
-              isActive ? "text-black/40" : "text-white/45"
+              isActive ? "text-black/40" : "text-muted"
             }`}
           >
             {offer.originalPrice.toLocaleString("fa-IR")}ت

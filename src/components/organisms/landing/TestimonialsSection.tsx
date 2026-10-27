@@ -76,7 +76,7 @@ const TestimonialsSection = () => {
   return (
     <section className="relative w-full overflow-hidden px-5 py-8 text-white md:px-8 md:py-10">
       <div className="mx-auto max-w-343.5">
-        <header className="mb-8 flex flex-col items-center text-center">
+        <header className="mb-8 flex flex-col items-center text-center text-foreground">
           <div className="mb-3 flex items-center gap-3">
             <Image
               src="/icons/Group 33.png"
@@ -101,7 +101,7 @@ const TestimonialsSection = () => {
             رضایت شما اعتبار و ارزش دلتا را می‌سازد!
           </h2>
 
-          <p className="mt-2 max-w-162.5 text-[16px] leading-5 text-white/80 md:text-[11px]">
+          <p className="mt-2 max-w-162.5 text-[16px] leading-5  md:text-[11px]">
             تیم دلتا با ارائه بهترین نیروهای خدماتی و سرویس‌های املاک سعی دارد
             تا بتواند در تمام لحظات کنار شما باشد.
           </p>
