@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { IDestination } from "@/src/core/types/IDestination";
 import { IOffer } from "@/src/core/types/IOffer";
@@ -8,7 +8,6 @@ import DestinationCard from "../../cards/DestinationCard";
 import OfferCard from "../../cards/OfferCard";
 
 const PopularDestinationsSection: FC = () => {
-  const [activeDestinationIndex, setActiveDestinationIndex] = useState(0);
   const [activeOfferIndex, setActiveOfferIndex] = useState(3);
 
   const destinations: IDestination[] = [
@@ -81,28 +80,11 @@ const PopularDestinationsSection: FC = () => {
     },
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveDestinationIndex((prev) => (prev + 1) % destinations.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [destinations.length]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveOfferIndex((prev) => (prev + 1) % offers.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [offers.length]);
-
   return (
     <main
       dir="rtl"
-     className="relative mx-auto w-full max-w-full overflow-x-clip bg-big-box text-foreground"
+      className="relative mx-auto w-full max-w-full overflow-x-clip bg-big-box text-foreground"
     >
-
       <section className="relative px-5 pb-16 pt-20">
         <div className="pointer-events-none absolute left-0 top-0 h-[300px] w-[300px] rounded-full bg-[#8CFF45]/10 blur-[100px]" />
 
@@ -124,29 +106,8 @@ const PopularDestinationsSection: FC = () => {
           </div>
 
           <div className="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {destinations.map((destination, index) => (
-              <DestinationCard
-                key={destination.id}
-                destination={destination}
-                isActive={activeDestinationIndex === index}
-                onClick={() => setActiveDestinationIndex(index)}
-              />
-            ))}
-          </div>
-
-          <div className="mt-8 flex items-center justify-center gap-2">
-            {destinations.map((destination, index) => (
-              <button
-                key={destination.id}
-                type="button"
-                aria-label={`رفتن به مقصد ${index + 1}`}
-                aria-pressed={activeDestinationIndex === index}
-                onClick={() => setActiveDestinationIndex(index)}
-                className={`h-[6px] rounded-full transition-all duration-300 ${activeDestinationIndex === index
-                    ? "w-[18px] bg-[#8CFF45]"
-                    : "w-[6px] bg-white/50"
-                  }`}
-              />
+            {destinations.map((destination) => (
+              <DestinationCard key={destination.id} destination={destination} />
             ))}
           </div>
         </div>
@@ -195,10 +156,11 @@ const PopularDestinationsSection: FC = () => {
                 aria-label={`انتخاب کارت ${index + 1}`}
                 aria-pressed={activeOfferIndex === index}
                 onClick={() => setActiveOfferIndex(index)}
-                className={`h-[6px] rounded-full transition-all duration-300 ${activeOfferIndex === index
+                className={`h-[6px] rounded-full transition-all duration-300 ${
+                  activeOfferIndex === index
                     ? "w-[18px] bg-[#8CFF45]"
                     : "w-[6px] bg-white/50"
-                  }`}
+                }`}
               />
             ))}
           </div>
