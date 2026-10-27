@@ -16,12 +16,10 @@ import {
     User,
 } from "lucide-react";
 
-/* ───────────── تایپ‌ها ───────────── */
 type NavLink = { label: string; href: string; active?: boolean };
 type Status = "idle" | "loading" | "success" | "error";
 type FieldProps = { legend: string; icon?: ReactNode; children: ReactNode };
 
-/* ───────────── داده‌ها ───────────── */
 const guideLinks: NavLink[] = [
     { label: "راهنمای ثبت آگهی", href: "#", active: true },
     { label: "شیوه پرداخت", href: "#" },
@@ -78,7 +76,6 @@ const activeLinkCls =
     "inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-neutral-900 transition-colors hover:bg-[#a6ff2e] focus-visible:bg-[#a6ff2e] focus-visible:outline-none";
 const headingCls = "mb-4 text-sm font-bold text-white";
 
-/* ───────────── فیلد با لیبل روی کادر ───────────── */
 function Field({ legend, icon, children }: FieldProps) {
     return (
         <fieldset className="rounded-xl border border-neutral-800/70 px-3 pb-2 pt-0 transition-colors focus-within:border-neutral-900 focus-within:ring-2 focus-within:ring-neutral-900/20" dir="rtl">
@@ -98,10 +95,9 @@ export default function Footer() {
 
     return (
         <footer className="bg-[#a6ff2e]" >
-            {/* ── نوار بالا: شماره‌ها و لوگو ── */}
             <div className="flex flex-col md:flex-row ">
                 <div className="w-full  md:w-4/5">
-                    <div className="mx-auto md:w-full flex  items-center justify-between md:rounded-br-[28px]  bg-[#212121] px-5 py-3 sm:px-8">
+                    <div className="mx-auto md:w-full flex  items-center justify-between md:rounded-br-[28px]  bg-[#171717] px-5 py-3 sm:px-8">
 
 
                         <Link
@@ -110,9 +106,13 @@ export default function Footer() {
                             aria-label="The Delta Real Estatement"
                             className="flex items-end gap-2 text-white"
                         >
-                            <span className="pb-1 text-sm font-medium">The</span>
-                            <span className="text-3xl font-black leading-none tracking-wide sm:text-4xl">DELTA</span>
-                            <span className="pb-1 text-sm font-medium">Real Estatement</span>
+                            <Image
+                                src="/images/Group%20262.png"
+                                alt="The Delta Real Estate"
+                                width={520}
+                                height={460}
+                                className="h-auto w-auto max-h-[80px]  max-w-full object-contain"
+                            />
                         </Link>
                     </div>
                 </div>
@@ -121,7 +121,7 @@ export default function Footer() {
                     <a
                         href="tel:+989129177846"
                         dir="ltr"
-                        className="flex  items-center gap-2 mt-3 md:mt-0 rounded-full text-white bg-[#0d0e0d] px-4 py-1.5 text-xs font-bold text-neutral-900 transition-opacity hover:opacity-90 sm:text-sm"
+                        className="flex  items-center gap-2 mt-3 md:mt-0 rounded-full text-white bg-[#0d0e0d] px-5 py-2.5 text-xs font-bold text-neutral-900 transition-opacity hover:opacity-90 sm:text-sm"
                     >
                         <Phone size={14} aria-hidden />
                         <span>۰۹۱۲۹۱۷۷۸۴۶</span>
@@ -130,19 +130,18 @@ export default function Footer() {
                     </a>
                 </div>
             </div>
-            {/* ── بخش سبز: متن، فرم و عکس ── */}
-            <div className="relative mx-auto grid w-full max-w-300 grid-cols-1 gap-6 px-5 pt-8 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:items-end lg:pt-10">
+            <div className="relative mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-6 px-5 pt-8 sm:px-8 lg:grid-cols-[1fr_1fr] lg:items-end lg:pt-10">
+                    <div className="relative order-last flex w-full items-end justify-center overflow-hidden lg:order-first lg:justify-start">
+                        <Image
+                            src="/footerman.png"
+                            alt="مشاور دلتا"
+                            width={520}
+                            height={460}
+                            sizes="(max-width: 639px) 75vw, (max-width: 1023px) 55vw, 520px"
+                            className="block h-auto w-full max-w-[280px] object-contain object-bottom sm:max-w-[340px] lg:max-w-[460px]"
+                        />
+                    </div>
 
-
-                <div className="order-first flex justify-center lg:order-0 lg:justify-start">
-                    <Image
-                        src="/footerman.png"
-                        alt="مشاور دلتا"
-                        width={520}
-                        height={460}
-                        className="h-auto max-h-85 w-auto object-contain lg:max-h-115"
-                    />
-                </div>
 
                 <div className="pb-10 lg:pb-14 text-right">
                     <p className="mb-3  gap-2 text-[0.7rem] font-medium text-neutral-900">
@@ -206,13 +205,14 @@ export default function Footer() {
                     </form>
                 </div>
 
-
             </div>
 
-            <div className="px-3">
-                <div className="mx-auto max-w-[1200px] rounded-t-[24px] bg-[#212121] px-5 pb-4 pt-7 text-neutral-400 sm:rounded-t-[32px] sm:px-10 sm:pt-9" dir="rtl">
+                <div className="relative z-10 -mt-20 px-4 pb-4 sm:px-6 sm:pb-4 lg:px-[17px] lg:pb-4">
+                    <div
+                        className="mx-auto w-full rounded-t-[32px] rounded-b-[32px] bg-[#171717] px-6 pb-4 pt-6 text-neutral-400 sm:px-8 sm:pb-5 sm:pt-7 lg:px-10"
+                        dir="rtl"
+                    >
                     <div className="grid grid-cols-1 gap-8 pb-7 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr]">
-                        {/* برند */}
                         <section className="sm:col-span-2 lg:col-span-1">
                             <h3 className="mb-3.5 text-[1.35rem] font-extrabold text-white">پلتفرم دلتا</h3>
                             <p className="max-w-[46ch] text-justify text-[0.78rem] leading-8">
@@ -220,10 +220,31 @@ export default function Footer() {
                                 متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.
                             </p>
                             <div className="mt-[18px] flex gap-2.5">
-                                <span className="size-10 rounded-[10px] bg-[#1e8be0]" role="img" aria-label="نماد اعتماد" />
-                                <span className="size-10 rounded-[10px] bg-neutral-100" role="img" aria-label="ساماندهی" />
-                                <span className="size-10 rounded-full bg-[#f5b82e]" role="img" aria-label="نماد ملی" />
-                            </div>
+                                <Image
+                                src="/icons/z2%201.png"
+                                alt="نماد اعتماد"
+                                width={40}
+                                height={40}
+                                className="size-10 object-contain"
+                                />
+
+                                <Image
+                                src="/icons/T1_1591355889268%201%20(1).png"
+                                alt="ساماندهی"
+                                width={40}
+                                height={40}
+                                className="size-10 object-contain"
+                                />
+
+                                <Image
+                                src="/icons/file_20191206_1550_36991%201.png"
+                                alt="نماد ملی"
+                                width={40}
+                                height={40}
+                                className="size-10 object-contain"
+                                />
+
+                            </div>                            
                         </section>
 
                         <nav aria-label="راهنما">
