@@ -28,13 +28,13 @@ return (
             در بارگذاری اطلاعات خطایی رخ داد. لطفاً دوباره تلاش کنید.
         </p>
 
-      <button
-    onClick={() => window.location.reload()}
-    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-black transition-colors hover:bg-primary-hover"
->
-    <RefreshCw size={18} />
-    تلاش مجدد
-</button>
+        <button
+            onClick={() => reset()}
+            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-black transition-colors hover:bg-primary-hover"
+        >
+            <RefreshCw size={18} />
+            تلاش مجدد
+        </button>
     </div>
 );
 

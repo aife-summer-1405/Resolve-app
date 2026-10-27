@@ -44,7 +44,7 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
       </div>
 
       <div className="mt-[18px] flex h-[36px] items-center justify-between gap-2">
-        <h3 className="min-w-0 truncate text-[14px] font-medium text-white">
+        <h3 className="min-w-0 truncate text-[14px] font-medium text-foreground">
           {offer.title}
         </h3>
 

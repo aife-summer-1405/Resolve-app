@@ -93,7 +93,7 @@ const AboutUsSection = () => {
     <section className="relative w-full overflow-hidden rounded-b-[48px]  px-5 pb-12 pt-12 text-white md:px-8">
       <div className="pointer-events-none absolute -right-22 top-20 h-72 w-72 rounded-full  bg-[#7569FF52]/32 blur-[80px]" />
 
-      <div className="relative z-10 mx-auto max-w-[1378px]">
+      <div className="relative z-10 mx-auto max-w-[1378px] text-foreground">
         <header className="mb-14 flex flex-col items-center text-center">
           <div className="mb-3 flex items-center gap-3">
             <Image
@@ -119,7 +119,7 @@ const AboutUsSection = () => {
             دلتا رو بیشتر بشناس!
           </h2>
 
-          <p className="mt-3 max-w-[700px] text-[16px] leading-6 text-white">
+          <p className="mt-3 max-w-[700px] text-[16px] leading-6 ">
             تیم دلتا با ارائه بهترین نیروهای خدماتی و سرویس‌های املاک سعی دارد
             تا بتواند در تمام لحظات کنار شما باشد.
           </p>
