@@ -4,8 +4,8 @@ import { FC, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { IDestination } from "@/src/core/types/IDestination";
 import { IOffer } from "@/src/core/types/IOffer";
-import DestinationCard from "../../cards/DestinationCard";
-import OfferCard from "../../cards/OfferCard";
+import DestinationCard from "../../molecules/cards/DestinationCard";
+import OfferCard from "../../molecules/cards/OfferCard";
 
 const PopularDestinationsSection: FC = () => {
   const [activeOfferIndex, setActiveOfferIndex] = useState(3);

@@ -1,4 +1,3 @@
-
 import type { IHouseFilters } from "@/src/types/HouseFilterType";
 
 export interface HouseLocation {

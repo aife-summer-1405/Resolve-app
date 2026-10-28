@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { IOffer } from "@/src/core/types/IOffer";
-import OfferCard from "../../cards/OfferCard";
+import OfferCard from "../../molecules/cards/OfferCard";
 
 const PropertyForSaleSection: FC = () => {
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);

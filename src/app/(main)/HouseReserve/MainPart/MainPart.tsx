@@ -4,16 +4,15 @@ import { IHouseFilters } from "@/src/types/HouseFilterType";
 import { MainPartLoading } from "./MainPartLoading";
 
 interface MainPartProps {
-    filters: IHouseFilters;
+  filters: IHouseFilters;
 }
 
-
 const MainPart = ({ filters }: MainPartProps) => {
-    return (
-        <Suspense fallback={<MainPartLoading/>}>
-            <MainPartContent filters={filters}/>
-        </Suspense>
-    );
+  return (
+    <Suspense fallback={<MainPartLoading />}>
+      <MainPartContent filters={filters} />
+    </Suspense>
+  );
 };
 
 export default MainPart;

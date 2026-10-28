@@ -1,4 +1,3 @@
-
 import { AuthButtonProps } from "@/src/types/AuthType/Authtype";
 
 export default function AuthButton({

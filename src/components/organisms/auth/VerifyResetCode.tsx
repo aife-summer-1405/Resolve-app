@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -10,8 +9,6 @@ import OtpInput from "@/src/components/organisms/auth/OtpInput";
 import { actionVerifyResetCode } from "@/src/actions/auth";
 import Link from "next/link";
 import { IVerifyResetCodeProps } from "@/src/types/AuthType/Authtype";
-
-
 
 export default function VerifyResetCode({
   email,
@@ -42,9 +39,7 @@ export default function VerifyResetCode({
         return;
       }
 
-      setServerError(
-        result.message || "تأیید کد بازیابی ناموفق بود."
-      );
+      setServerError(result.message || "تأیید کد بازیابی ناموفق بود.");
     } catch {
       setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
     } finally {
@@ -96,10 +91,7 @@ export default function VerifyResetCode({
         <AuthDivider text="یا می‌توانید" />
 
         <div className="mt-8">
-          <OtpInput
-            onChange={setCode}
-            onCompleteChange={setIsCodeComplete}
-          />
+          <OtpInput onChange={setCode} onCompleteChange={setIsCodeComplete} />
         </div>
 
         {serverError && (
@@ -115,11 +107,7 @@ export default function VerifyResetCode({
         )}
 
         <div className="mt-10 grid grid-cols-2 gap-3">
-          <AuthButton
-            type="button"
-            onClick={onBack}
-            disabled={isSubmitting}
-          >
+          <AuthButton type="button" onClick={onBack} disabled={isSubmitting}>
             بازگشت
           </AuthButton>
 
