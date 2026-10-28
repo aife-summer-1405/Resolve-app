@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { ArrowLeft, Star } from "lucide-react";
 import Image from "next/image";
 import { IDestination } from "@/src/core/types/IDestination";
-import FileContainer from "../Ui/FileContainer";
+import FileContainer from "../../Ui/FileContainer";
 
 interface IDestinationCardProps {
   destination: IDestination & {

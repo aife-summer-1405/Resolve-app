@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, Clock3 } from "lucide-react";
 import { IOffer } from "@/src/core/types/IOffer";
 import Image from "next/image";
-import OfferCard from "../../cards/OfferCard";
+import OfferCard from "../../molecules/cards/OfferCard";
 
 const OffersSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
