@@ -3,6 +3,7 @@ import HeroSection from "../components/organisms/landing/HeroSection";
 import OffersSection from "../components/organisms/landing/OffersSection";
 import PopularDestinationsSection from "../components/organisms/landing/PopularDestinationsSection";
 import PropertyCategoriesSection from "../components/organisms/landing/PropertyCategoriesSection";
+import PropertyForSaleSection from "../components/organisms/landing/PropertyForSaleSection";
 import TestimonialsSection from "../components/organisms/landing/TestimonialsSection";
 
 const Landing = () => {
@@ -16,7 +17,7 @@ const Landing = () => {
       <OffersSection />
       <PopularDestinationsSection />
       <AboutUsSection />
-      <PopularDestinationsSection />
+      <PropertyForSaleSection />
       <TestimonialsSection />
     </div>
   );
