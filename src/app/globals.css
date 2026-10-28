@@ -55,14 +55,15 @@
   --color-timer: var(--timer);
   --color-big-box: var(--big-box);
   --color-green-footer: #8CFF45;
-  --font-sans: var(--font-geist-sans);
+
+  --font-sans: var(--font-vazirmatn);
   --font-mono: var(--font-geist-mono);
-}
+} 
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-vazirmatn), sans-serif;
 }
 
 .house-swiper .swiper-pagination-bullet {
