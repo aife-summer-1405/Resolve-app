@@ -1,12 +1,49 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import AuthLayout from "@/src/components/organisms/auth/AuthLayout";
 import SocialLogin from "@/src/components/organisms/auth/SocialLogin";
 import AuthDivider from "@/src/components/organisms/auth/AuthDivider";
-import AuthInput from "@/src/components/organisms/auth/AuthInput";
 import AuthButton from "@/src/components/organisms/auth/AuthButton";
+import AuthInput from "@/src/components/organisms/auth/AuthInput";
 import Link from "next/link";
 import Image from "next/image";
+import { actionRegister } from "@/src/actions/auth";
+import { IRegisterForm, registerSchema } from "@/src/schemas/auth/registerSchema";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [serverError, setServerError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<IRegisterForm>({
+    resolver: zodResolver(registerSchema),
+    mode: "onBlur",
+  });
+
+  const onSubmit = async (data: IRegisterForm) => {
+    setServerError("");
+
+    try {
+      const result = await actionRegister(data);
+
+      if (result.success) {
+        router.push("/verify");
+        return;
+      }
+
+      setServerError(result.message || "ارسال کد تأیید انجام نشد.");
+    } catch {
+      setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+    }
+  };
+
   return (
     <AuthLayout>
       <div className="text-right">
@@ -30,8 +67,7 @@ export default function RegisterPage() {
         </h1>
 
         <p className="mt-5 text-sm leading-7 text-white/75">
-          ! با وارد کردن اطلاعات خود به راحتی وارد پنل خودتون بشید و از پروژه
-          هاتون خبر بگیرید
+          با وارد کردن اطلاعات خود به راحتی وارد پنل خودتون بشید و از پروژه‌هاتون خبر بگیرید!
         </p>
 
         <div
@@ -54,21 +90,29 @@ export default function RegisterPage() {
         </div>
 
         <SocialLogin />
-
         <AuthDivider />
 
-        <form className="space-y-5" action="/verify" method="get">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <AuthInput
             id="email"
             label="ایمیل شما"
-            name="email"
             type="email"
             autoComplete="email"
             placeholder="مثال: name@email.com"
+            registration={register("email")}
+            error={errors.email}
           />
 
+          {serverError && (
+            <p role="alert" className="text-sm text-red-400">
+              {serverError}
+            </p>
+          )}
+
           <div className="mt-8">
-            <AuthButton>ارسال کد تأیید</AuthButton>
+            <AuthButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "در حال ارسال..." : "ارسال کد تأیید"}
+            </AuthButton>
           </div>
         </form>
       </div>
