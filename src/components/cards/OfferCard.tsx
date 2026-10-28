@@ -29,7 +29,7 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
         width="100%"
         height="188px"
         labelWidth="95px"
-        labelHeight="35px"
+        labelHeight="32px"
         tagHeight="24px"
         classNames={{
           base: "transition-colors duration-200",
@@ -40,7 +40,7 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
         label={
           <div className="flex h-full items-center justify-center">
             <div
-              className={`flex h-[25px] w-[58px] items-center gap-1 rounded-[10px] mt-2 text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200 ${
+              className={`flex h-[25px] w-[58px] items-center justify-center gap-1 rounded-[10px] mt-2 text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200 ${
                 hovered ? "bg-[#444444] text-white" : "bg-white text-[#292929]"
               }`}
             >
@@ -56,9 +56,7 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
         tag={
           <button
             type="button"
-            aria-label="مشاهده اقامتگاه"
-            onClick={(event) => event.stopPropagation()}
-            className={`pointer-events-auto ms-[10px] flex h-[24px] w-[40px] items-center justify-center rounded-[10px] transition-colors duration-200 ${
+            className={`flex items-center justify-center h-[22px] w-[45px] rounded-lg -mt-1 cursor-pointer ${
               hovered
                 ? "bg-[#8CFF45] text-[#292929]"
                 : "bg-[#414141] text-white"

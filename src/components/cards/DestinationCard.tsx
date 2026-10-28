@@ -1,6 +1,7 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
+import { ArrowLeft, Star } from "lucide-react";
 import Image from "next/image";
 import { IDestination } from "@/src/core/types/IDestination";
 import FileContainer from "../Ui/FileContainer";
@@ -18,53 +19,81 @@ const toFa = (value: number | string) =>
     .replace(".", "٫");
 
 const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
+  const [hovered, setHovered] = useState(false);
+
   const count = destination.count ?? 56;
   const score = destination.rating ?? 4.5;
 
   return (
-    <article className="group w-[306px] text-white">
+    <article
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="w-[306px] cursor-pointer text-white"
+    >
       <FileContainer
-        background="#393939"
+        background={hovered ? "#8CFF45" : "#393939"}
         radius="md"
         size="md"
-        label={
-          <span className="text-sm font-semibold text-white transition-colors duration-200 group-hover:text-[#2D2D2D]">
-            ★ {toFa(score)}
-          </span>
-        }
-        labelHeight="30px"
-        labelWidth="100px"
-        width="306px"
+        width="100%"
+        height="188px"
+        labelWidth="95px"
+        labelHeight="32px"
+        tagHeight="24px"
         classNames={{
-          base: "h-[240px] p-4 pt-[32px] !bg-[#393939] transition-colors duration-200 group-hover:!bg-[#8CFF45]",
-          innerLabel: "!p-0 flex justify-center items-center",
-          wrapperLabel:
-            "!bg-[#393939] transition-colors duration-200 group-hover:!bg-[#8CFF45]",
-          coverHollow:
-            "transition-colors duration-200 group-hover:!text-[#8CFF45]",
+          base: "transition-colors duration-200",
+          wrapperLabel: "transition-colors duration-200",
+          coverHollow: "transition-shadow duration-200",
+          innerLabel: "h-full p-0!",
         }}
+        label={
+          <div className="flex h-full items-center justify-center">
+            <div
+              className={`flex h-[25px] w-[58px] items-center justify-center gap-1 rounded-[10px] mt-2 text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200  ${
+                hovered ? "bg-[#444444] text-white" : "bg-white text-[#292929]"
+              }`}
+            >
+              <Star size={14} fill="currentColor" />
+              <span>{toFa(score)}</span>
+            </div>
+          </div>
+        }
+        tag={
+          <button
+            type="button"
+            className={`flex items-center justify-center h-[22px] w-[45px] rounded-lg -mt-1 cursor-pointer ${
+              hovered
+                ? "bg-[#8CFF45] text-[#292929]"
+                : "bg-[#414141] text-white"
+            }`}
+          >
+            <ArrowLeft size={18} />
+          </button>
+        }
       >
-        <div className="absolute inset-x-[18px] bottom-[30px] top-[54px] overflow-hidden rounded-[22px] bg-[#444]">
-          <Image
-            src={destination.image}
-            alt={destination.title}
-            fill
-            sizes="270px"
-            className="object-cover"
-          />
+        <div className="relative h-full px-[16px] pt-[22px]">
+          <div className="relative h-[124px] w-full overflow-hidden rounded-[22px] bg-[#444444]">
+            <Image
+              src={destination.image}
+              alt={destination.title}
+              fill
+              sizes="274px"
+              className="object-cover"
+            />
 
-          <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <span
-                key={index}
-                className="h-[7px] w-[7px] rounded-full bg-white/90"
-              />
-            ))}
+            <div className="absolute inset-x-0 bottom-[12px] z-10 flex items-center justify-center gap-[10px]">
+              <span className="h-0 w-0 border-x-[4px] border-b-[7px] border-x-transparent border-b-white" />
+              {[0, 1, 2, 3].map((dot) => (
+                <span
+                  key={dot}
+                  className="h-[7px] w-[7px] rounded-full bg-white/80"
+                />
+              ))}
+            </div>
           </div>
         </div>
       </FileContainer>
 
-      <div className="mt-4 flex items-center gap-1.5 pe-2">
+      <div className="mt-[16px] flex items-center gap-1.5 pe-2">
         <h3 className="text-[16px] font-semibold">{destination.title}</h3>
 
         <span className="text-[12px] text-white/50">({toFa(count)} مورد)</span>

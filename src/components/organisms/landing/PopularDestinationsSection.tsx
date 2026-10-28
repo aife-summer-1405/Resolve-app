@@ -81,12 +81,9 @@ const PopularDestinationsSection: FC = () => {
   ];
 
   return (
-    <main
-      dir="rtl"
-      className="relative mx-auto w-full max-w-full overflow-x-clip bg-big-box text-foreground"
-    >
+    <main className=" relative mx-auto w-full max-w-full overflow-x-clip bg-big-box text-foreground rounded-b-[64px]">
       <section className="relative px-5 pb-16 pt-20">
-        <div className="pointer-events-none absolute left-0 top-0 h-[300px] w-[300px] rounded-full bg-[#8CFF45]/10 blur-[100px]" />
+        <div className="pointer-events-none absolute -left-16 top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px]" />
 
         <div className="relative mx-auto w-full max-w-[1240px]">
           <div className="mb-8 text-center">
