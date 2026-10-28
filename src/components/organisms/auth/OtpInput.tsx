@@ -3,28 +3,35 @@
 
 import { useRef, useState } from "react";
 
-const OTP_LENGTH = 5;
+const OTP_LENGTH = 6;
 
-type OtpInputProps = {
+interface IOtpInputProps {
   onCompleteChange: (complete: boolean) => void;
-};
+  onChange: (value: string) => void;
+}
 
 export default function OtpInput({
   onCompleteChange,
-}: OtpInputProps) {
+  onChange,
+}: IOtpInputProps) {
   const [digits, setDigits] = useState<string[]>(
     Array(OTP_LENGTH).fill("")
   );
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  function updateDigits(nextDigits: string[]) {
+    setDigits(nextDigits);
+    onChange(nextDigits.join(""));
+    onCompleteChange(nextDigits.every((digit) => digit !== ""));
+  }
+
   function handleChange(value: string, index: number) {
     const digit = value.replace(/\D/g, "").slice(-1);
     const nextDigits = [...digits];
-    nextDigits[index] = digit;
 
-    setDigits(nextDigits);
-    onCompleteChange(nextDigits.every((item) => item !== ""));
+    nextDigits[index] = digit;
+    updateDigits(nextDigits);
 
     if (digit && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
@@ -36,16 +43,16 @@ export default function OtpInput({
     index: number
   ) {
     if (event.key === "Backspace") {
+      event.preventDefault();
+
       const nextDigits = [...digits];
 
       if (digits[index]) {
         nextDigits[index] = "";
-        setDigits(nextDigits);
-        onCompleteChange(false);
+        updateDigits(nextDigits);
       } else if (index > 0) {
         nextDigits[index - 1] = "";
-        setDigits(nextDigits);
-        onCompleteChange(false);
+        updateDigits(nextDigits);
         inputRefs.current[index - 1]?.focus();
       }
     }
@@ -76,8 +83,7 @@ export default function OtpInput({
       nextDigits[index] = digit;
     });
 
-    setDigits(nextDigits);
-    onCompleteChange(nextDigits.every((item: string) => item !== ""));
+    updateDigits(nextDigits);
 
     const nextIndex = Math.min(
       pastedDigits.length,
