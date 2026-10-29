@@ -10,7 +10,7 @@ interface IHeaderProps {
 
 const links = [
   { label: "رزرو سریع", href: "/HouseReserve", hasMenu: true },
-  { label: "رهن و اجاره", href: "/rah", hasMenu: true },
+  { label: "رهن و اجاره", href: "/Mortgage", hasMenu: true },
   { label: "درباره دلتا", href: "#about" },
   { label: "مقالات ما", href: "#blog" },
   { label: "تماس با ما", href: "#contact" },
