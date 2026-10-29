@@ -117,9 +117,11 @@ const OfferCard: FC<IOfferCardProps> = ({
                       event.stopPropagation();
                       setActiveImageIndex(index);
                     }}
-                    className={`h-[7px] w-[7px] rounded-full transition-colors ${
-                      activeImageIndex === index ? "bg-white" : "bg-white/50"
-                    }`}
+                    className={
+                      activeImageIndex === index
+                        ? "h-0 w-0 border-x-[4px] border-b-[7px] border-x-transparent border-b-[#8CFF45]"
+                        : "h-[7px] w-[7px] rounded-full bg-white/50"
+                    }
                   />
                 ))}
               </div>

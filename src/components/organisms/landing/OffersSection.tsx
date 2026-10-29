@@ -32,7 +32,7 @@ const OffersSection = () => {
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % offers.length);
-    }, 4000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [offers.length]);
