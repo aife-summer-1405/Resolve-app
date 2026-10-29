@@ -3,11 +3,11 @@
 import { FC, useState } from "react";
 import { ArrowLeft, Star } from "lucide-react";
 import Image from "next/image";
-import { IDestination } from "@/src/core/types/IDestination";
 import FileContainer from "../../Ui/FileContainer";
+import { House } from "@/src/services/houseService";
 
 interface IDestinationCardProps {
-  destination: IDestination & {
+  destination: House & {
     rating?: number;
     count?: number;
   };
@@ -24,11 +24,15 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
   const count = destination.count ?? 56;
   const score = destination.rating ?? 4.5;
 
+  const photos = destination.photos ?? [];
+
+  const image = photos[2] || photos[0] || "/images/offer.jpg";
+
   return (
     <article
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="w-[306px] cursor-pointer text-white"
+      className="w-full cursor-pointer text-white"
     >
       <FileContainer
         background={hovered ? "#8CFF45" : "#393939"}
@@ -48,7 +52,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
         label={
           <div className="flex h-full items-center justify-center">
             <div
-              className={`flex h-[25px] w-[58px] items-center justify-center gap-1 rounded-[10px] mt-2 text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200  ${
+              className={`mt-2 flex h-[25px] w-[58px] items-center justify-center gap-1 rounded-[10px] text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200 ${
                 hovered ? "bg-[#444444] text-white" : "bg-white text-[#292929]"
               }`}
             >
@@ -60,7 +64,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
         tag={
           <button
             type="button"
-            className={`flex items-center justify-center h-[22px] w-[45px] rounded-lg -mt-1 cursor-pointer ${
+            className={`-mt-1 flex h-[22px] w-[45px] cursor-pointer items-center justify-center rounded-lg ${
               hovered
                 ? "bg-[#8CFF45] text-[#292929]"
                 : "bg-[#414141] text-white"
@@ -71,24 +75,14 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
         }
       >
         <div className="relative h-full px-[16px] pt-[22px]">
-          <div className="relative h-[124px] w-full overflow-hidden rounded-[22px] bg-[#444444]">
+          <div className="relative h-[150px] w-full overflow-hidden rounded-[22px] bg-[#444444]">
             <Image
-              src={destination.image}
-              alt={destination.title}
+              src={image}
+              alt={destination.title || "تصویر مقصد"}
               fill
-              sizes="274px"
+              sizes="(max-width: 768px) 260px, 274px"
               className="object-cover"
             />
-
-            <div className="absolute inset-x-0 bottom-[12px] z-10 flex items-center justify-center gap-[10px]">
-              <span className="h-0 w-0 border-x-[4px] border-b-[7px] border-x-transparent border-b-white" />
-              {[0, 1, 2, 3].map((dot) => (
-                <span
-                  key={dot}
-                  className="h-[7px] w-[7px] rounded-full bg-white/80"
-                />
-              ))}
-            </div>
           </div>
         </div>
       </FileContainer>
