@@ -1,21 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoveLeft } from "lucide-react";
 import Image from "next/image";
 import FileContainer from "@/src/components/Ui/FileContainer";
-
-const categories = [
-  { label: "ملک ویلایی", icon: "/icons/v.png" },
-  { label: "ملک کلبه", icon: "/icons/k.png" },
-  { label: "بومگردی", icon: "/icons/B.png" },
-  { label: "استخردار", icon: "/icons/A.png" },
-  { label: "ملک ساحلی", icon: "/icons/k.png" },
-  { label: "آپارتمان", icon: "/icons/p.png" },
-];
+import type { ICategories } from "@/src/types/CategoriesType";
+import { getCategories } from "@/src/services/getCategoryService";
 
 const PropertyCategoriesSection = () => {
+  const [categories, setCategories] = useState<ICategories[]>([]);
   const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategories();
+        setCategories(response.data);
+      } catch (error) {
+        console.error("دریافت دسته‌بندی‌ها ناموفق بود", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <section className="relative mb-30 w-full overflow-hidden px-5 pb-16 pt-30 text-white">
@@ -43,17 +50,17 @@ const PropertyCategoriesSection = () => {
           </p>
         </div>
 
-        <div className="mt-8 overflow-x-auto pb-3 pt-9 scrollbar-hide">
+        <div className="category-scroll mt-8 overflow-x-auto pb-3 pt-9">
           <div className="flex min-w-max items-start gap-4 px-1">
             {categories.map((category) => {
-              const isActive = active === category.label;
+              const isActive = active === category.id;
 
               return (
                 <div
-                  key={category.label}
-                  onMouseEnter={() => setActive(category.label)}
+                  key={category.id}
+                  onMouseEnter={() => setActive(category.id)}
                   onMouseLeave={() => setActive(null)}
-                  onFocus={() => setActive(category.label)}
+                  onFocus={() => setActive(category.id)}
                   onBlur={() => setActive(null)}
                 >
                   <FileContainer
@@ -75,7 +82,7 @@ const PropertyCategoriesSection = () => {
                     label={
                       <div className="pointer-events-none absolute right-[15px] top-[-28px] z-50 flex size-[58px] items-center justify-center rounded-[16px] bg-[#393939]">
                         <Image
-                          src={category.icon}
+                          src="/icons/v.png"
                           alt=""
                           width={56}
                           height={56}
@@ -95,7 +102,7 @@ const PropertyCategoriesSection = () => {
                     >
                       <span className="flex items-center gap-2 whitespace-nowrap text-[16px]">
                         <span>✦</span>
-                        {category.label}
+                        {category.name}
                         <span>✦</span>
                       </span>
                     </button>

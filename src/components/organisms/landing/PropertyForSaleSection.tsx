@@ -1,71 +1,35 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import { IOffer } from "@/src/core/types/IOffer";
 import OfferCard from "../../molecules/cards/OfferCard";
+import OfferCardSkeleton from "../../Skeletons/OfferCardSkeleton";
+import { getHouses, type House } from "@/src/services/houseService";
+
+const VISIBLE_CARDS = 4;
 
 const PropertyForSaleSection: FC = () => {
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
+  const [offers, setOffers] = useState<House[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const offers: IOffer[] = [
-    {
-      id: "1",
-      title: "آپارتمان لوکس زعفرانیه",
-      image: "/images/offer.jpg",
-      rating: 4.5,
-      discount: 15,
-      location: "گیلان، رشت",
-      amenities: "۴ خوابه، ۱ پارکینگ، ۲ حمام، حیاط",
-      originalPrice: 5000000,
-      price: 5000000,
-    },
-    {
-      id: "2",
-      title: "آپارتمان لوکس زعفرانیه",
-      image: "/images/offer.jpg",
-      rating: 4.5,
-      discount: 15,
-      location: "گیلان، رشت",
-      amenities: "۴ خوابه، ۱ پارکینگ، ۲ حمام، حیاط",
-      originalPrice: 5000000,
-      price: 5000000,
-    },
-    {
-      id: "3",
-      title: "آپارتمان لوکس زعفرانیه",
-      image: "/images/offer.jpg",
-      rating: 4.5,
-      discount: 15,
-      location: "گیلان، رشت",
-      amenities: "۴ خوابه، ۱ پارکینگ، ۲ حمام، حیاط",
-      originalPrice: 5000000,
-      price: 5000000,
-    },
-    {
-      id: "4",
-      title: "آپارتمان لوکس زعفرانیه",
-      image: "/images/offer.jpg",
-      rating: 4.5,
-      discount: 15,
-      location: "گیلان، رشت",
-      amenities: "۴ خوابه، ۱ پارکینگ، ۲ حمام، حیاط",
-      originalPrice: 5000000,
-      price: 5000000,
-    },
-    {
-      id: "5",
-      title: "آپارتمان لوکس زعفرانیه",
-      image: "/images/offer.jpg",
-      rating: 4.5,
-      discount: 15,
-      location: "گیلان، رشت",
-      amenities: "۴ خوابه، ۱ پارکینگ، ۲ حمام، حیاط",
-      originalPrice: 5000000,
-      price: 5000000,
-    },
-  ];
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const response = await getHouses();
+        setOffers(response.houses);
+      } catch (error) {
+        console.error("خطا در دریافت ملک‌های قابل فروش:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOffers();
+  }, []);
+
+  const dotsCount = Math.max(offers.length - VISIBLE_CARDS + 1, 1);
 
   return (
     <section className="relative w-full overflow-hidden rounded-b-[64px] bg-[#2D2D2D] px-5 pb-16 pt-[240px] text-white shadow-[0_12px_32px_0_rgba(0,0,0,0.06)] md:px-8 lg:min-h-[1671px]">
@@ -96,35 +60,61 @@ const PropertyForSaleSection: FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 justify-items-center gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {offers.map((offer, index) => (
-            <OfferCard
-              key={offer.id}
-              offer={offer}
-              isActive={activeOfferIndex === index}
-              onClick={() => setActiveOfferIndex(index)}
-            />
-          ))}
+        <div className="overflow-hidden pt-1">
+          {isLoading ? (
+            <div className="flex items-start gap-5">
+              {Array.from({ length: VISIBLE_CARDS }).map((_, index) => (
+                <div
+                  key={index}
+                  className="w-[306px] min-w-[306px] shrink-0 lg:w-[calc((100%-60px)/4)] lg:min-w-0"
+                >
+                  <OfferCardSkeleton />
+                </div>
+              ))}
+            </div>
+          ) : offers.length === 0 ? (
+            <div className="flex min-h-[250px] items-center justify-center text-center text-white/60">
+              در حال حاضر ملکی برای نمایش وجود ندارد.
+            </div>
+          ) : (
+            <div
+              className="flex items-start gap-5 transition-transform duration-700 ease-in-out"
+              style={{
+                transform: `translateX(calc(${activeOfferIndex} * (100% / 4 + 5px)))`,
+              }}
+            >
+              {offers.map((offer) => (
+                <div
+                  key={offer.id}
+                  className="w-[306px] min-w-[306px] shrink-0 lg:w-[calc((100%-60px)/4)] lg:min-w-0"
+                >
+                  <OfferCard offer={offer} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="mt-12 flex items-center justify-center gap-2">
-          {offers.map((offer, index) => (
-            <button
-              key={offer.id}
-              type="button"
-              aria-label={`انتخاب کارت ${index + 1}`}
-              aria-pressed={activeOfferIndex === index}
-              onClick={() => setActiveOfferIndex(index)}
-              className="flex h-[10px] w-[10px] items-center justify-center"
-            >
-              {activeOfferIndex === index ? (
-                <span className="h-0 w-0 border-x-[5px] border-b-[8px] border-x-transparent border-b-[#8CFF45]" />
-              ) : (
-                <span className="h-[6px] w-[6px] rounded-full bg-white/70" />
-              )}
-            </button>
-          ))}
-        </div>
+        {!isLoading && offers.length > VISIBLE_CARDS && (
+          <div className="mt-12 flex items-center justify-center gap-2">
+            {Array.from({ length: dotsCount }).map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                aria-label={`نمایش گروه ${index + 1}`}
+                aria-pressed={activeOfferIndex === index}
+                onClick={() => setActiveOfferIndex(index)}
+                className="flex h-[10px] w-[10px] items-center justify-center"
+              >
+                {activeOfferIndex === index ? (
+                  <span className="h-0 w-0 border-x-[5px] border-b-[8px] border-x-transparent border-b-[#8CFF45]" />
+                ) : (
+                  <span className="h-[6px] w-[6px] rounded-full bg-white/70" />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
