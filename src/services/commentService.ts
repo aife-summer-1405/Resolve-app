@@ -1,15 +1,10 @@
-import api from "@/lib/axios";
+import apiClient from "@/lib/client";
+import { ICreateComment } from "../types/HousereservesType/housereserveType";
 
-export interface ICreateComment {
-    house_id: string;
-    title: string;
-    caption: string;
-    rating: number;
-    parent_comment_id: string | null;
-}
+
 
 export const createComment = async (data: ICreateComment) => {
-    const response = await api.post("/api/comments", data);
+    const response = await apiClient.post("/api/comments", data);
 
     return response.data;
 };

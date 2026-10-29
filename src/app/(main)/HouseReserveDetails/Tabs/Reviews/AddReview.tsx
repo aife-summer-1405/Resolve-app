@@ -21,7 +21,7 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
     const replyId = useReplyStore((s) => s.replyId);
     const clearReply = useReplyStore((s) => s.clearReply);
 
-const { mutate, isPending, isError } = useCreateComment(houseId);
+    const { mutate, isPending, isError } = useCreateComment(houseId);
     const resetForm = () => {
         setName("");
         setEmail("");
@@ -32,7 +32,9 @@ const { mutate, isPending, isError } = useCreateComment(houseId);
 
     const handleSubmit = () => {
         if (!caption.trim()) return;
-
+        console.log(2222, replyId)
+        console.log("replyId:", replyId);
+console.log("parent_comment_id:", replyId ? String(replyId) : null);
         mutate(
             {
                 house_id: houseId,
@@ -60,39 +62,39 @@ const { mutate, isPending, isError } = useCreateComment(houseId);
             }}
         >
             {replyId ? (
-                    <div className="  md:hidden">
-                        <Field legend="برای نظر">
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(event) => setTitle(event.target.value)}
-                                placeholder="عنوان پاسخ"
-                                className="w-full bg-transparent outline-none"
-                            />
-                        </Field>
-                    </div>
-                ) : (
-                    <div className="  md:hidden">
-                        <Field legend="امتیاز شما">
-                            <div className="flex w-full flex-row-reverse items-center gap-4 rounded-xl">
-                                <div className="flex flex-row-reverse items-center gap-1">
-                                    <Star className="size-4 fill-current" />
-                                    <span>{rating[0]}</span>
-                                </div>
-
-                                <Slider
-                                    dir="rtl"
-                                    min={0}
-                                    max={5}
-                                    step={0.5}
-                                    value={rating}
-                                    onValueChange={setRating}
-                                    className="w-full"
-                                />
+                <div className="  md:hidden">
+                    <Field legend="برای نظر">
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(event) => setTitle(event.target.value)}
+                            placeholder="عنوان پاسخ"
+                            className="w-full bg-transparent outline-none"
+                        />
+                    </Field>
+                </div>
+            ) : (
+                <div className="  md:hidden">
+                    <Field legend="امتیاز شما">
+                        <div className="flex w-full flex-row-reverse items-center gap-4 rounded-xl">
+                            <div className="flex flex-row-reverse items-center gap-1">
+                                <Star className="size-4 fill-current" />
+                                <span>{rating[0]}</span>
                             </div>
-                        </Field>
-                    </div>
-                )}
+
+                            <Slider
+                                dir="rtl"
+                                min={0}
+                                max={5}
+                                step={0.5}
+                                value={rating}
+                                onValueChange={setRating}
+                                className="w-full"
+                            />
+                        </div>
+                    </Field>
+                </div>
+            )}
             <div className="flex flex-row gap-2">
                 <div className="w-2/4 md:w-1/4">
                     <Field legend="نام">
@@ -106,7 +108,7 @@ const { mutate, isPending, isError } = useCreateComment(houseId);
                     </Field>
                 </div>
 
-             <div className="w-2/4 md:w-1/4">
+                <div className="w-2/4 md:w-1/4">
                     <Field legend="ایمیل">
                         <input
                             type="email"
