@@ -6,7 +6,7 @@
   --background: #e2e3e5;
   --foreground: #171717;
   --surface: #ffffff;
-  --card:  #ffffff;
+  --card: #ffffff;
   --card-2: #838383;
   --card-border: #393939;
   --slider: #cfcfcf;
@@ -14,7 +14,7 @@
   --muted: #666666;
   --textgray: #302e2e;
   --spangray: #959292;
-  --blue-primary: #5B4BDB;
+  --blue-primary: #5b4bdb;
   --big-box: #838181;
   --timer: #7862ff;
 }
@@ -31,9 +31,9 @@
   --slider: #444444;
   --border: #ffffff;
   --muted: #ffffff80;
-  --textgray: #AAAAAA;
+  --textgray: #aaaaaa;
   --spangray: #565656;
-  --big-box: #2D2D2D;
+  --big-box: #2d2d2d;
   --timer: #7862ff;
 }
 
@@ -54,11 +54,11 @@
   --color-blue-primary: var(--blue-primary);
   --color-timer: var(--timer);
   --color-big-box: var(--big-box);
-  --color-green-footer: #8CFF45;
+  --color-green-footer: #8cff45;
 
   --font-sans: var(--font-vazirmatn);
   --font-mono: var(--font-geist-mono);
-} 
+}
 
 body {
   background: var(--background);
@@ -74,4 +74,15 @@ body {
 .house-swiper .swiper-pagination-bullet-active {
   background-color: #91ff45;
   opacity: 1;
+}
+
+.category-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }

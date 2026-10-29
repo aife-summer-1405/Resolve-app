@@ -2,18 +2,46 @@
 
 import { FC, useState } from "react";
 import { ArrowLeft, Building2, MapPin, Star } from "lucide-react";
-import Image from "next/image";
+
 import FileContainer from "@/src/components/Ui/FileContainer";
-import { IOffer } from "@/src/core/types/IOffer";
+import { House } from "@/src/services/houseService";
+import OfferCardSkeleton from "../../Skeletons/OfferCardSkeleton";
+import ImageFallback from "../ImageFallBack/ImageFallBack";
 
 interface IOfferCardProps {
-  offer: IOffer;
+  offer: House;
   isActive?: boolean;
+  isLoading?: boolean;
   onClick?: () => void;
 }
 
-const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
+const OfferCard: FC<IOfferCardProps> = ({
+  offer,
+  isLoading = false,
+  onClick,
+}) => {
   const [hovered, setHovered] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  if (isLoading) {
+    return <OfferCardSkeleton />;
+  }
+
+  const originalPrice = Number(offer.price) || 0;
+
+  const price =
+    offer.discounted_price !== null
+      ? Number(offer.discounted_price) || 0
+      : originalPrice;
+
+  const discount =
+    originalPrice > 0 && price < originalPrice
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
+      : 0;
+
+  const images = offer.photos?.length ? offer.photos : ["/images/offer.jpg"];
+
+  const image = images[activeImageIndex] || images[0];
 
   return (
     <article
@@ -40,13 +68,13 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
         label={
           <div className="flex h-full items-center justify-center">
             <div
-              className={`flex h-[25px] w-[58px] items-center justify-center gap-1 rounded-[10px] mt-2 text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200 ${
+              className={`mt-2 flex h-[25px] w-[58px] items-center justify-center gap-1 rounded-[10px] text-[11px] font-semibold shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A] transition-colors duration-200 ${
                 hovered ? "bg-[#444444] text-white" : "bg-white text-[#292929]"
               }`}
             >
               <Star size={14} fill="currentColor" />
               <span>
-                {offer.rating.toLocaleString("fa-IR", {
+                {(Number(offer.rate) || 0).toLocaleString("fa-IR", {
                   minimumFractionDigits: 1,
                 })}
               </span>
@@ -56,7 +84,7 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
         tag={
           <button
             type="button"
-            className={`flex items-center justify-center h-[22px] w-[45px] rounded-lg -mt-1 cursor-pointer ${
+            className={`-mt-1 flex h-[22px] w-[45px] cursor-pointer items-center justify-center rounded-lg ${
               hovered
                 ? "bg-[#8CFF45] text-[#292929]"
                 : "bg-[#414141] text-white"
@@ -68,23 +96,34 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
       >
         <div className="relative h-full px-[16px] pt-[14px]">
           <div className="relative h-[156px] w-full overflow-hidden rounded-[20px] bg-[#444444]">
-            <Image
-              src={offer.image}
-              alt={offer.title}
+            <ImageFallback
+              key={image}
+              src={image}
+              fallbackSrc="/images/offer.jpg"
+              alt={offer.title || "تصویر ملک"}
               fill
               sizes="274px"
               className="object-cover"
             />
 
-            <div className="absolute inset-x-0 bottom-[15px] flex items-center justify-center gap-[10px]">
-              <span className="h-0 w-0 border-x-[4px] border-b-[7px] border-x-transparent border-b-white" />
-              {[0, 1, 2, 3].map((dot) => (
-                <span
-                  key={dot}
-                  className="h-[7px] w-[7px] rounded-full bg-white/80"
-                />
-              ))}
-            </div>
+            {images.length > 1 && (
+              <div className="absolute inset-x-0 bottom-[15px] z-10 flex items-center justify-center gap-[10px]">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    aria-label={`نمایش تصویر ${index + 1}`}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setActiveImageIndex(index);
+                    }}
+                    className={`h-[7px] w-[7px] rounded-full transition-colors ${
+                      activeImageIndex === index ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </FileContainer>
@@ -94,19 +133,23 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
           {offer.title}
         </h3>
 
-        <span className="shrink-0 rounded-[12px] bg-[#FF545E] px-[10px] py-[6px] text-[12px] font-medium text-white">
-          ٪{offer.discount.toLocaleString("fa-IR")}
-        </span>
+        {discount > 0 && (
+          <span className="shrink-0 rounded-[12px] bg-[#FF545E] px-[10px] py-[6px] text-[12px] font-medium text-white">
+            ٪{discount.toLocaleString("fa-IR")}
+          </span>
+        )}
       </div>
 
       <div className="mt-[8px] flex items-center gap-[5px] px-[2px] text-[12px] text-white/50">
         <MapPin size={14} className="shrink-0" />
-        <span>{offer.location}</span>
+        <span>{offer.address || "آدرس ثبت نشده"}</span>
       </div>
 
       <div className="mt-[12px] flex items-center gap-[5px] px-[2px] text-[12px] text-white/50">
         <Building2 size={14} className="shrink-0" />
-        <span>{offer.amenities}</span>
+        <span>
+          {offer.rooms} خواب، {offer.capacity} نفر ظرفیت
+        </span>
       </div>
 
       <div
@@ -115,22 +158,26 @@ const OfferCard: FC<IOfferCardProps> = ({ offer, onClick }) => {
         }`}
       >
         <span className="shrink-0 text-[11px] font-semibold">
-          {offer.price.toLocaleString("fa-IR")}ت / هر شب
+          {price.toLocaleString("fa-IR")}ت / هر شب
         </span>
 
-        <span
-          className={`h-[16px] w-px shrink-0 ${
-            hovered ? "bg-black/20" : "bg-white/25"
-          }`}
-        />
+        {discount > 0 && (
+          <>
+            <span
+              className={`h-[16px] w-px shrink-0 ${
+                hovered ? "bg-black/20" : "bg-white/25"
+              }`}
+            />
 
-        <span
-          className={`truncate text-[10px] line-through ${
-            hovered ? "text-black/40" : "text-white/45"
-          }`}
-        >
-          {offer.originalPrice.toLocaleString("fa-IR")}ت
-        </span>
+            <span
+              className={`truncate text-[10px] line-through ${
+                hovered ? "text-black/40" : "text-white/45"
+              }`}
+            >
+              {originalPrice.toLocaleString("fa-IR")}ت
+            </span>
+          </>
+        )}
       </div>
     </article>
   );
