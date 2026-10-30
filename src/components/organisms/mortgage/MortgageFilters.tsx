@@ -6,7 +6,6 @@ import {
   Search,
   MapPin,
   ChevronDown,
-  SlidersHorizontal,
   ListFilter,
   Building2,
   Banknote,
@@ -34,9 +33,9 @@ interface MortgageFiltersProps {
 
 const initialFilters: MortgageFilterValues = {
   location: "",
-  propertyType: "apartment",
-  transactionType: "rent",
-  sort: "newest",
+  propertyType: "",
+  transactionType: "",
+  sort: "",
   search: "",
   minMortgage: "",
   maxMortgage: "",
@@ -54,7 +53,7 @@ const numberFieldClass =
 
 export default function MortgageFilters({
   onFilterChange,
-  propertyCount = 33,
+  propertyCount = 0,
 }: MortgageFiltersProps) {
   const [filters, setFilters] =
     useState<MortgageFilterValues>(initialFilters);
@@ -92,9 +91,10 @@ export default function MortgageFilters({
 
   return (
     <section dir="rtl" className="w-full text-white">
-      <div className="flex flex-col gap-3 rounded-[22px] bg-[#303030] p-3 lg:flex-row lg:items-center lg:gap-4 lg:px-3 lg:py-3">
 
+      <div className="flex flex-col gap-3 rounded-[22px] bg-[#303030] p-3 lg:flex-row lg:items-center lg:gap-4 lg:px-3 lg:py-3">
         <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+
           <div className="relative min-w-0">
             <label
               htmlFor="mortgage-search"
@@ -114,7 +114,7 @@ export default function MortgageFilters({
               onChange={(event) =>
                 updateFilter("search", event.target.value)
               }
-              placeholder="نام هتل مورد نظر..."
+              placeholder="نام ملک مورد نظر..."
               className={`${fieldClass} pr-9`}
             />
           </div>
@@ -140,11 +140,8 @@ export default function MortgageFilters({
               }
               className={`${fieldClass} appearance-none pl-8`}
             >
-              <option value="rent" className="bg-[#303030]">
-                رهن و اجاره
-              </option>
-              <option value="mortgage" className="bg-[#303030]">
-                رهن کامل
+              <option value="" disabled className="bg-[#303030]">
+                انتخاب نوع معامله
               </option>
             </select>
 
@@ -175,17 +172,8 @@ export default function MortgageFilters({
               }
               className={`${fieldClass} appearance-none pl-8`}
             >
-              <option value="" className="bg-[#303030]">
-                همه ملک‌ها
-              </option>
-              <option value="apartment" className="bg-[#303030]">
-                آپارتمان
-              </option>
-              <option value="villa" className="bg-[#303030]">
-                ویلا
-              </option>
-              <option value="house" className="bg-[#303030]">
-                خانه
+              <option value="" disabled className="bg-[#303030]">
+                انتخاب نوع ملک
               </option>
             </select>
 
@@ -216,14 +204,8 @@ export default function MortgageFilters({
               }
               className={`${fieldClass} appearance-none pl-8`}
             >
-              <option value="newest" className="bg-[#303030]">
-                جدیدترین آگهی‌ها
-              </option>
-              <option value="price-asc" className="bg-[#303030]">
-                ارزان‌ترین
-              </option>
-              <option value="price-desc" className="bg-[#303030]">
-                گران‌ترین
+              <option value="" disabled className="bg-[#303030]">
+                انتخاب ترتیب نمایش
               </option>
             </select>
 
@@ -261,11 +243,13 @@ export default function MortgageFilters({
               className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 text-white/70"
             />
           </div>
-          
+
         </div>
+
         <div className="order-2 flex shrink-0 items-center justify-center lg:order-none">
           <div className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[15px] border border-white/70 px-4 text-xs sm:w-auto">
             <Megaphone size={15} />
+
             <span>
               تعداد آگهی:{" "}
               <span className="font-bold">
@@ -274,9 +258,11 @@ export default function MortgageFilters({
             </span>
           </div>
         </div>
+
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-5 border-b border-white/25 px-1 pb-5 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_12px_1fr_1fr_12px_1fr_1fr] lg:items-center lg:gap-x-3">
+
         <NumberField
           id="mortgage-min-mortgage"
           label="حداقل رهن:"
@@ -302,7 +288,6 @@ export default function MortgageFilters({
         />
 
         <div className="hidden h-6 w-px justify-self-center bg-white/60 lg:block" />
-
         <NumberField
           id="mortgage-min-rent"
           label="حداقل اجاره:"
@@ -352,9 +337,11 @@ export default function MortgageFilters({
           formatNumber={formatNumber}
           className={numberFieldClass}
         />
+
       </div>
 
-       <div className="mt-4 flex flex-wrap items-center justify-start gap-3">
+      <div className="mt-4 flex flex-wrap items-center justify-start gap-3">
+
         <button
           type="button"
           onClick={applyFilters}
@@ -371,7 +358,9 @@ export default function MortgageFilters({
         >
           پاک کردن فیلترها
         </button>
+
       </div>
+
     </section>
   );
 }
@@ -397,6 +386,7 @@ function NumberField({
 }: NumberFieldProps) {
   return (
     <div className="relative min-w-0">
+
       <label
         htmlFor={id}
         className="absolute -top-[7px] right-3 z-10 bg-[#222222] px-1 text-[10px] text-white/60"
@@ -417,6 +407,7 @@ function NumberField({
       <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-white/60">
         {unit}
       </span>
+
     </div>
   );
 }

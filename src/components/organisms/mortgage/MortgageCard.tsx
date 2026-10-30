@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import {
   Star,
   MapPin,
@@ -29,14 +28,11 @@ interface MortgageCardProps {
 }
 
 export default function MortgageCard({ property }: MortgageCardProps) {
-  const [hovered, setHovered] = useState(false);
 
   return (
     <article
       dir="ltr"
       className="w-full pt-5"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       <FileContainer
         background="#393939"
@@ -55,11 +51,10 @@ export default function MortgageCard({ property }: MortgageCardProps) {
         }}
         label={null}
       >
-        <div
-          className={`h-full rounded-b-[24px] rounded-tl-[24px] p-[3px] transition-colors duration-200 
-           bg-[#393939]
-          `}
-        >
+
+          <div
+            className="group h-full rounded-b-[24px] rounded-tl-[24px] bg-[#393939] p-[3px] transition-colors duration-200"
+          >        
           <div className="grid h-full grid-cols-[minmax(0,1fr)_170px] gap-2 rounded-b-[20px] rounded-tl-[20px] bg-[#393939] p-2 sm:grid-cols-[minmax(0,1fr)_170px] sm:gap-3">
             <div
               dir="rtl"
@@ -108,22 +103,20 @@ export default function MortgageCard({ property }: MortgageCardProps) {
                 dir="ltr"
                 className="flex items-end justify-between gap-2"
               >
-                <Link
-                  href={`/HouseReserveDetails/${property.id}`}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-3 py-2 text-[10px] font-medium transition-colors sm:px-4 ${
-                    hovered
-                      ? "border-[#8CFF45] bg-[#8CFF45] text-black"
-                      : "border-[#91FF45] text-[#91FF45] hover:bg-[#91FF45] hover:text-black"
-                  }`}
-                >
-                  <span dir="rtl">مشاهده ملک</span>
-                  <span
-                    aria-hidden="true"
-                    className="text-base leading-none"
-                  >
-                    ‹
-                  </span>
-                </Link>
+
+            <Link
+              href={`/Mortgage/${property.id}`}
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-[#91FF45] px-3 py-2 text-[10px] font-medium text-[#91FF45] transition-colors duration-200 group-hover:border-[#8CFF45] group-hover:bg-[#8CFF45] group-hover:text-black sm:px-4"
+            >
+                <span
+                aria-hidden="true"
+                className="text-base leading-none"
+              >
+                ‹
+              </span>
+              <span dir="rtl">مشاهده ملک</span>
+
+            </Link>                
 
                 <p className="whitespace-nowrap text-left text-base font-bold text-[#91FF45] sm:text-lg">
                   {property.rent.toLocaleString("fa-IR")}
@@ -131,15 +124,15 @@ export default function MortgageCard({ property }: MortgageCardProps) {
               </div>
             </div>
 
-            <div className="relative h-full min-h-0 overflow-hidden rounded-[12px] bg-[#292929]">
+            <div className="relative h-full w-full overflow-hidden rounded-[12px]">
               <Image
                 src={property.image}
                 alt={property.title}
                 fill
-                sizes="(max-width: 640px) 155px, 170px"
-                className="object-cover transition-transform duration-300"
+                sizes="(max-width: 640px) 155px, 210px"
+                className="object-cover"
               />
-            </div>
+            </div>            
           </div>
         </div>
       </FileContainer>
