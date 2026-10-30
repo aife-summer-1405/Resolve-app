@@ -6,7 +6,7 @@ import AuthButton from "@/src/components/organisms/auth/AuthButton";
 import AuthDivider from "@/src/components/organisms/auth/AuthDivider";
 import SocialLogin from "@/src/components/organisms/auth/SocialLogin";
 import OtpInput from "@/src/components/organisms/auth/OtpInput";
-import { actionVerifyResetCode } from "@/src/actions/auth";
+import { actionVerifyResetCode } from "@/src/actions/authActions";
 import Link from "next/link";
 import { IVerifyResetCodeProps } from "@/src/types/AuthType/Authtype";
 
@@ -51,7 +51,7 @@ export default function VerifyResetCode({
     <AuthLayout>
       <div dir="rtl" className="text-right">
         <div className="text-xs text-white/50">
-          خانه　‹　
+          خانه　‹
           <span className="text-[#91FF45]">فراموشی رمز عبور</span>
         </div>
 

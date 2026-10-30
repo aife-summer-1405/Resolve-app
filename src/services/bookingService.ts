@@ -1,6 +1,6 @@
 import api from "@/lib/axios";
 import apiClient from "@/lib/client";
-import type { IBookingData } from "@/src/types/BookingType";
+import type { IBookingData } from "@/src/types/HousereservesType/BookingType";
 
 export const createBooking = async (data: IBookingData) => {
     const response = await apiClient.post("/api/bookings", data);

@@ -11,7 +11,7 @@ import OtpInput from "@/src/components/organisms/auth/OtpInput";
 import {
   actionResendOtp,
   actionVerifyOtp,
-} from "@/src/actions/auth";
+} from "@/src/actions/authActions";
 
 export default function VerifyPage() {
   const router = useRouter();

@@ -10,7 +10,7 @@ import AuthLayout from "@/src/components/organisms/auth/AuthLayout";
 import AuthButton from "@/src/components/organisms/auth/AuthButton";
 import AuthInput from "@/src/components/organisms/auth/AuthInput";
 
-import { actionRequestResetCode } from "@/src/actions/auth";
+import { actionRequestResetCode } from "@/src/actions/authActions";
 import { IRequestResetCodeForm, requestResetCodeSchema } from "@/src/schemas/auth/requestResetCodeSchema";
 
 interface IRequestResetCodeProps {
@@ -57,7 +57,7 @@ export default function RequestResetCode({
     <AuthLayout>
       <div className="text-right">
         <div className="text-xs text-white/50">
-          خانه　‹　
+          خانه　‹
           <span className="text-[#91FF45]">فراموشی رمز عبور</span>
         </div>
 

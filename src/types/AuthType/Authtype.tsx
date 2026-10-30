@@ -2,12 +2,14 @@ export interface ILoginResponse {
     accessToken: string;
     refreshToken?: string;
     message?: string;
+    user: {
+        id: number;
+    };
 }
-
 export interface IActionResponse {
   success: boolean;
   message?: string;
-  tempUserId?: number;
+  userId?: number;
 }
 export type AuthButtonProps = {
     children: React.ReactNode;
@@ -42,4 +44,25 @@ export interface IResetPasswordProps {
   email: string;
   code: string;
   onBack: () => void;
+}
+export interface IUser {
+    id: string;
+    role: string;
+    membershipDate: string | null;
+    email: string;
+    phoneNumber: string;
+    emailVerified: boolean;
+    fullName: string;
+    firstName: string;
+    lastName: string;
+    profilePicture: string | null;
+    createdAt: string;
+    updatedAt: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface IUserResponse {
+    user: IUser;
+    additionalPercentage: number;
 }

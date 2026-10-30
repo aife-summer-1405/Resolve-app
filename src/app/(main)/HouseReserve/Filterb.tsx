@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
-import type { IHouseFilters } from "@/src/types/HouseFilterType";
+import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import { fieldClass, iconClass, labelClass } from "./filterStyles";
 
 const DEBOUNCE_MS = 500;

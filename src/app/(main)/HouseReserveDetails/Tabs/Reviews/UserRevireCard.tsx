@@ -2,7 +2,7 @@
 import FolderBox from "@/src/components/Ui/FolderBox";
 import { CalendarRange, ChevronLeft, Star } from "lucide-react";
 import UserReply from "./UserReply";
-import type { IHouseComment } from "@/src/types/HouseCommentsType";
+import type { IHouseComment } from "@/src/types/HousereservesType/HouseCommentsType";
 import { useReplyStore } from "@/src/store/useReplyStore";
 
 interface IUserReviewCardProps {

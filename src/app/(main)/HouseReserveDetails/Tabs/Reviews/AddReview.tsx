@@ -29,29 +29,25 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
         setCaption("");
         setRating([4.5]);
     };
+const handleSubmit = () => {
+    if (!caption.trim()) return;
 
-    const handleSubmit = () => {
-        if (!caption.trim()) return;
-        console.log(2222, replyId)
-        console.log("replyId:", replyId);
-console.log("parent_comment_id:", replyId ? String(replyId) : null);
-        mutate(
-            {
-                house_id: houseId,
-                title: title.trim() || "نظر کاربر",
-                caption: caption.trim(),
-                rating: replyId ? 5 : rating[0],
-                parent_comment_id: replyId ? String(replyId) : null,
+    mutate(
+        {
+            house_id: Number(houseId),
+            title: title.trim() || "نظر کاربر",
+            caption: caption.trim(),
+            rating: replyId ? 5 : rating[0],
+            parent_comment_id: replyId ? Number(replyId) : null,
+        },
+        {
+            onSuccess: () => {
+                resetForm();
+                clearReply();
             },
-            {
-                onSuccess: () => {
-                    resetForm();
-                    clearReply();
-                },
-            }
-        );
-    };
-
+        }
+    );
+};
     return (
         <div
             className="flex flex-col gap-10 border-b-[3px] pb-10"

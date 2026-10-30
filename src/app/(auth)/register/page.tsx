@@ -11,7 +11,7 @@ import AuthButton from "@/src/components/organisms/auth/AuthButton";
 import AuthInput from "@/src/components/organisms/auth/AuthInput";
 import Link from "next/link";
 import Image from "next/image";
-import { actionRegister } from "@/src/actions/auth";
+import { actionRegister } from "@/src/actions/authActions";
 import { IRegisterForm, registerSchema } from "@/src/schemas/auth/registerSchema";
 
 export default function RegisterPage() {

@@ -1,4 +1,4 @@
-import type { IHouseDetails } from "@/src/types/HouseDetailType";
+import type { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 import {
   CarFront,
   Bath,
