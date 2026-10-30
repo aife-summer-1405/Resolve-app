@@ -3,64 +3,42 @@
 import { useEffect, useState } from "react";
 import { LucideCalendarDays, Star } from "lucide-react";
 import Image from "next/image";
-
-const testimonials = [
-  {
-    id: 1,
-    rating: "۴.۵",
-    comment:
-      "«لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربرد...»",
-    name: "محمد رضا ساداتی",
-    date: "۱۳ مرداد - ۱۴۰۴",
-    time: "۱۲:۳۳",
-  },
-  {
-    id: 2,
-    rating: "۴.۵",
-    comment:
-      "«لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربرد...»",
-    name: "محمد رضا ساداتی",
-    date: "۱۳ مرداد - ۱۴۰۴",
-    time: "۱۲:۳۳",
-  },
-  {
-    id: 3,
-    rating: "۵",
-    comment:
-      "«تجربه‌ی بسیار خوبی داشتم. فرایند استفاده از خدمات راحت بود و پشتیبانی هم به‌خوبی پاسخ‌گو بود.»",
-    name: "علی رضایی",
-    date: "۱۵ مرداد - ۱۴۰۴",
-    time: "۱۰:۲۰",
-  },
-  {
-    id: 4,
-    rating: "۴.۸",
-    comment:
-      "«محیط کاربری ساده و قابل فهم است و به‌راحتی می‌توان خدمات مورد نیاز را پیدا کرد.»",
-    name: "سارا محمدی",
-    date: "۱۸ مرداد - ۱۴۰۴",
-    time: "۱۶:۴۵",
-  },
-  {
-    id: 5,
-    rating: "۴.۸",
-    comment:
-      "«محیط کاربری ساده و قابل فهم است و به‌راحتی می‌توان خدمات مورد نیاز را پیدا کرد.»",
-    name: "سارا محمدی",
-    date: "۱۸ مرداد - ۱۴۰۴",
-    time: "۱۶:۴۵",
-  },
-];
+import FileContainer from "../../Ui/FileContainer";
+import { IHouseComment } from "@/src/types/HouseCommentsType";
+import { getAllComments } from "@/src/services/getAllComments";
 
 const TestimonialsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [comments, setComments] = useState<IHouseComment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const visibleCount =
     typeof window !== "undefined" && window.innerWidth < 768 ? 1 : 2;
 
-  const totalSlides = Math.ceil(testimonials.length / visibleCount);
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await getAllComments();
+        setComments(
+          response.comments.filter(
+            (comment) => comment.parent_comment_id === null,
+          ),
+        );
+      } catch (error) {
+        console.error("خطا در دریافت نظرات:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, []);
+
+  const totalSlides = Math.ceil(comments.length / visibleCount);
 
   useEffect(() => {
+    if (totalSlides <= 1) return;
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
     }, 4000);
@@ -68,10 +46,25 @@ const TestimonialsSection = () => {
     return () => clearInterval(interval);
   }, [totalSlides]);
 
-  const visibleTestimonials = testimonials.slice(
+  const visibleTestimonials = comments.slice(
     currentIndex * visibleCount,
     currentIndex * visibleCount + visibleCount,
   );
+
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString("fa-IR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  const formatTime = (date: string) => {
+    return new Date(date).toLocaleTimeString("fa-IR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <section className="relative w-full overflow-hidden px-5 py-8 text-white md:px-8 md:py-10">
@@ -86,7 +79,7 @@ const TestimonialsSection = () => {
             />
 
             <span className="text-[16px] font-medium text-[#8CFF45]">
-              نظرا کاربران
+              نظرات کاربران
             </span>
 
             <Image
@@ -101,71 +94,118 @@ const TestimonialsSection = () => {
             رضایت شما اعتبار و ارزش دلتا را می‌سازد!
           </h2>
 
-          <p className="mt-2 max-w-162.5 text-[16px] leading-5  md:text-[11px]">
+          <p className="mt-2 max-w-162.5 text-[16px] leading-5 md:text-[11px]">
             تیم دلتا با ارائه بهترین نیروهای خدماتی و سرویس‌های املاک سعی دارد
             تا بتواند در تمام لحظات کنار شما باشد.
           </p>
         </header>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-3">
-          {visibleTestimonials.map((testimonial) => (
-            <article
-              key={testimonial.id}
-              className="relative mt-2 flex h-77.25 w-full min-w-0 flex-col rounded-[24px] bg-[#393939] px-3 pb-3 pt-10 md:max-w-169.5"
-            >
-              <div className="absolute right-4 top-[-15px] flex h-[32px] w-16.75 items-center justify-center gap-1 rounded-lg bg-white text-[#292929] shadow-md">
-                <span className="text-[16px] font-semibold">
-                  {testimonial.rating}
-                </span>
-                <Star size={20} fill="currentColor" strokeWidth={1.5} />
-              </div>
+        {!isLoading && comments.length > 0 && (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-3">
+            {visibleTestimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                dir="rtl"
+                className="relative mt-2 w-full min-w-0"
+              >
+                <FileContainer
+                  background="#393939"
+                  radius="md"
+                  size="md"
+                  width="100%"
+                  height="260px"
+                  labelWidth="100px"
+                  labelHeight="32px"
+                  tagHeight="24px"
+                  classNames={{
+                    base: "w-full",
+                    innerLabel: "h-full p-0!",
+                  }}
+                  label={
+                    <div className="absolute right-5 top-[10px] z-50 flex h-[30px] w-[60px] items-center justify-center gap-1 rounded-[10px] bg-white text-[#292929] shadow-[0_4px_12px_0_#FFFFFF33,inset_-1px_-1px_8px_0_#0000000A]">
+                      <span className="text-[16px] font-semibold leading-none">
+                        {testimonial.rating}
+                      </span>
+                      <Star size={16} fill="currentColor" strokeWidth={1.5} />
+                    </div>
+                  }
+                  tag={<div className="h-full w-full" />}
+                >
+                  <div className="flex h-full flex-col px-3 pb-3 pt-[40px]">
+                    <p className="min-h-0 flex-1 px-1 text-right text-[16px] leading-[2.1] text-white/90">
+                      {testimonial.caption}
+                    </p>
 
-              <p className="min-h-0 flex-1 px-1 text-right text-[20px] leading-[2.1] text-white/90">
-                {testimonial.comment}
-              </p>
+                    <div className="flex h-[70px] w-full shrink-0 items-center justify-between rounded-2xl bg-[#444444]">
+                      <div className="mr-5 flex items-center gap-2">
+                        {testimonial.user.profilePicture ? (
+                          <Image
+                            src={testimonial.user.profilePicture}
+                            alt="تصویر کاربر"
+                            width={50}
+                            height={50}
+                            className="h-[50px] w-[50px] shrink-0 rounded-xl object-cover"
+                          />
+                        ) : (
+                          <div
+                            className="h-[50px] w-[50px] shrink-0 rounded-xl bg-[#D9D9D9]"
+                            aria-hidden="true"
+                          />
+                        )}
 
-              <div className="flex h-20.25 w-full shrink-0 items-center justify-between rounded-2xl bg-[#444444]">
-                <div className="mr-5 flex items-center gap-2">
-                  <div
-                    className="h-14.25 w-14.25 shrink-0 rounded-xl bg-[#D9D9D9]"
-                    aria-hidden="true"
-                  />
+                        <div className="text-right">
+                          <h3 className="text-[13px] font-medium text-white">
+                            {testimonial.user.firstName}{" "}
+                            {testimonial.user.lastName}
+                          </h3>
 
-                  <div className="text-right">
-                    <h3 className="text-[16px] font-medium text-white">
-                      {testimonial.name}
-                    </h3>
-
-                    <div className="mt-1 flex flex-wrap items-center gap-2 text-[16px] text-[#AAAAAA]">
-                      <LucideCalendarDays size={16} />
-                      <span>{testimonial.date}</span>
-                      <span>{testimonial.time}</span>
+                          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-[#AAAAAA]">
+                            <LucideCalendarDays size={15} />
+                            <span>{formatDate(testimonial.created_at)}</span>
+                            <span>{formatTime(testimonial.created_at)}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </FileContainer>
               </div>
-            </article>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        <div
-          className="mt-7 flex items-center justify-center gap-1.5"
-          aria-label="صفحه‌های نظرات"
-        >
-          {Array.from({ length: totalSlides }).map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`رفتن به صفحه ${index + 1}`}
-              className={
-                index === currentIndex
-                  ? "h-0 w-0 border-b-[7px] border-l-[4px] border-r-[4px] border-b-[#8CFF45] border-l-transparent border-r-transparent"
-                  : "h-1.25 w-1.25 rounded-full bg-white"
-              }
-            />
-          ))}
-        </div>
+        {!isLoading && comments.length === 0 && (
+          <p className="py-10 text-center text-white/60">
+            هنوز نظری ثبت نشده است.
+          </p>
+        )}
+
+        {isLoading && (
+          <p className="py-10 text-center text-white/60">
+            در حال دریافت نظرات...
+          </p>
+        )}
+
+        {totalSlides > 1 && (
+          <div
+            className="mt-7 flex items-center justify-center gap-1.5"
+            aria-label="صفحه‌های نظرات"
+          >
+            {Array.from({ length: totalSlides }).map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setCurrentIndex(index)}
+                aria-label={`رفتن به صفحه ${index + 1}`}
+                className={
+                  index === currentIndex
+                    ? "h-0 w-0 border-b-[7px] border-l-[4px] border-r-[4px] border-b-[#8CFF45] border-l-transparent border-r-transparent"
+                    : "h-1.25 w-1.25 rounded-full bg-white"
+                }
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
