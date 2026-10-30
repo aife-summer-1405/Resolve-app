@@ -15,6 +15,7 @@ import {
     HousesIcon,
     Minus,
     Plus,
+    User,
     Users,
 } from "lucide-react";
 
@@ -23,6 +24,8 @@ import type { IBookingData } from "@/src/types/HousereservesType/BookingType";
 import { useCreateBooking } from "@/src/hooks/useCreateBooking";
 import { useUserStore } from "@/src/store/userStore";
 import Field from "@/src/components/Ui/Field";
+import Link from "next/link";
+import LoginRequiredModal from "@/src/components/organisms/auth/LoginRequiredModal";
 
 interface IReservationBoxProps {
     result: IHouseDetails;
@@ -100,7 +103,7 @@ export default function ReservationBox({
     onReserve,
 }: IReservationBoxProps) {
     const user = useUserStore((state) => state.user);
-
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const [minDate, setMinDate] = useState<DateObject>();
     const [checkIn, setCheckIn] = useState<DateObject | null>(null);
     const [checkOut, setCheckOut] = useState<DateObject | null>(null);
@@ -108,15 +111,15 @@ export default function ReservationBox({
     const [bookingData, setBookingData] = useState<IBookingData>({
         houseId: Number(result.id),
         reservedDates: [],
-       traveler_details: [
-    {
-        firstName: user?.firstName || "کاربر",
-        lastName: user?.lastName || "کاربر",
-        gender: "female",
-        birthDate: "1996-01-01",
-        nationalId: "0000000000",
-    },
-],
+        traveler_details: [
+            {
+                firstName: user?.firstName || "کاربر",
+                lastName: user?.lastName || "کاربر",
+                gender: "female",
+                birthDate: "1996-01-01",
+                nationalId: "0000000000",
+            },
+        ],
         sharedEmail: user?.email ?? "",
         sharedMobile: user?.phoneNumber ?? "",
     });
@@ -145,10 +148,10 @@ export default function ReservationBox({
                 (traveler, index) =>
                     index === 0
                         ? {
-                              ...traveler,
-                              firstName: user.firstName ?? "",
-                              lastName: user.lastName ?? "",
-                          }
+                            ...traveler,
+                            firstName: user.firstName ?? "",
+                            lastName: user.lastName ?? "",
+                        }
                         : traveler,
             ),
         }));
@@ -164,9 +167,9 @@ export default function ReservationBox({
     const discountedPrice =
         result.discounted_price != null
             ? Math.max(
-                  0,
-                  Number(result.discounted_price) || 0,
-              )
+                0,
+                Number(result.discounted_price) || 0,
+            )
             : originalPrice;
 
     const pricePerNight = discountedPrice;
@@ -174,10 +177,10 @@ export default function ReservationBox({
     const discountPercent =
         originalPrice > 0 && discountedPrice < originalPrice
             ? Math.round(
-                  ((originalPrice - discountedPrice) /
-                      originalPrice) *
-                      100,
-              )
+                ((originalPrice - discountedPrice) /
+                    originalPrice) *
+                100,
+            )
             : 0;
 
     const maxGuests = Math.max(
@@ -214,7 +217,7 @@ export default function ReservationBox({
             date &&
             checkOut &&
             date.convert(gregorian).toDate().getTime() >=
-                checkOut.convert(gregorian).toDate().getTime()
+            checkOut.convert(gregorian).toDate().getTime()
         ) {
             setCheckOut(null);
             updateReservedDates(date, null);
@@ -260,13 +263,14 @@ export default function ReservationBox({
             };
         });
     }
-
     function handleReserve() {
-      console.log(222222222,user)
+        if (!user) {
+            setShowLoginModal(true);
+            return;
+        }
+
         if (!checkIn || !checkOut || nights < 1) {
-            toast.error(
-                "لطفاً تاریخ ورود و خروج را انتخاب کنید.",
-            );
+            toast.error("لطفاً تاریخ ورود و خروج را انتخاب کنید.");
             return;
         }
 
@@ -290,9 +294,7 @@ export default function ReservationBox({
 
         createBooking(reservationPayload, {
             onSuccess: () => {
-                toast.success(
-                    "درخواست رزرو با موفقیت ثبت شد",
-                );
+                toast.success("درخواست رزرو با موفقیت ثبت شد");
             },
             onError: () => {
                 toast.error("ثبت رزرو ناموفق بود");
@@ -481,6 +483,10 @@ export default function ReservationBox({
                     ? "در حال ثبت رزرو..."
                     : "همین الان رزرو کن"}
             </button>
+            <LoginRequiredModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+            />
         </aside>
     );
 }

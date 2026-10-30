@@ -7,10 +7,10 @@ import {
   MapPin,
   MessageSquare,
 } from "lucide-react";
-import type { IHouseDetails } from "@/src/types/HouseDetailType";
 import HouseFacilities from "@/src/app/(main)/HouseReserveDetails/Tabs/HouseFacilities";
 import ReviewForm from "./ReviewForm";
 import ReviewList from "./ReviewList";
+import { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 
 const tabs = [
   { id: "description", label: "توضیحات ملک", icon: FileText },

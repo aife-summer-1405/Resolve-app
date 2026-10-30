@@ -506,3 +506,21 @@ export async function getUserAction(): Promise<IUser | null> {
         return null;
     }
 }
+
+export async function logoutAction() {
+    const cookieStore = await cookies();
+
+    try {
+        await apiServer.post("/auth/logout");
+
+        return { success: true };
+    } catch (error) {
+        console.error("Logout error:", error);
+
+        return { success: false };
+    } finally {
+        cookieStore.delete("accessToken");
+        cookieStore.delete("refreshToken");
+        cookieStore.delete("userId");
+    }
+}
