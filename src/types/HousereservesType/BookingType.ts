@@ -13,3 +13,9 @@ export interface IBookingData {
     sharedEmail: string;
     sharedMobile: string;
 }
+
+export interface IBookingResult {
+    success: boolean;
+    data?: unknown;
+    message?: string;
+}

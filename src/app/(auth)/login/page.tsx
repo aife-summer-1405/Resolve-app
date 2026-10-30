@@ -11,8 +11,9 @@ import AuthDivider from "@/src/components/organisms/auth/AuthDivider";
 import AuthInput from "@/src/components/organisms/auth/AuthInput";
 import AuthButton from "@/src/components/organisms/auth/AuthButton";
 import { loginSchema, ILoginForm } from "@/src/schemas/auth/loginSchema";
-import { actionLogin } from "@/src/actions/auth";
+import { actionLogin, getUserAction } from "@/src/actions/authActions";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/src/store/userStore";
 export default function LoginPage() {
   const [serverError, setServerError] = useState("");
   const router = useRouter();
@@ -31,17 +32,23 @@ export default function LoginPage() {
     try {
       const result = await actionLogin(data);
 
-      if (result.success) {
-        router.push("/");
+      if (!result.success) {
+        setServerError(result.message || "ورود انجام نشد.");
         return;
       }
 
-      setServerError(result.message || "ورود انجام نشد.");
+      if (!result.userId) {
+        setServerError("شناسه کاربر از سرور دریافت نشد.");
+        return;
+      }
+
+  
+
+      router.push("/");
     } catch {
       setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
     }
   };
-
   return (
     <AuthLayout>
       <div className="text-right">

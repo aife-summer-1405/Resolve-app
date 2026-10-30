@@ -9,7 +9,7 @@ import Image from "next/image";
 import AuthLayout from "@/src/components/organisms/auth/AuthLayout";
 import AuthButton from "@/src/components/organisms/auth/AuthButton";
 import AuthInput from "@/src/components/organisms/auth/AuthInput";
-import { actionCompleteRegistration } from "@/src/actions/auth";
+import { actionCompleteRegistration } from "@/src/actions/authActions";
 import {
     type ICompleteRegistrationForm,
     completeRegistrationSchema,
@@ -51,7 +51,7 @@ export default function CompleteRegistrationPage() {
         <AuthLayout>
             <div className="text-right">
                 <div className="text-xs text-white/50">
-                    خانه　‹　
+                    خانه　‹
                     <span className="text-primary">
                         تکمیل حساب کاربری
                     </span>

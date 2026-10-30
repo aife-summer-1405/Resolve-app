@@ -1,5 +1,5 @@
 import { getHouses, type House } from "@/src/services/houseService";
-import type { IHouseFilters } from "@/src/types/HouseFilterType";
+import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import { Filterbottom } from "../Filterb";
 import { HouseMap, type MapMarker } from "../HouseMap";
 import HotelCard from "../HotelCard";

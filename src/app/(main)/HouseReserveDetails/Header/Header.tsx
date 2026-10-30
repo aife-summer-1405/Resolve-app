@@ -1,4 +1,4 @@
-import { IHouseDetails } from "@/src/types/HouseDetailType";
+import { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 import HeaderSlider from "./Slider";
 interface IHeader {
   result: IHouseDetails;

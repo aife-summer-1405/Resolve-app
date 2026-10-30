@@ -22,6 +22,8 @@ import {
     ICompleteRegistrationResponse,
     ILoginResponse,
     IResetPasswordRequest,
+    IUser,
+    IUserResponse,
     IVerifyOtpRequest,
     IVerifyResetCodeRequest,
 } from "../types/AuthType/Authtype";
@@ -44,12 +46,12 @@ export async function actionLogin(
             validation.data,
         );
 
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken, user } = response.data;
 
-        if (!accessToken) {
+        if (!accessToken || !user?.id) {
             return {
                 success: false,
-                message: "توکن ورود از سرور دریافت نشد.",
+                message: "اطلاعات ورود از سرور کامل دریافت نشد.",
             };
         }
 
@@ -73,9 +75,18 @@ export async function actionLogin(
             });
         }
 
+        cookieStore.set("userId", String(user.id), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 24 * 30,
+        });
+
         return {
             success: true,
             message: "ورود با موفقیت انجام شد.",
+            userId: user.id,
         };
     } catch (error) {
         if (isAxiosError(error)) {
@@ -93,7 +104,6 @@ export async function actionLogin(
         };
     }
 }
-
 export async function actionRegister(
     raw: IRegisterForm,
 ): Promise<IActionResponse> {
@@ -468,5 +478,30 @@ export async function actionResetPassword(
             success: false,
             message: "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
         };
+    }
+}
+export async function getUserAction(): Promise<IUser | null> {
+    try {
+        const cookieStore = await cookies();
+        const userId = cookieStore.get("userId")?.value;
+
+        if (!userId || !/^\d+$/.test(userId)) {
+            return null;
+        }
+
+        const response = await apiServer.get<IUserResponse>(
+            `/api/users/${userId}`,
+        );
+
+        return response.data.user;
+    } catch (error) {
+        if (isAxiosError(error)) {
+            console.error(
+                "Get user error:",
+                error.response?.data?.message,
+            );
+        }
+
+        return null;
     }
 }

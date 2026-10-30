@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { MainPartContent } from "./MainPartContent";
-import { IHouseFilters } from "@/src/types/HouseFilterType";
+import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import { MainPartLoading } from "./MainPartLoading";
 
 interface MainPartProps {

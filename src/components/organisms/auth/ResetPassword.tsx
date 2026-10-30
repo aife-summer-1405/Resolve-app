@@ -11,7 +11,7 @@ import {
   resetPasswordSchema,
   type IResetPasswordForm,
 } from "@/src/schemas/auth/resetPasswordSchema";
-import { actionResetPassword } from "@/src/actions/auth";
+import { actionResetPassword } from "@/src/actions/authActions";
 import { IResetPasswordProps } from "@/src/types/AuthType/Authtype";
 
 export default function ResetPassword({

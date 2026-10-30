@@ -6,7 +6,7 @@ import type { Swiper as SwiperType } from "swiper";
 import { Pagination, Thumbs } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { IHouseDetails } from "@/src/types/HouseDetailType";
+import { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 
 interface Isliderprops {
   result: IHouseDetails;

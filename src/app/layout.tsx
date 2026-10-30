@@ -4,6 +4,8 @@ import QueryProvider from "@/src/providers/QueryProvider";
 import ThemeProvider from "@/src/providers/ThemeProvider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import UserProvider from "../providers/UserProvider";
+import { getUserAction } from "../actions/authActions";
 
 const vazirmatn = localFont({
   src: [
@@ -61,34 +63,39 @@ export const metadata: Metadata = {
   description: "رزرو و مشاهده اقامتگاه‌ها",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
+export default async function RootLayout({
+    children,
+}: LayoutProps<"/">) {
+    const user = await getUserAction();
+
+    return (
         <html
-          lang="fa"
-          suppressHydrationWarning
-          className={`${vazirmatn.variable} h-full antialiased`}
+            lang="fa"
+            suppressHydrationWarning
+            className={`${vazirmatn.variable} h-full antialiased`}
         >
+            <body className="flex min-h-full flex-col bg-background">
+                <ThemeProvider>
+                    <QueryProvider>
+                        <UserProvider initialUser={user}>
+                            {children}
+                        </UserProvider>
 
-      <body className="flex min-h-full flex-col bg-background">
-        <ThemeProvider>
-          <QueryProvider>
-            {children}
-
-            <Toaster
-              position="top-center"
-              richColors
-              dir="rtl"
-              toastOptions={{
-                classNames: {
-                  toast: "text-right",
-                  title: "text-right",
-                  description: "text-right",
-                },
-              }}
-            />
-          </QueryProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+                        <Toaster
+                            position="top-center"
+                            richColors
+                            dir="rtl"
+                            toastOptions={{
+                                classNames: {
+                                    toast: "text-right",
+                                    title: "text-right",
+                                    description: "text-right",
+                                },
+                            }}
+                        />
+                    </QueryProvider>
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }

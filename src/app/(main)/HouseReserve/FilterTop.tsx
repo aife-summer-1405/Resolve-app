@@ -11,7 +11,7 @@ import {
   X,
   SlidersHorizontal,
 } from "lucide-react";
-import { IHouseFilters } from "@/src/types/HouseFilterType";
+import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import Field from "@/src/components/Ui/Field";
 
 interface FilterTopProps {

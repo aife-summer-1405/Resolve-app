@@ -25,3 +25,17 @@ export interface IHouseCommentsResponse {
     currentPage: number;
     totalPages: number;
 }
+
+export interface ICreateCommentInput {
+    house_id: number;
+    title: string;
+    caption: string;
+    rating: number;
+    parent_comment_id: number | null;
+}
+
+export interface ICreateCommentResult {
+    success: boolean;
+    data?: unknown;
+    message?: string;
+}

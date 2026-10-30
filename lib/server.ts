@@ -14,7 +14,6 @@ const apiServer = axios.create({
 });
 
 apiServer.interceptors.request.use(async (config) => {
-    console.log(33333333333333333333)
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
 
