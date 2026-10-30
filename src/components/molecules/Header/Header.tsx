@@ -13,7 +13,7 @@ const links = [
   { label: "رهن و اجاره", href: "/Mortgage", hasMenu: true },
   { label: "درباره دلتا", href: "#about" },
   { label: "مقالات ما", href: "#blog" },
-  { label: "تماس با ما", href: "#contact" },
+  { label: "تماس با ما", href: "/ContactUs" },
 ];
 
 const Header = ({ isOverlay = false }: IHeaderProps) => {
