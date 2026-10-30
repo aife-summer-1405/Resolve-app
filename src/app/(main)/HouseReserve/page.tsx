@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import { FilterTop } from "./FilterTop";
-import Footer from "@/src/components/molecules/footer";
+import Footer from "@/src/components/molecules/Footer/footer";
 import MainPart from "./MainPart/MainPart";
 import Loading from "@/src/Loading";
 

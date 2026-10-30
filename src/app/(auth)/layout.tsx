@@ -1,4 +1,4 @@
-import Footer from "@/src/components/molecules/footer";
+import Footer from "@/src/components/molecules/Footer/footer";
 import type { ReactNode } from "react";
 
 type AuthLayoutProps = {

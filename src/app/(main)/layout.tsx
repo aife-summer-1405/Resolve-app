@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import Header from "@/src/components/molecules/Header";
-import Footer from "@/src/components/molecules/footer";
+import Header from "@/src/components/molecules/Header/Header";
+import Footer from "@/src/components/molecules/Footer/footer";
 
 type MainLayoutProps = {
   children: ReactNode;
