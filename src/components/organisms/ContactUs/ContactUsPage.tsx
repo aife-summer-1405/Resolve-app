@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  AtSign,
-  ChevronLeft,
-  MapPin,
-  Phone,
-  PhoneCallIcon,
-} from "lucide-react";
+import { AtSign, ChevronLeft, MapPin, PhoneCallIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
