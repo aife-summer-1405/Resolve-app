@@ -1,129 +1,127 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 
-type IResetPasswordStep =
-  | "request-resetcode"
-  | "verifyreset-code"
-  | "reset-password";
+import AuthLayout from "@/src/components/organisms/auth/AuthLayout";
+import AuthButton from "@/src/components/organisms/auth/AuthButton";
+import AuthInput from "@/src/components/organisms/auth/AuthInput";
+import { actionCompleteRegistration } from "@/src/actions/auth";
+import {
+    type ICompleteRegistrationForm,
+    completeRegistrationSchema,
+} from "@/src/schemas/auth/completeRegistrationSchema";
 
-export default function ForgotPasswordPage() {
-  const [step, setStep] = useState<IResetPasswordStep>(
-    "request-resetcode"
-  );
+export default function CompleteRegistrationPage() {
+    const router = useRouter();
+    const [serverError, setServerError] = useState("");
 
-  const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<ICompleteRegistrationForm>({
+        resolver: zodResolver(completeRegistrationSchema),
+        mode: "onBlur",
+    });
 
-  return (
-    <main className="mx-auto w-full max-w-md p-6">
-      {step === "request-resetcode" && (
-        <section className="space-y-4">
-          <h1 className="text-xl font-bold">فراموشی رمز عبور</h1>
+    const onSubmit = async (data: ICompleteRegistrationForm) => {
+        setServerError("");
 
-          <p className="text-sm text-muted">
-            ایمیل خود را وارد کنید تا کد تأیید برای شما ارسال شود.
-          </p>
+        try {
+            const result = await actionCompleteRegistration(data);
 
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="ایمیل"
-            className="w-full rounded-xl border border-border bg-card p-3"
-          />
-
-          <button
-            type="button"
-            onClick={() => setStep("verifyreset-code")}
-            className="w-full rounded-xl bg-primary p-3 font-semibold text-black"
-          >
-            ارسال کد تأیید
-          </button>
-        </section>
-      )}
-
-      {step === "verifyreset-code" && (
-        <section className="space-y-4">
-          <h1 className="text-xl font-bold">تأیید ایمیل</h1>
-
-          <p className="text-sm text-muted">
-            کد ارسال‌شده به ایمیل {email} را وارد کنید.
-          </p>
-
-          <input
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            value={verificationCode}
-            onChange={(event) =>
-              setVerificationCode(event.target.value.replace(/\D/g, ""))
+            if (result.success) {
+                router.push("/login");
+                return;
             }
-            placeholder="کد تأیید"
-            className="w-full rounded-xl border border-border bg-card p-3"
-          />
 
-          <button
-            type="button"
-            onClick={() => setStep("request-resetcode")}
-            className="w-full rounded-xl border border-border p-3"
-          >
-            بازگشت
-          </button>
+            setServerError(
+                result.message || "تکمیل ثبت‌نام انجام نشد."
+            );
+        } catch {
+            setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+        }
+    };
 
-          <button
-            type="button"
-            onClick={() => setStep("reset-password")}
-            disabled={verificationCode.length !== 6}
-            className="w-full rounded-xl bg-primary p-3 font-semibold text-black disabled:opacity-50"
-          >
-            تأیید کد
-          </button>
-        </section>
-      )}
+    return (
+        <AuthLayout>
+            <div className="text-right">
+                <div className="text-xs text-white/50">
+                    خانه　‹　
+                    <span className="text-primary">
+                        تکمیل حساب کاربری
+                    </span>
+                </div>
 
-      {step === "reset-password" && (
-        <section className="space-y-4">
-          <h1 className="text-xl font-bold">تعیین رمز عبور جدید</h1>
+                <div className="relative mt-8 text-sm font-medium text-primary">
+                    فقط یک قدم تا عضویت!
+                    <Image
+                        className="absolute -top-3 left-0"
+                        src="/icons/Group%2034.png"
+                        alt="فلش"
+                        width={55}
+                        height={10}
+                    />
+                </div>
 
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="رمز عبور جدید"
-            className="w-full rounded-xl border border-border bg-card p-3"
-          />
+                <h1 className="mt-4 text-2xl font-bold sm:text-3xl">
+                    تکمیل اطلاعات حساب کاربری
+                </h1>
 
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            placeholder="تکرار رمز عبور"
-            className="w-full rounded-xl border border-border bg-card p-3"
-          />
+                <p className="mt-5 text-sm leading-7 text-white/75">
+                    برای تکمیل ثبت‌نام، شماره تلفن و رمز عبور خود را وارد کنید.
+                </p>
 
-          <button
-            type="button"
-            onClick={() => setStep("verifyreset-code")}
-            className="w-full rounded-xl border border-border p-3"
-          >
-            بازگشت
-          </button>
+                <form
+                    dir="rtl"
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="mt-8 space-y-5"
+                >
+                    <AuthInput
+                        id="phoneNumber"
+                        label="شماره تلفن همراه"
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="مثال: 09123456789"
+                        registration={register("phoneNumber")}
+                        error={errors.phoneNumber}
+                    />
 
-          <button
-            type="button"
-            disabled={
-              password.length < 8 ||
-              password !== confirmPassword
-            }
-            className="w-full rounded-xl bg-primary p-3 font-semibold text-black disabled:opacity-50"
-          >
-            تغییر رمز عبور
-          </button>
-        </section>
-      )}
-    </main>
-  );
+                    <AuthInput
+                        id="password"
+                        label="رمز عبور"
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder="رمز عبور خود را وارد کنید"
+                        registration={register("password")}
+                        error={errors.password}
+                    />
+
+                    {serverError && (
+                        <p
+                            role="alert"
+                            className="text-sm text-red-400"
+                        >
+                            {serverError}
+                        </p>
+                    )}
+
+                    <div className="pt-3">
+                        <AuthButton
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting
+                                ? "در حال تکمیل ثبت‌نام..."
+                                : "تکمیل ثبت‌نام"}
+                        </AuthButton>
+                    </div>
+                </form>
+            </div>
+        </AuthLayout>
+    );
 }
