@@ -1,9 +1,4 @@
-export type PropertyType =
-    | "apartment"
-    | "villa"
-    | "house"
-    | "land"
-    | "commercial";
+export type PropertyType = string;
 
 export interface IHouseFilters {
     page?: number;

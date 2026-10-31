@@ -1,19 +1,23 @@
 import { getHouses, type House } from "@/src/services/houseService";
 import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
+import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 import { Filterbottom } from "../Filterb";
 import { HouseMap, type MapMarker } from "../HouseMap";
 import HotelCard from "../HotelCard";
 
-interface MainPartProps {
+interface IMainPartContentProps {
   filters: IHouseFilters;
+  categories: ICategory[];
 }
 
-export const MainPartContent = async ({ filters }: MainPartProps) => {
-  console.log("filters", filters);
+export const MainPartContent = async ({
+  filters,
+  categories,
+}: IMainPartContentProps) => {
   const result = await getHouses(filters);
 
-  console.log("result", result);
   const houses: House[] = result.houses;
+
   const markers: MapMarker[] = houses
     .filter(
       (house) =>
@@ -31,7 +35,10 @@ export const MainPartContent = async ({ filters }: MainPartProps) => {
     <div className="flex flex-col gap-4 rounded-3xl bg-[#303030] p-3 sm:p-5 lg:h-full lg:min-h-0 lg:flex-row-reverse lg:gap-6 lg:overflow-hidden lg:p-6 xl:gap-8">
       <div className="flex min-w-0 flex-col lg:min-h-0 lg:w-3/5 lg:flex-none">
         <div className="shrink-0">
-          <Filterbottom filters={filters} />
+          <Filterbottom
+            filters={filters}
+            categories={categories}
+          />
         </div>
 
         <div className="mt-4 space-y-4 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain">

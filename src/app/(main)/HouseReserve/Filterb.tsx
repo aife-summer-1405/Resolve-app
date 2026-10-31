@@ -5,11 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import { fieldClass, iconClass, labelClass } from "./filterStyles";
-
+import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 const DEBOUNCE_MS = 500;
 
 interface FilterbottomProps {
   filters: IHouseFilters;
+  categories: ICategory[];
 }
 
 type FilterState = {
@@ -24,10 +25,12 @@ interface PriceFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
+
 const formatPrice = (value: string) => {
   const digits = value.replace(/\D/g, "");
   return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
 const PriceField = ({ id, label, value, onChange }: PriceFieldProps) => (
   <div className="group relative min-w-0">
     <input
@@ -51,7 +54,7 @@ const PriceField = ({ id, label, value, onChange }: PriceFieldProps) => (
   </div>
 );
 
-export const Filterbottom = ({ filters }: FilterbottomProps) => {
+export const Filterbottom = ({ filters, categories }: FilterbottomProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -154,10 +157,11 @@ export const Filterbottom = ({ filters }: FilterbottomProps) => {
           className={`${fieldClass} appearance-none pl-10`}
         >
           <option value="">همه انواع ملک</option>
-          <option value="apartment">آپارتمان</option>
-          <option value="villa">ویلا</option>
-          <option value="land">زمین</option>
-          <option value="commercial">تجاری</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
         </select>
 
         <ChevronDown size={20} className={`${iconClass} left-3`} />

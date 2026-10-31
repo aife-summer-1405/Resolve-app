@@ -1,8 +1,9 @@
-export interface ICategories {
-  id: string;
-  name: string;
+export interface ICategory {
+    id: string;
+    name: string;
 }
 
 export interface ICategoriesResponse {
-  data: ICategories[];
+    data: ICategory[];
+    totalCount: number;
 }

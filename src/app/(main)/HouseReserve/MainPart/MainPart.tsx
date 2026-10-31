@@ -1,16 +1,18 @@
 import { Suspense } from "react";
 import { MainPartContent } from "./MainPartContent";
-import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
+import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
+import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 import { MainPartLoading } from "./MainPartLoading";
 
-interface MainPartProps {
+interface IMainPartProps {
   filters: IHouseFilters;
+  categories: ICategory[];
 }
 
-const MainPart = ({ filters }: MainPartProps) => {
+const MainPart = ({ filters, categories }: IMainPartProps) => {
   return (
     <Suspense fallback={<MainPartLoading />}>
-      <MainPartContent filters={filters} />
+      <MainPartContent filters={filters} categories={categories} />
     </Suspense>
   );
 };
