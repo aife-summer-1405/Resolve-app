@@ -38,17 +38,13 @@ export default function SimilarHouses({
             title: property.title,
             image: property.image,
 
-            // چون SimilarProperty امتیاز ندارد
             rating: 4.5,
-
-            // چون این بخش ملک مشابه است
             discount: 0,
 
             location: property.location,
 
             amenities: `${property.rooms} اتاق خواب`,
 
-            // فعلاً مطابق ساختار OfferCard
             originalPrice: property.mortgage,
             price: property.rent,
           };
@@ -64,7 +60,6 @@ export default function SimilarHouses({
         })}
       </div>
 
-      {/* نقطه‌های پایین */}
       {properties.length > 1 && (
         <div className="mt-10 flex items-center justify-center gap-2">
           {properties.map((property, index) => (
