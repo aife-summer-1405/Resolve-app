@@ -94,7 +94,7 @@ export default function Footer() {
 
 
     return (
-        <footer className="bg-[#a6ff2e]" >
+        <footer className="bg-[#a6ff2e] mt-40" >
             <div className="flex flex-col md:flex-row ">
                 <div className="w-full  md:w-4/5">
                     <div className="mx-auto md:w-full flex  items-center justify-between md:rounded-br-[28px]  bg-[#171717] px-5 py-3 sm:px-8">

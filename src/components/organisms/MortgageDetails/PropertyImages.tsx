@@ -1,55 +1,112 @@
-
 "use client";
 
 import { useState } from "react";
+import type { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 
-export default function PropertyImages() {
+const DEFAULT_IMAGE = "/images/house-default.jpg";
+
+interface PropertyImagesProps {
+  result: IHouseDetails;
+}
+
+export default function PropertyImages({ result }: PropertyImagesProps) {
+  const photos = result.photos?.length ? result.photos : [DEFAULT_IMAGE];
+
   const [activeIndex, setActiveIndex] = useState(0);
+  const [failed, setFailed] = useState<Record<number, boolean>>({});
+
+  const getSrc = (index: number) =>
+    failed[index] ? DEFAULT_IMAGE : photos[index] ?? DEFAULT_IMAGE;
+
+  const handleError = (index: number) =>
+    setFailed((prev) => ({ ...prev, [index]: true }));
+
+  const thumbIndexes = photos
+    .map((_, index) => index)
+    .filter((index) => index !== activeIndex)
+    .slice(0, 2);
+
+  const hiddenCount = photos.length - 1 - thumbIndexes.length;
 
   return (
     <section
       dir="ltr"
-      className="grid w-full grid-cols-1 gap-3 md:grid-cols-[minmax(130px,0.65fr)_minmax(0,1.35fr)]"
+      className="flex w-full flex-col gap-3 md:h-[350px] md:flex-row lg:h-[380px]"
     >
-      <div className="order-2 grid grid-cols-2 gap-3 md:order-1 md:grid-cols-1 md:grid-rows-2">
-        {[1, 2].map((index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => setActiveIndex(index)}
-            aria-label={`نمایش تصویر ${index + 1}`}
-            className={`relative h-[125px] overflow-hidden rounded-[22px] border-2 bg-[#393939] transition sm:h-[150px] md:h-auto md:min-h-[130px] ${
-              activeIndex === index
-                ? "border-[#168CFF]"
-                : "border-transparent"
-            }`}
-          >
-            {index === 2 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/35 text-base font-bold text-white">
-                +۱۲ عکس دیگر
-              </div>
-            )}
-          </button>
-        ))}
-      </div>
+      {/* ستون کناری */}
+      <div className="order-2 flex gap-3 md:order-1 md:w-[32%] md:shrink-0 md:flex-col">
+        {[0, 1].map((slot) => {
+          const index = thumbIndexes[slot];
 
-      <div className="relative order-1 h-[260px] min-w-0 overflow-hidden rounded-[24px] bg-[#393939] sm:h-[320px] md:order-2 md:h-[350px] lg:h-[380px]">
-        <div className="absolute inset-0" />
-        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/70 px-4 py-2">
-          {[0, 1, 2, 3, 4].map((index) => (
+          if (index === undefined) {
+            return (
+              <div
+                key={`empty-${slot}`}
+                className="h-[125px] min-h-0 flex-1 overflow-hidden rounded-[22px] bg-[#393939] sm:h-[150px] md:h-auto"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={DEFAULT_IMAGE}
+                  alt=""
+                  className="h-full w-full object-cover opacity-60"
+                />
+              </div>
+            );
+          }
+
+          return (
             <button
               key={index}
               type="button"
               onClick={() => setActiveIndex(index)}
               aria-label={`نمایش تصویر ${index + 1}`}
-              className={`h-1.5 w-1.5 rounded-full transition ${
-                activeIndex === index
-                  ? "scale-125 bg-[#91FF45]"
-                  : "bg-white/40"
-              }`}
-            />
-          ))}
-        </div>
+              className="flex h-[125px] min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[22px] border-2 border-transparent bg-[#393939] transition hover:border-[#168CFF] sm:h-[150px] md:h-auto"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={getSrc(index)}
+                alt={`${result.title} - ${index + 1}`}
+                onError={() => handleError(index)}
+                className="h-full w-full object-cover"
+              />
+
+              {slot === 1 && hiddenCount > 0 && (
+                <span className="absolute flex items-center justify-center text-base font-bold text-white">
+                  +{hiddenCount.toLocaleString("fa-IR")} عکس دیگر
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* عکس اصلی */}
+      <div className="order-1 flex h-[260px] min-w-0 flex-1 flex-col overflow-hidden rounded-[24px] bg-[#393939] sm:h-[320px] md:order-2 md:h-auto">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={getSrc(activeIndex)}
+          alt={result.title}
+          onError={() => handleError(activeIndex)}
+          className="min-h-0 w-full flex-1 object-cover"
+        />
+
+        {photos.length > 1 && (
+          <div className="flex shrink-0 items-center justify-center gap-2 px-4 py-2">
+            {photos.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                aria-label={`نمایش تصویر ${index + 1}`}
+                className={`h-1.5 w-1.5 rounded-full transition ${
+                  activeIndex === index
+                    ? "scale-125 bg-[#91FF45]"
+                    : "bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
