@@ -1,30 +1,19 @@
-import { MapPin, Ruler, BedDouble, Building2, Banknote } from "lucide-react";
-
-export interface PropertyInfoData {
-  title: string;
-  location: string;
-  area: number;
-  rooms: number;
-  floor: string;
-  mortgage: number;
-  rent: number;
-}
+import { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
+import { MapPin } from "lucide-react";
 
 interface PropertyInfoProps {
-  property: PropertyInfoData;
+  result: IHouseDetails;
 }
 
-export default function PropertyInfo({ property }: PropertyInfoProps) {
+export default function PropertyInfo({ result }: PropertyInfoProps) {
   return (
     <section dir="rtl" className="space-y-6 text-white">
       <div>
-        <h1 className="text-xl font-bold sm:text-2xl">
-          {property.title}
-        </h1>
+        <h1 className="text-xl font-bold sm:text-2xl">{result.title}</h1>
 
         <p className="mt-3 flex items-center gap-2 text-sm text-white/60">
           <MapPin size={18} />
-          {property.location}
+          {result.address}
         </p>
       </div>
     </section>

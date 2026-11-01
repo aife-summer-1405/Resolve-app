@@ -1,4 +1,3 @@
-// loading.tsx
 export default function Loading() {
     return (
         <div className="mt-10 animate-pulse space-y-6">

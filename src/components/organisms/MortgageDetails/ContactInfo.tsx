@@ -8,14 +8,26 @@ import {
   ScrollText,
   MessageCircle,
 } from "lucide-react";
+import type { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 
 interface ContactInfoProps {
-  ownerName: string;
-  phoneNumber: string;
+  result: IHouseDetails;
+  phoneNumber?: string; 
 }
 
+const formatPrice = (value: string | null) =>
+  value ? Number(value).toLocaleString("fa-IR") : "—";
+
+const formatDate = (value: string) =>
+  value
+    ? new Date(value).toLocaleString("fa-IR", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
+    : "";
+
 export default function ContactInfo({
-  ownerName,
+  result,
   phoneNumber,
 }: ContactInfoProps) {
   return (
@@ -36,12 +48,12 @@ export default function ContactInfo({
         </div>
 
         <p className="mt-4 max-w-full truncate text-base font-medium">
-          {ownerName}
+          {result.sellerName}
         </p>
 
         <div className="mt-3 flex items-center justify-center gap-2 text-xs text-white/50">
           <CalendarDays size={17} />
-          <span>۱۲ مرداد - ۱۴۰۱ / ۱۲:۳۳</span>
+          <span>{formatDate(result.last_updated)}</span>
         </div>
       </div>
 
@@ -51,8 +63,8 @@ export default function ContactInfo({
           قیمت رهن از:
         </span>
 
-        <span className="whitespace-nowrap font-semibold text-[#91FF45]">
-          ۴۰,۰۰۰,۰۰۰
+        <span className="whitespace-nowrap font-semibold text-primary">
+          {formatPrice(result.discounted_price ?? result.price)}
         </span>
       </div>
 
@@ -62,20 +74,22 @@ export default function ContactInfo({
           قیمت اجاره از:
         </span>
 
-        <span className="whitespace-nowrap font-semibold text-[#91FF45]">
-          ۴۰,۰۰۰,۰۰۰
+        <span className="whitespace-nowrap font-semibold text-primary">
+          {formatPrice(result.price)}
         </span>
       </div>
 
-      <a
-        href={`tel:${phoneNumber}`}
-        className="mt-8 flex min-h-[45px] w-full items-center justify-center gap-2 rounded-xl bg-[#91FF45] px-2 py-3 text-sm font-bold text-black transition hover:bg-[#a5ff6b]"
-      >
-        <span dir="rtl" className="truncate">
-          تماس با {phoneNumber.replace(/^(\d{1})\d{4}(\d{4})$/, "$1****$2")}
-        </span>
-        <Phone size={19} className="shrink-0" />
-      </a>
+      {phoneNumber && (
+        <a
+          href={`tel:${phoneNumber}`}
+          className="mt-8 flex min-h-11.25 w-full items-center justify-center gap-2 rounded-xl bg-primary px-2 py-3 text-sm font-bold text-black transition hover:bg-[#a5ff6b]"
+        >
+          <span dir="rtl" className="truncate">
+            تماس با {phoneNumber.replace(/^(\d{1})\d{4}(\d{4})$/, "$1****$2")}
+          </span>
+          <Phone size={19} className="shrink-0" />
+        </a>
+      )}
 
       <button
         type="button"

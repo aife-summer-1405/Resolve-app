@@ -92,30 +92,6 @@ function Filters({
         </Field>
       </div>
 
-      <div className="min-w-0 flex-1">
-        <Field legend="نوع ملک:">
-          <div className="flex items-center gap-2">
-            <select
-              value={draft.propertyType}
-              onChange={(event) =>
-                onPropertyTypeChange(event.target.value)
-              }
-              dir="rtl"
-              className={fieldClass}
-            >
-              <option value="">همه انواع ملک</option>
-
-              {categories.map((category) => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-
-            <ChevronDown size={20} className={iconClass} />
-          </div>
-        </Field>
-      </div>
 
       <div className="min-w-0 flex-1">
         <Field legend="مرتب‌سازی بر اساس:">
