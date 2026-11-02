@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { MoveLeft } from "lucide-react";
 import Image from "next/image";
 import FileContainer from "@/src/components/Ui/FileContainer";
-import type { ICategories } from "@/src/types/HousereservesType/CategoriesType";
+import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 import { getCategories } from "@/src/services/getCategoryService";
 
 const PropertyCategoriesSection = () => {
-  const [categories, setCategories] = useState<ICategories[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
@@ -96,8 +96,9 @@ const PropertyCategoriesSection = () => {
                   >
                     <button
                       type="button"
-                      className={`flex h-full w-full items-center justify-center rounded-[14px] text-xs font-medium transition-colors duration-200 ${isActive ? "text-black" : "text-white"
-                        }`}
+                      className={`flex h-full w-full items-center justify-center rounded-[14px] text-xs font-medium transition-colors duration-200 ${
+                        isActive ? "text-black" : "text-white"
+                      }`}
                     >
                       <span className="flex items-center gap-2 whitespace-nowrap text-[16px]">
                         <span>✦</span>

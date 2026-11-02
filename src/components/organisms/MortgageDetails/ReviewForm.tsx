@@ -18,7 +18,6 @@ export default function ReviewForm() {
 
   return (
     <form
-      dir="ltr"
       onSubmit={(event) => {
         event.preventDefault();
         handleSubmit();
@@ -33,7 +32,6 @@ export default function ReviewForm() {
           </div>
 
           <Slider
-            dir="rtl"
             min={0}
             max={5}
             step={0.5}

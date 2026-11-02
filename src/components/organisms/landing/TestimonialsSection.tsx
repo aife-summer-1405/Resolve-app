@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { LucideCalendarDays, Star } from "lucide-react";
 import Image from "next/image";
 import FileContainer from "../../Ui/FileContainer";
-import { IHouseComment } from "@/src/types/HouseCommentsType";
 import { getAllComments } from "@/src/services/getAllComments";
+import { IHouseComment } from "@/src/types/HousereservesType/HouseCommentsType";
 
 const TestimonialsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -21,7 +21,7 @@ const TestimonialsSection = () => {
         const response = await getAllComments();
         setComments(
           response.comments.filter(
-            (comment) => comment.parent_comment_id === null,
+            (comment: IHouseComment) => comment.parent_comment_id === null,
           ),
         );
       } catch (error) {
