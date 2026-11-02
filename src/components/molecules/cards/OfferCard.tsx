@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Building2, MapPin, Star } from "lucide-react";
 
 import FileContainer from "@/src/components/Ui/FileContainer";
@@ -22,6 +23,7 @@ const OfferCard: FC<IOfferCardProps> = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const router = useRouter();
 
   if (isLoading) {
     return <OfferCardSkeleton />;
@@ -45,7 +47,10 @@ const OfferCard: FC<IOfferCardProps> = ({
 
   return (
     <article
-      onClick={onClick}
+      onClick={() => {
+        onClick?.();
+        router.push(`/HouseReserve/${offer.id}`);
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="w-full cursor-pointer text-white"

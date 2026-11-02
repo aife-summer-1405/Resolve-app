@@ -16,7 +16,7 @@ export default function PropertyImages({ result }: PropertyImagesProps) {
   const [failed, setFailed] = useState<Record<number, boolean>>({});
 
   const getSrc = (index: number) =>
-    failed[index] ? DEFAULT_IMAGE : photos[index] ?? DEFAULT_IMAGE;
+    failed[index] ? DEFAULT_IMAGE : (photos[index] ?? DEFAULT_IMAGE);
 
   const handleError = (index: number) =>
     setFailed((prev) => ({ ...prev, [index]: true }));
@@ -29,11 +29,7 @@ export default function PropertyImages({ result }: PropertyImagesProps) {
   const hiddenCount = photos.length - 1 - thumbIndexes.length;
 
   return (
-    <section
-      dir="ltr"
-      className="flex w-full flex-col gap-3 md:h-[350px] md:flex-row lg:h-[380px]"
-    >
-      {/* ستون کناری */}
+    <section className="flex w-full flex-col gap-3 md:h-[350px] md:flex-row lg:h-[380px]">
       <div className="order-2 flex gap-3 md:order-1 md:w-[32%] md:shrink-0 md:flex-col">
         {[0, 1].map((slot) => {
           const index = thumbIndexes[slot];
@@ -62,7 +58,6 @@ export default function PropertyImages({ result }: PropertyImagesProps) {
               aria-label={`نمایش تصویر ${index + 1}`}
               className="flex h-[125px] min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[22px] border-2 border-transparent bg-[#393939] transition hover:border-[#168CFF] sm:h-[150px] md:h-auto"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={getSrc(index)}
                 alt={`${result.title} - ${index + 1}`}

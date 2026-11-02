@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Star } from "lucide-react";
 import Image from "next/image";
 import FileContainer from "../../Ui/FileContainer";
@@ -20,6 +21,7 @@ const toFa = (value: number | string) =>
 
 const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
   const [hovered, setHovered] = useState(false);
+  const router = useRouter();
 
   const count = destination.count ?? 56;
   const score = destination.rating ?? 4.5;
@@ -30,6 +32,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
 
   return (
     <article
+      onClick={() => router.push(`/HouseReserve/${destination.id}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="w-full cursor-pointer text-white"

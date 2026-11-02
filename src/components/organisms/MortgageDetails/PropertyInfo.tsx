@@ -7,7 +7,7 @@ interface PropertyInfoProps {
 
 export default function PropertyInfo({ result }: PropertyInfoProps) {
   return (
-    <section dir="rtl" className="space-y-6 text-white">
+    <section className="space-y-6 text-white">
       <div>
         <h1 className="text-xl font-bold sm:text-2xl">{result.title}</h1>
 

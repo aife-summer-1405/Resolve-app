@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRef, useState } from "react";
@@ -14,9 +13,7 @@ export default function OtpInput({
   onCompleteChange,
   onChange,
 }: IOtpInputProps) {
-  const [digits, setDigits] = useState<string[]>(
-    Array(OTP_LENGTH).fill("")
-  );
+  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -40,7 +37,7 @@ export default function OtpInput({
 
   function handleKeyDown(
     event: React.KeyboardEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) {
     if (event.key === "Backspace") {
       event.preventDefault();
@@ -66,9 +63,7 @@ export default function OtpInput({
     }
   }
 
-  function handlePaste(
-    event: React.ClipboardEvent<HTMLInputElement>
-  ) {
+  function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
     event.preventDefault();
 
     const pastedDigits = event.clipboardData
@@ -85,16 +80,13 @@ export default function OtpInput({
 
     updateDigits(nextDigits);
 
-    const nextIndex = Math.min(
-      pastedDigits.length,
-      OTP_LENGTH - 1
-    );
+    const nextIndex = Math.min(pastedDigits.length, OTP_LENGTH - 1);
 
     inputRefs.current[nextIndex]?.focus();
   }
 
   return (
-    <div dir="ltr" className="flex justify-center gap-3 sm:gap-4">
+    <div className="flex justify-center gap-3 sm:gap-4">
       {digits.map((digit, index) => (
         <input
           key={index}
@@ -107,9 +99,7 @@ export default function OtpInput({
           maxLength={1}
           value={digit}
           aria-label={`رقم ${index + 1} کد تأیید`}
-          onChange={(event) =>
-            handleChange(event.target.value, index)
-          }
+          onChange={(event) => handleChange(event.target.value, index)}
           onKeyDown={(event) => handleKeyDown(event, index)}
           onPaste={handlePaste}
           className="h-12 w-12 rounded-xl border border-white/20 bg-transparent text-center text-xl text-white outline-none transition focus:border-[#91FF45] sm:h-14 sm:w-14"

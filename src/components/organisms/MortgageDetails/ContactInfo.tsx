@@ -12,7 +12,7 @@ import type { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailTyp
 
 interface ContactInfoProps {
   result: IHouseDetails;
-  phoneNumber?: string; 
+  phoneNumber?: string;
 }
 
 const formatPrice = (value: string | null) =>
@@ -26,19 +26,11 @@ const formatDate = (value: string) =>
       })
     : "";
 
-export default function ContactInfo({
-  result,
-  phoneNumber,
-}: ContactInfoProps) {
+export default function ContactInfo({ result, phoneNumber }: ContactInfoProps) {
   return (
-    <section
-      dir="rtl"
-      className="relative w-full rounded-[32px] border-2 border-[#393939] bg-[#393939] px-4 pb-4 pt-12 text-white shadow-[0_0_0_1px_rgba(22,140,255,0.15)]"
-    >
+    <section className="relative w-full rounded-[32px] border-2 border-[#393939] bg-[#393939] px-4 pb-4 pt-12 text-white shadow-[0_0_0_1px_rgba(22,140,255,0.15)]">
       <div className="absolute left-1/2 top-0 flex h-[50px] w-[80%] -translate-x-1/2 -translate-y-[1px] items-center justify-center gap-2 rounded-b-[28px] bg-[#555555] px-3">
-        <h2 className="whitespace-nowrap text-base font-bold">
-          اطلاعات تماس
-        </h2>
+        <h2 className="whitespace-nowrap text-base font-bold">اطلاعات تماس</h2>
         <Phone size={21} />
       </div>
 

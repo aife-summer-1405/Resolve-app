@@ -57,7 +57,7 @@ export default function ResetPassword({
 
   return (
     <AuthLayout>
-      <div dir="rtl" className="text-right">
+      <div className="text-right">
         <div className="text-xs text-white/50">
           خانه　‹
           <span className="text-[#91FF45]">فراموشی رمز عبور</span>

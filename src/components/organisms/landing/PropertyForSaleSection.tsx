@@ -135,10 +135,7 @@ const PropertyForSaleSection: FC = () => {
     "!appearance-none !rounded-full !border-0 !p-0 !shadow-none before:!content-none after:!content-none";
 
   return (
-    <section
-      dir="rtl"
-      className="relative w-full overflow-hidden rounded-b-[48px] bg-[#2D2D2D] px-5 pb-16 pt-10 text-white md:px-8 lg:min-h-[860px]"
-    >
+    <section className="relative w-full overflow-hidden rounded-b-[48px] bg-[#2D2D2D] px-5 pb-16 pt-10 text-white md:px-8 lg:min-h-[860px]">
       <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full bg-[#8CFF45]/10 blur-[100px]" />
 
       <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#7569FF]/20 blur-[100px]" />

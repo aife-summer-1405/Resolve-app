@@ -1,12 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  FileText,
-  ListChecks,
-  MapPin,
-  MessageSquare,
-} from "lucide-react";
+import { FileText, ListChecks, MapPin, MessageSquare } from "lucide-react";
 import HouseFacilities from "@/src/app/(main)/HouseReserveDetails/Tabs/HouseFacilities";
 import ReviewForm from "./ReviewForm";
 import ReviewList from "./ReviewList";
@@ -32,32 +27,29 @@ export default function PropertyTabs({ result }: PropertyTabsProps) {
   const { lat, lng } = result.location;
 
   return (
-    <section dir="rtl" className="w-full text-white">
-      <div
-  dir="rtl"
-  className="mb-4 flex flex-nowrap gap-2 overflow-x-auto rounded-2xl bg-card px-2 py-1"
->
-  {tabs.map((tab) => {
-    const Icon = tab.icon;
-    const isActive = activeTab === tab.id;
+    <section className="w-full text-white">
+      <div className="mb-4 flex flex-nowrap gap-2 overflow-x-auto rounded-2xl bg-card px-2 py-1">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
 
-    return (
-      <button
-        key={tab.id}
-        type="button"
-        onClick={() => setActiveTab(tab.id)}
-        className={`flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl border-b-2 p-2 transition-colors ${
-          isActive
-            ? "bg-lime-400 text-black"
-            : "border-transparent text-gray-400 hover:text-white"
-        }`}
-      >
-        <Icon size={17} />
-        {tab.label}
-      </button>
-    );
-  })}
-</div>
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl border-b-2 p-2 transition-colors ${
+                isActive
+                  ? "bg-lime-400 text-black"
+                  : "border-transparent text-gray-400 hover:text-white"
+              }`}
+            >
+              <Icon size={17} />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="min-h-[160px] py-6">
         {activeTab === "description" && (
@@ -94,9 +86,7 @@ export default function PropertyTabs({ result }: PropertyTabsProps) {
           </div>
         )}
 
-        {activeTab === "reviews" && (
-          <UserReviews houseId={result.id}/>
-        )}
+        {activeTab === "reviews" && <UserReviews houseId={result.id} />}
       </div>
     </section>
   );

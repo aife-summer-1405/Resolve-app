@@ -20,9 +20,7 @@ interface SimilarHousesProps {
   properties: SimilarProperty[];
 }
 
-export default function SimilarHouses({
-  properties,
-}: SimilarHousesProps) {
+export default function SimilarHouses({ properties }: SimilarHousesProps) {
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
 
   if (properties.length === 0) {
@@ -30,7 +28,7 @@ export default function SimilarHouses({
   }
 
   return (
-    <section dir="rtl" className="w-full text-white">
+    <section className="w-full text-white">
       <div className="grid grid-cols-1 justify-items-center gap-x-5 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
         {properties.map((property, index) => {
           const offer: IOffer = {

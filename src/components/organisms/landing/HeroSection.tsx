@@ -1,19 +1,25 @@
+"use client";
+
 import { ChevronLeft, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Field from "../../Ui/Field";
-const fields = [
-  {
-    label: "انتخاب مقصد:",
-    placeholder: "استان، شهر، اقامتگاه ....",
-    wide: true,
-  },
-  { label: "تاریخ ورود:", placeholder: "وارد کنید ...." },
-  { label: "تاریخ خروج:", placeholder: "وارد کنید ...." },
-  { label: "تعداد نفرات:", placeholder: "وارد کنید ...." },
-];
 
 export default function HeroSection() {
+  const t = useTranslations("HeroSection");
+
+  const fields = [
+    {
+      label: t("destination"),
+      placeholder: t("destinationPlaceholder"),
+      wide: true,
+    },
+    { label: t("checkIn"), placeholder: t("enterPlaceholder") },
+    { label: t("checkOut"), placeholder: t("enterPlaceholder") },
+    { label: t("guests"), placeholder: t("enterPlaceholder") },
+  ];
+
   return (
     <section className="relative flex w-full flex-col items-center overflow-hidden bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323] px-4 pt-20 text-white xl:h-225.25 xl:px-2 xl:pt-6">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-35 h-48 bg-gradient-to-t from-[#232323] via-[#232323]/80 to-transparent xl:h-105" />
@@ -23,7 +29,7 @@ export default function HeroSection() {
           <div className="absolute inset-x-0 top-0 z-10 h-full md:h-[286px] xl:left-0 xl:h-71.5 xl:w-321">
             <Image
               src="/images/landing2.png"
-              alt="DELTA"
+              alt={t("logoAlt")}
               fill
               sizes="(min-width: 1280px) 1284px, 100vw"
               className="object-contain object-top xl:object-fill"
@@ -33,7 +39,7 @@ export default function HeroSection() {
           <div className="pointer-events-none absolute left-1/2 top-[115px] z-20 hidden h-[600px] w-[754px] max-w-none -translate-x-1/2 md:block xl:left-auto xl:right-45 xl:top-28.75 xl:h-150 xl:w-188.5 xl:translate-x-0">
             <Image
               src="/images/landingg1.png"
-              alt="ساختمان مدرن"
+              alt={t("buildingAlt")}
               fill
               sizes="754px"
             />
@@ -42,12 +48,12 @@ export default function HeroSection() {
 
         <div className="relative z-30 mt-4 w-full max-w-md space-y-4 text-center xl:absolute xl:right-235 xl:top-68 xl:mt-0 xl:w-95 xl:max-w-none xl:text-start">
           <p className="text-base font-normal text-white sm:text-lg xl:text-[20px]">
-            رزرو، رهن، اجاره و حتی خرید و فروش ملک مورد
+            {t("description1")}
           </p>
 
           <div className="flex w-full items-center justify-center gap-5 xl:w-100">
             <p className="text-base font-normal text-white sm:text-lg xl:text-[20px]">
-              نظرتون مثل آب خوردن فقط در دلتا
+              {t("description2")}
             </p>
             <span className="hidden h-px w-32 bg-white sm:block" />
           </div>
@@ -57,7 +63,7 @@ export default function HeroSection() {
               href="#search"
               className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-[#363636]"
             >
-              آسون رزرو کن
+              {t("easyReserve")}
               <ChevronLeft size={12} />
             </Link>
 
@@ -65,7 +71,7 @@ export default function HeroSection() {
               href="#rent"
               className="flex items-center gap-2 rounded-lg bg-[#363636] px-4 py-2 text-xs transition hover:bg-[#474747]"
             >
-              رهن و اجاره ملک
+              {t("rentAndLease")}
               <ChevronLeft size={12} />
             </Link>
           </div>
@@ -74,7 +80,7 @@ export default function HeroSection() {
             <div>
               <p className="text-lg font-bold">+۸۵۰۰</p>
               <p className="text-sm text-white xl:text-[16px]">
-                منطقه برای رزرو، ویلا و کلبه ها
+                {t("bookingRegions")}
               </p>
             </div>
 
@@ -83,17 +89,17 @@ export default function HeroSection() {
             <div>
               <p className="text-lg font-bold">+۵۶۰۰</p>
               <p className="text-sm text-white xl:text-[16px]">
-                ملک برای رزرو و رهن اجاره
+                {t("propertiesForRent")}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="relative z-30 mt-8 hidden flex-col items-center gap-2 text-center md:flex xl:absolute xl:top-80 xl:mt-0 xl:items-stretch xl:text-start">
+        <div className="relative z-30 mt-8 hidden flex-col items-center gap-2 text-center md:flex xl:absolute xl:right-0 xl:top-80 xl:mt-0 xl:items-stretch xl:text-start">
           <div>
             <Image
               src="/images/Group 9940.png"
-              alt="مشتری"
+              alt={t("customerAlt")}
               width={100}
               height={50}
             />
@@ -101,10 +107,10 @@ export default function HeroSection() {
 
           <div className="text-white">
             <p className="text-2xl font-semibold sm:text-3xl xl:text-[32px]">
-              بیش از ۷۰۰۰ +
+              {t("satisfiedCustomers")}
             </p>
             <p className="text-base font-normal xl:text-[20px]">
-              رضایت مشتریانی که به دلتا اعتماد کرده اند
+              {t("customerTrust")}
             </p>
           </div>
         </div>
@@ -112,34 +118,34 @@ export default function HeroSection() {
 
       <div className="relative z-40 mt-8 w-full max-w-286.25 pb-6 xl:absolute xl:bottom-4.5 xl:left-1/2 xl:mt-0 xl:w-286.25 xl:max-w-[calc(100%-16px)] xl:-translate-x-1/2 xl:pb-0">
         <div className="mb-3 flex cursor-pointer items-center gap-4 pe-2 text-xs max-sm:overflow-x-auto">
-          <div className="flex h-6.25 w-23.75 shrink-0 items-center gap-3 border-l">
+          <div className="flex h-6.25 w-28 items-center gap-3 border-l">
             <Image
               src="/icons/booking (1).png"
-              alt="آیکون رزرو"
+              alt={t("bookingIconAlt")}
               width={20}
               height={20}
             />
-            <p>رزرو ملک</p>
+            <p>{t("booking")}</p>
           </div>
 
-          <div className="flex h-6.25 w-23.75 shrink-0 items-center gap-3 border-l">
+          <div className="flex h-6.25 w-28 items-center gap-3 border-l">
             <Image
               src="/icons/house-building (1).png"
-              alt="آیکون رهن و اجاره"
+              alt={t("mortgageIconAlt")}
               width={20}
               height={20}
             />
-            <p className="text-[#8C8C8C]">رهن و اجاره</p>
+            <p className="text-[#8C8C8C]">{t("mortgage")}</p>
           </div>
 
-          <div className="flex h-6.25 w-23.75 shrink-0 items-center gap-3">
+          <div className="flex h-6.25 w-25 items-center gap-3">
             <Image
               src="/icons/money-check-edit.png"
-              alt="آیکون خرید و فروش"
+              alt={t("buyAndSellIconAlt")}
               width={20}
               height={20}
             />
-            <p className="text-[#8C8C8C]">خرید و فروش</p>
+            <p className="text-[#8C8C8C] ">{t("buyAndSell")}</p>
           </div>
         </div>
 
@@ -166,7 +172,7 @@ export default function HeroSection() {
             className="flex items-center justify-center gap-2 rounded-xl bg-[#91FF45] px-7 py-4 text-xs font-bold text-black transition hover:opacity-90"
           >
             <Search size={14} />
-            جستجو کن
+            {t("search")}
           </button>
         </div>
       </div>

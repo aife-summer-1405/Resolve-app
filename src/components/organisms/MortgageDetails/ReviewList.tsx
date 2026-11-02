@@ -36,7 +36,7 @@ const reviews = [
 
 export default function ReviewList() {
   return (
-    <section dir="rtl" className="mt-7 w-full">
+    <section className="mt-7 w-full">
       <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2">
         {reviews.map((review) => (
           <article
@@ -110,9 +110,7 @@ export default function ReviewList() {
             type="button"
             aria-label={`صفحه ${page + 1}`}
             className={`rounded-full transition-all ${
-              page === 0
-                ? "size-2 bg-[#91FF45]"
-                : "size-1.5 bg-white/75"
+              page === 0 ? "size-2 bg-[#91FF45]" : "size-1.5 bg-white/75"
             }`}
           />
         ))}
