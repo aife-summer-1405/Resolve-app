@@ -57,14 +57,12 @@ type NumberKey =
 const toStr = (value: number | undefined) =>
   value === undefined ? "" : String(value);
 
-// تبدیل ارقام فارسی و عربی به لاتین و حذف هر چیز غیر از رقم
 const normalizeDigits = (value: string) =>
   value
     .replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
     .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
     .replace(/\D/g, "");
 
-// نمایش با ارقام لاتین و جداکننده‌ی سه‌رقمی
 const formatNumber = (value: string) =>
   value ? Number(value).toLocaleString("en-US") : "";
 
