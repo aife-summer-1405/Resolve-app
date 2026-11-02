@@ -2,7 +2,8 @@
 
 import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Star } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { ArrowLeft, ArrowRight, Star } from "lucide-react";
 import Image from "next/image";
 import FileContainer from "../../Ui/FileContainer";
 import { House } from "@/src/services/houseService";
@@ -22,6 +23,10 @@ const toFa = (value: number | string) =>
 const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("DestinationCard");
+
+  const isFa = locale === "fa";
 
   const count = destination.count ?? 56;
   const score = destination.rating ?? 4.5;
@@ -39,6 +44,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
     >
       <FileContainer
         background={hovered ? "#8CFF45" : "#393939"}
+        direction={isFa ? "rtl" : "ltr"}
         radius="md"
         size="md"
         width="100%"
@@ -60,7 +66,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
               }`}
             >
               <Star size={14} fill="currentColor" />
-              <span>{toFa(score)}</span>
+              <span>{isFa ? toFa(score) : score}</span>
             </div>
           </div>
         }
@@ -73,7 +79,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
                 : "bg-[#414141] text-white"
             }`}
           >
-            <ArrowLeft size={18} />
+            {isFa ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
           </button>
         }
       >
@@ -93,7 +99,10 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
       <div className="mt-[16px] flex items-center gap-1.5 pe-2">
         <h3 className="text-[16px] font-semibold">{destination.title}</h3>
 
-        <span className="text-[12px] text-white/50">({toFa(count)} مورد)</span>
+        <span className="text-[12px] text-white/50">
+          ({isFa ? toFa(count) : count.toLocaleString("en-US")}{" "}
+          {t("countLabel")})
+        </span>
       </div>
     </article>
   );

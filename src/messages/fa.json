@@ -46,5 +46,80 @@
     "bookingIconAlt": "آیکون رزرو",
     "mortgageIconAlt": "آیکون رهن و اجاره",
     "buyAndSellIconAlt": "آیکون خرید و فروش"
+  },
+  "OffersSection": {
+    "bestDiscount": "بهترین تخفیف",
+    "titleBefore": "پیشنهادهای",
+    "titleHighlight": "ویژه",
+    "titleAfter": "دلتا",
+    "viewAll": "مشاهده همه",
+    "loading": "در حال بارگذاری پیشنهادهای ویژه...",
+    "empty": "در حال حاضر پیشنهادی برای نمایش وجود ندارد.",
+    "selectOffer": "انتخاب پیشنهاد {number}"
+  },
+  "OfferCard": {
+    "propertyImage": "تصویر ملک",
+    "showImage": "نمایش تصویر {number}",
+    "noAddress": "آدرس ثبت نشده"
+  },
+  "PropertyCategoriesSection": {
+    "label": "دسته بندی املاک دلتا",
+    "title": "هر ملکی بخوای اینجا پیدا میشه!",
+    "description": "با کلیک به روی هر دسته بندی می توانید تمام آگهی مربوط به آن را مشاهده کنید و به ملک مورد علاقه خود برسید."
+  },
+  "DestinationCard": {
+    "countLabel": "مورد"
+  },
+  "PopularDestinationsSection": {
+    "popularDestinations": "مقصدهای محبوب",
+    "destinationTitle": "اجاره ویلا در محبوب‌ترین مقاصد این ماه",
+    "destinationDescription": "بهترین مقصدها برای تجربه یک اقامت دلنشین و به‌یادماندنی",
+    "emptyDestinations": "در حال حاضر مقصدی برای نمایش وجود ندارد.",
+    "latestListings": "جدیدترین نقاط",
+    "rentTitle": "رهن و اجاره ملک در دلتا",
+    "viewAll": "مشاهده همه",
+    "emptyProperties": "در حال حاضر ملکی برای نمایش وجود ندارد.",
+    "showDestination": "نمایش مقصد {number}",
+    "showProperty": "نمایش ملک {number}",
+    "iconAlt": "آیکون"
+  },
+  "AboutUsSection": {
+    "label": "درباره ما",
+    "title": "دلتا رو بیشتر بشناس!",
+    "description": "تیم دلتا با ارائه بهترین نیروهای خدماتی و سرویس‌های املاک سعی دارد تا بتواند در تمام لحظات کنار شما باشد.",
+    "supportTitle": "۲۴/۷ ساعت شبانه روز",
+    "supportDescription": "تیم پشتیبانی در تمام طول روز همراه شما هستند",
+    "reviewsTitle": "۱۵۰.۰۰۰+ نظرات کاربران",
+    "reviewsDescription": "رضایت مسافرانی که از پلتفرم دلتا استفاده کردند",
+    "housesTitle": "+ ۱۲۰۰۰۰ خانه فعال",
+    "housesDescription": "خانه‌هایی که نظافت و امنیت آن‌ها تأمین شده!",
+    "experienceTitle": "+ ۱۰ سال سابقه درخشان",
+    "experienceDescription": "در مهمان‌نوازی به شما مسافران عزیز",
+    "middleText": "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطر آن‌چنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می‌باشد.",
+    "iconAlt": "آیکون"
+  },
+  "PropertyForSaleSection": {
+    "topLabel": "خونه از خودت میخوای!",
+    "buyAndSell": "خرید و فروش ملک",
+    "inDelta": "در دلتا",
+    "viewAll": "مشاهده همه",
+    "emptyProperties": "در حال حاضر ملکی برای نمایش وجود ندارد.",
+    "latestPoints": "جدیدترین نقاط",
+    "latestRecreationalAreas": "جدیدترین مناطق تفریحی",
+    "emptyDestinations": "در حال حاضر مقصدی برای نمایش وجود ندارد.",
+    "showProperty": "نمایش ملک {number}",
+    "showDestination": "نمایش مقصد {number}",
+    "iconAlt": "آیکون"
+  },
+  "TestimonialsSection": {
+    "iconAlt": "آیکون",
+    "label": "نظرات کاربران",
+    "title": "رضایت شما اعتبار و ارزش دلتا را می‌سازد!",
+    "description": "تیم دلتا با ارائه بهترین نیروهای خدماتی و سرویس‌های املاک سعی دارد تا بتواند در تمام لحظات کنار شما باشد.",
+    "userImageAlt": "تصویر کاربر",
+    "emptyComments": "هنوز نظری ثبت نشده است.",
+    "loadingComments": "در حال دریافت نظرات...",
+    "paginationLabel": "صفحه‌های نظرات",
+    "goToPage": "رفتن به صفحه {number}"
   }
 }

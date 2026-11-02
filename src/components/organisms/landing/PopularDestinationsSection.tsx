@@ -1,7 +1,8 @@
 "use client";
 
 import { FC, useEffect, useRef, useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import DestinationCard from "../../molecules/cards/DestinationCard";
 import OfferCard from "../../molecules/cards/OfferCard";
 import DestinationCardSkeleton from "../../Skeletons/DestinationCardSkeleton";
@@ -25,6 +26,11 @@ const PopularDestinationsSection: FC = () => {
     startX: 0,
     scrollLeft: 0,
   });
+
+  const locale = useLocale();
+  const t = useTranslations("PopularDestinationsSection");
+
+  const isFa = locale === "fa";
 
   useEffect(() => {
     const fetchHouses = async () => {
@@ -135,29 +141,41 @@ const PopularDestinationsSection: FC = () => {
     "!appearance-none !rounded-full !border-0 !p-0 !shadow-none before:!content-none after:!content-none";
 
   return (
-    <main className="relative mx-auto w-full max-w-full overflow-x-clip rounded-b-[64px] bg-big-box text-foreground">
+    <main
+      dir={isFa ? "rtl" : "ltr"}
+      className="relative mx-auto w-full max-w-full overflow-x-clip rounded-b-[64px] bg-big-box text-foreground"
+    >
       <section className="relative px-5 pb-16 pt-20">
-        <div className="pointer-events-none absolute -left-16 top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px]" />
+        <div
+          className={`pointer-events-none absolute top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px] ${
+            isFa ? "-left-16" : "-right-16"
+          }`}
+        />
 
         <div className="relative mx-auto w-full max-w-[1240px]">
           <div className="mb-8 text-center">
-            <span className="mb-3 inline-flex items-center gap-2 text-[12px] text-[#8CFF45]">
-              <span className="h-[5px] w-[5px] rounded-full bg-[#8CFF45]" />
-              مقصدهای محبوب
-              <span className="h-[5px] w-[5px] rounded-full bg-[#8CFF45]" />
-            </span>
+            <div className="mb-3 flex items-center justify-center gap-3">
+              <Image src="/icons/Group 33.png" alt="" width={48} height={16} />
+
+              <span className="text-[16px] font-medium text-[#8CFF45]">
+                {t("popularDestinations")}
+              </span>
+
+              <Image src="/icons/Group 34.png" alt="" width={48} height={16} />
+            </div>
 
             <h2 className="text-[24px] font-semibold">
-              اجاره ویلا در محبوب‌ترین مقاصد این ماه
+              {t("destinationTitle")}
             </h2>
 
             <p className="mt-3 text-[12px] text-white/50">
-              بهترین مقصدها برای تجربه یک اقامت دلنشین و به‌یادماندنی
+              {t("destinationDescription")}
             </p>
           </div>
 
           <div
             ref={destinationSliderRef}
+            dir={isFa ? "rtl" : "ltr"}
             onMouseDown={(event) => startDrag(event, destinationSliderRef)}
             onMouseMove={(event) => drag(event, destinationSliderRef)}
             onMouseUp={() => stopDrag(destinationSliderRef)}
@@ -182,7 +200,7 @@ const PopularDestinationsSection: FC = () => {
 
           {!isLoading && houses.length === 0 && (
             <p className="mt-6 text-center text-sm text-white/50">
-              در حال حاضر مقصدی برای نمایش وجود ندارد.
+              {t("emptyDestinations")}
             </p>
           )}
 
@@ -192,7 +210,9 @@ const PopularDestinationsSection: FC = () => {
                 <button
                   key={house.id}
                   type="button"
-                  aria-label={`نمایش مقصد ${index + 1}`}
+                  aria-label={t("showDestination", {
+                    number: index + 1,
+                  })}
                   aria-pressed={activeDestinationIndex === index}
                   onClick={() =>
                     selectCard(
@@ -214,40 +234,43 @@ const PopularDestinationsSection: FC = () => {
       </section>
 
       <section className="relative px-5 pb-20 pt-16">
-        <div className="pointer-events-none absolute bottom-10 right-0 h-[300px] w-[300px] rounded-full bg-[#7964FF]/10 blur-[100px]" />
+        <div
+          className={`pointer-events-none absolute bottom-10 h-[300px] w-[300px] rounded-full bg-[#7964FF]/10 blur-[100px] ${
+            isFa ? "right-0" : "left-0"
+          }`}
+        />
 
         <div className="relative mx-auto w-full max-w-[1240px]">
           <div className="mb-8 flex flex-wrap items-center justify-between gap-5">
             <div>
               <div className="mb-3 flex items-center gap-3">
                 <span className="text-[16px] font-medium text-[#8CFF45]">
-                  جدیدترین نقاط
+                  {t("latestListings")}
                 </span>
 
                 <Image
                   src="/icons/Group 34.png"
-                  alt="آیکون"
+                  alt={t("iconAlt")}
                   width={30}
                   height={25}
                 />
               </div>
 
-              <h2 className="text-[24px] font-semibold">
-                رهن و اجاره ملک در دلتا
-              </h2>
+              <h2 className="text-[24px] font-semibold">{t("rentTitle")}</h2>
             </div>
 
             <button
               type="button"
               className="flex items-center gap-2 rounded-[10px] border border-white/20 px-4 py-2 text-[12px] text-white/70 transition-colors hover:border-[#8CFF45] hover:text-[#8CFF45]"
             >
-              مشاهده همه
-              <ChevronLeft size={16} />
+              {t("viewAll")}
+              {isFa ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
             </button>
           </div>
 
           <div
             ref={offerSliderRef}
+            dir={isFa ? "rtl" : "ltr"}
             onMouseDown={(event) => startDrag(event, offerSliderRef)}
             onMouseMove={(event) => drag(event, offerSliderRef)}
             onMouseUp={() => stopDrag(offerSliderRef)}
@@ -276,7 +299,7 @@ const PopularDestinationsSection: FC = () => {
 
           {!isLoading && houses.length === 0 && (
             <p className="mt-6 text-center text-sm text-white/50">
-              در حال حاضر ملکی برای نمایش وجود ندارد.
+              {t("emptyProperties")}
             </p>
           )}
 
@@ -286,7 +309,9 @@ const PopularDestinationsSection: FC = () => {
                 <button
                   key={house.id}
                   type="button"
-                  aria-label={`نمایش ملک ${index + 1}`}
+                  aria-label={t("showProperty", {
+                    number: index + 1,
+                  })}
                   aria-pressed={activeOfferIndex === index}
                   onClick={() =>
                     selectCard(index, offerSliderRef, setActiveOfferIndex)

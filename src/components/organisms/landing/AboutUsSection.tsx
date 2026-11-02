@@ -1,18 +1,20 @@
 "use client";
 
+import { FC } from "react";
 import { CalendarClock, ShieldCheck, Smile, Trophy } from "lucide-react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 
 const leftCards = [
   {
-    title: "۲۴/۷ ساعت شبانه روز",
-    description: "تیم پشتیبانی در تمام طول روز همراه شما هستین",
+    title: "supportTitle",
+    description: "supportDescription",
     icon: CalendarClock,
     image: "/images/headphones.png",
   },
   {
-    title: "۱۵۰.۰۰۰+ نظرات کاربران",
-    description: "رضایت مسافرانی که از پلتفرم دلتا استفاده کردن",
+    title: "reviewsTitle",
+    description: "reviewsDescription",
     icon: Smile,
     image: "/images/heart.png",
   },
@@ -20,20 +22,20 @@ const leftCards = [
 
 const rightCards = [
   {
-    title: "+ ۱۲۰۰۰۰ خونه فعال",
-    description: "خانه هایی که نظافت و امنیت شان تامین شده!",
+    title: "housesTitle",
+    description: "housesDescription",
     icon: ShieldCheck,
     image: "/icons/house.png",
   },
   {
-    title: "+ ۱۰ سال سابقه درخشان",
-    description: "در مهمان نوازی به شما مسافران عزیز",
+    title: "experienceTitle",
+    description: "experienceDescription",
     icon: Trophy,
     image: "/images/trophy.png",
   },
 ];
 
-type AboutCard = (typeof leftCards)[number];
+type AboutCard = (typeof leftCards)[number] | (typeof rightCards)[number];
 
 function AboutCardItem({
   card,
@@ -43,13 +45,19 @@ function AboutCardItem({
   side: "left" | "right";
 }) {
   const Icon = card.icon;
+  const locale = useLocale();
+  const t = useTranslations("AboutUsSection");
+
+  const isFa = locale === "fa";
 
   return (
     <article className="relative h-[224px] min-w-0 overflow-hidden">
       <svg
         viewBox="0 0 446 224"
         preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full"
+        className={`absolute inset-0 h-full w-full ${
+          isFa ? "" : "[transform:scaleX(-1)]"
+        }`}
         aria-hidden="true"
       >
         <path
@@ -64,7 +72,11 @@ function AboutCardItem({
       </svg>
 
       <div className="absolute inset-0">
-        <div className="absolute right-8 top-[50px] z-20 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#292929]">
+        <div
+          className={`absolute top-[50px] z-20 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#292929] ${
+            isFa ? "right-8" : "left-8"
+          }`}
+        >
           <Icon size={24} strokeWidth={1.8} />
         </div>
 
@@ -73,14 +85,22 @@ function AboutCardItem({
           alt=""
           width={112}
           height={112}
-          className="pointer-events-none absolute left-2 top-10 z-10 h-[112px] w-[112px] object-contain"
+          className={`pointer-events-none absolute top-10 z-10 h-[112px] w-[112px] object-contain ${
+            isFa ? "left-2" : "right-2"
+          }`}
         />
 
-        <div className="absolute right-8 top-[122px] z-20 w-[75%] text-right">
-          <h3 className="text-[20px] font-semibold leading-7">{card.title}</h3>
+        <div
+          className={`absolute top-[122px] z-20 w-[75%] ${
+            isFa ? "right-8 text-right" : "left-8 text-left"
+          }`}
+        >
+          <h3 className="text-[20px] font-semibold leading-7">
+            {t(card.title)}
+          </h3>
 
           <p className="mt-2 text-[16px] leading-6 text-white/75">
-            {card.description}
+            {t(card.description)}
           </p>
         </div>
       </div>
@@ -88,40 +108,49 @@ function AboutCardItem({
   );
 }
 
-const AboutUsSection = () => {
+const AboutUsSection: FC = () => {
+  const locale = useLocale();
+  const t = useTranslations("AboutUsSection");
+
+  const isFa = locale === "fa";
+
   return (
-    <section className="relative w-full overflow-hidden rounded-b-[64سpx] px-5 pb-12 pt-12 text-white md:px-8">
-      <div className="pointer-events-none absolute -right-22 top-20 h-72 w-72 rounded-full  bg-[#7569FF52]/32 blur-[80px]" />
+    <section
+      dir={isFa ? "rtl" : "ltr"}
+      className="relative w-full overflow-hidden rounded-b-[64px] px-5 pb-12 pt-12 text-white md:px-8"
+    >
+      <div
+        className={`pointer-events-none absolute top-20 h-72 w-72 rounded-full bg-[#7569FF52]/32 blur-[80px] ${
+          isFa ? "-right-22" : "-left-22"
+        }`}
+      />
 
       <div className="relative z-10 mx-auto max-w-[1378px] text-foreground">
         <header className="mb-14 flex flex-col items-center text-center">
           <div className="mb-3 flex items-center gap-3">
             <Image
               src="/icons/Group 33.png"
-              alt="آیکون"
+              alt={t("iconAlt")}
               width={48}
               height={16}
             />
 
             <span className="text-[16px] font-medium text-[#8CFF45]">
-              درباره ی ما
+              {t("label")}
             </span>
 
             <Image
               src="/icons/Group 34.png"
-              alt="آیکون"
+              alt={t("iconAlt")}
               width={48}
               height={16}
             />
           </div>
 
-          <h2 className="text-[30px] font-medium leading-8">
-            دلتا رو بیشتر بشناس!
-          </h2>
+          <h2 className="text-[30px] font-medium leading-8">{t("title")}</h2>
 
-          <p className="mt-3 max-w-[700px] text-[16px] leading-6 ">
-            تیم دلتا با ارائه بهترین نیروهای خدماتی و سرویس‌های املاک سعی دارد
-            تا بتواند در تمام لحظات کنار شما باشد.
+          <p className="mt-3 max-w-[700px] text-[16px] leading-6">
+            {t("description")}
           </p>
         </header>
 
@@ -136,7 +165,9 @@ const AboutUsSection = () => {
             <svg
               viewBox="0 0 446 470"
               preserveAspectRatio="none"
-              className="absolute inset-0 h-full w-full"
+              className={`absolute inset-0 h-full w-full ${
+                isFa ? "" : "[transform:scaleX(-1)]"
+              }`}
               aria-hidden="true"
             >
               <path
@@ -152,14 +183,7 @@ const AboutUsSection = () => {
 
             <div className="absolute inset-0 z-10 flex items-center justify-center px-7 pb-4 pt-12">
               <p className="w-full text-center text-[16px] leading-[36px] text-white">
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله
-                در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
-                نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می‌باشد.
-                کتابهای زیادی در شصت و سه درصد گذشته و حال و آینده شناخت فراوان
-                جامعه و متخصصان را می‌طلبد تا با نرم‌افزارها شناخت بیشتری برای
-                طراحان رایانه‌ای، علی‌الخصوص طراحان خلاق و فرهنگ پیشرو در زبان
-                فارسی ایجاد کرد.
+                {t("middleText")}
               </p>
             </div>
           </div>

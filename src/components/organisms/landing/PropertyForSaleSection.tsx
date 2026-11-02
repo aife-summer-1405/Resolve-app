@@ -1,8 +1,9 @@
 "use client";
 
 import { FC, useEffect, useRef, useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import DestinationCard from "../../molecules/cards/DestinationCard";
 import OfferCard from "../../molecules/cards/OfferCard";
 import DestinationCardSkeleton from "../../Skeletons/DestinationCardSkeleton";
@@ -12,6 +13,10 @@ import { getHouses, type House } from "@/src/services/houseService";
 const VISIBLE_CARDS = 4;
 
 const PropertyForSaleSection: FC = () => {
+  const locale = useLocale();
+  const t = useTranslations("PropertyForSaleSection");
+  const isFa = locale === "fa";
+
   const [activeDestinationIndex, setActiveDestinationIndex] = useState(2);
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
   const [houses, setHouses] = useState<House[]>([]);
@@ -135,36 +140,54 @@ const PropertyForSaleSection: FC = () => {
     "!appearance-none !rounded-full !border-0 !p-0 !shadow-none before:!content-none after:!content-none";
 
   return (
-    <section className="relative w-full overflow-hidden rounded-b-[48px] bg-[#2D2D2D] px-5 pb-16 pt-10 text-white md:px-8 lg:min-h-[860px]">
-      <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full bg-[#8CFF45]/10 blur-[100px]" />
+    <section
+      dir={isFa ? "rtl" : "ltr"}
+      className="relative w-full overflow-hidden rounded-b-[48px] bg-[#2D2D2D] px-5 pb-16 pt-10 text-white md:px-8 lg:min-h-[860px]"
+    >
+      <div
+        className={`pointer-events-none absolute top-0 h-72 w-72 rounded-full bg-[#8CFF45]/10 blur-[100px] ${
+          isFa ? "-right-32" : "-left-32"
+        }`}
+      />
 
-      <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#7569FF]/20 blur-[100px]" />
+      <div
+        className={`pointer-events-none absolute bottom-0 h-72 w-72 rounded-full bg-[#7569FF]/20 blur-[100px] ${
+          isFa ? "-left-24" : "-right-24"
+        }`}
+      />
 
       <div className="relative z-10 mx-auto w-full max-w-[1376px]">
         <div className="mb-3 flex items-center gap-3">
           <span className="text-[16px] font-medium text-[#8CFF45]">
-            خونه از خودت میخوای!
+            {t("topLabel")}
           </span>
 
-          <Image src="/icons/Group 34.png" alt="آیکون" width={30} height={25} />
+          <Image
+            src="/icons/Group 34.png"
+            alt={t("iconAlt")}
+            width={30}
+            height={25}
+          />
         </div>
 
         <div className="mb-7 flex items-center justify-between gap-4">
           <h2 className="text-[22px] font-light md:text-[28px]">
-            <span className="font-semibold">خرید و فروش ملک</span> در دلتا
+            <span className="font-semibold">{t("buyAndSell")}</span>{" "}
+            {t("inDelta")}
           </h2>
 
           <button
             type="button"
             className="flex shrink-0 items-center gap-2 rounded-[10px] border border-white/50 px-3 py-1.5 text-[11px] transition hover:border-[#8CFF45] hover:text-[#8CFF45]"
           >
-            <ChevronLeft size={13} />
-            مشاهده همه
+            {t("viewAll")}
+            {isFa ? <ChevronLeft size={13} /> : <ChevronRight size={13} />}
           </button>
         </div>
 
         <div
           ref={offerSliderRef}
+          dir={isFa ? "rtl" : "ltr"}
           onMouseDown={(event) => startDrag(event, offerSliderRef)}
           onMouseMove={(event) => drag(event, offerSliderRef)}
           onMouseUp={() => stopDrag(offerSliderRef)}
@@ -189,7 +212,7 @@ const PropertyForSaleSection: FC = () => {
 
         {!isLoading && houses.length === 0 && (
           <p className="mt-5 text-center text-sm text-white/50">
-            در حال حاضر ملکی برای نمایش وجود ندارد.
+            {t("emptyProperties")}
           </p>
         )}
 
@@ -199,7 +222,7 @@ const PropertyForSaleSection: FC = () => {
               <button
                 key={house.id}
                 type="button"
-                aria-label={`نمایش ملک ${index + 1}`}
+                aria-label={t("showProperty", { number: index + 1 })}
                 aria-pressed={activeOfferIndex === index}
                 onClick={() =>
                   selectCard(index, offerSliderRef, setActiveOfferIndex)
@@ -215,12 +238,12 @@ const PropertyForSaleSection: FC = () => {
         <div className="mt-28 rounded-[28px] bg-[#222222] px-4 py-7 md:px-5 md:py-8">
           <div className="mb-3 flex items-center gap-3">
             <span className="text-[16px] font-medium text-[#8CFF45]">
-              جدیدترین نقاط
+              {t("latestPoints")}
             </span>
 
             <Image
               src="/icons/Group 34.png"
-              alt="آیکون"
+              alt={t("iconAlt")}
               width={30}
               height={25}
             />
@@ -228,20 +251,23 @@ const PropertyForSaleSection: FC = () => {
 
           <div className="mb-7 flex items-center justify-between gap-4">
             <h2 className="text-[22px] font-light md:text-[28px]">
-              <span className="font-semibold">جدیدترین مناطق تفریحی</span>
+              <span className="font-semibold">
+                {t("latestRecreationalAreas")}
+              </span>
             </h2>
 
             <button
               type="button"
               className="flex shrink-0 items-center gap-2 rounded-[10px] border border-white/50 px-3 py-1.5 text-[11px] transition hover:border-[#8CFF45] hover:text-[#8CFF45]"
             >
-              <ChevronLeft size={13} />
-              مشاهده همه
+              {t("viewAll")}
+              {isFa ? <ChevronLeft size={13} /> : <ChevronRight size={13} />}
             </button>
           </div>
 
           <div
             ref={destinationSliderRef}
+            dir={isFa ? "rtl" : "ltr"}
             onMouseDown={(event) => startDrag(event, destinationSliderRef)}
             onMouseMove={(event) => drag(event, destinationSliderRef)}
             onMouseUp={() => stopDrag(destinationSliderRef)}
@@ -257,7 +283,7 @@ const PropertyForSaleSection: FC = () => {
                     <DestinationCardSkeleton />
                   </div>
                 ))
-              : houses.map((house, index) => (
+              : houses.map((house) => (
                   <div key={house.id} className={cardWrapperClass}>
                     <DestinationCard destination={house} />
                   </div>
@@ -266,7 +292,7 @@ const PropertyForSaleSection: FC = () => {
 
           {!isLoading && houses.length === 0 && (
             <p className="mt-5 text-center text-sm text-white/50">
-              در حال حاضر مقصدی برای نمایش وجود ندارد.
+              {t("emptyDestinations")}
             </p>
           )}
 
@@ -276,7 +302,7 @@ const PropertyForSaleSection: FC = () => {
                 <button
                   key={house.id}
                   type="button"
-                  aria-label={`نمایش مقصد ${index + 1}`}
+                  aria-label={t("showDestination", { number: index + 1 })}
                   aria-pressed={activeDestinationIndex === index}
                   onClick={() =>
                     selectCard(
@@ -287,8 +313,8 @@ const PropertyForSaleSection: FC = () => {
                   }
                   className={`${paginationButtonClass} !flex !h-[5px] !w-[5px] !min-w-[5px] !shrink-0 !transform-none !transition-colors ${
                     activeDestinationIndex === index
-                      ? "!bg-[#8CFF45]"
-                      : "!bg-white/70"
+                      ? "bg-[#8CFF45]"
+                      : "bg-white"
                   }`}
                 />
               ))}

@@ -46,5 +46,80 @@
     "bookingIconAlt": "Booking Icon",
     "mortgageIconAlt": "Rent and Lease Icon",
     "buyAndSellIconAlt": "Buy and Sell Icon"
+  },
+  "OffersSection": {
+    "bestDiscount": "Best Discount",
+    "titleBefore": "Delta's",
+    "titleHighlight": "Special",
+    "titleAfter": "Offers",
+    "viewAll": "View All",
+    "loading": "Loading special offers...",
+    "empty": "There are currently no offers to display.",
+    "selectOffer": "Select offer {number}"
+  },
+  "OfferCard": {
+    "propertyImage": "Property image",
+    "showImage": "Show image {number}",
+    "noAddress": "Address not provided"
+  },
+  "PropertyCategoriesSection": {
+    "label": "Delta Property Categories",
+    "title": "Find Any Property You Want!",
+    "description": "Click on any category to explore all related listings and find your favorite property."
+  },
+  "DestinationCard": {
+    "countLabel": "items"
+  },
+  "PopularDestinationsSection": {
+    "popularDestinations": "Popular Destinations",
+    "destinationTitle": "Rent a Villa in This Month's Most Popular Destinations",
+    "destinationDescription": "The best destinations for a pleasant and memorable stay",
+    "emptyDestinations": "There are currently no destinations to display.",
+    "latestListings": "Latest Listings",
+    "rentTitle": "Property Rentals on Delta",
+    "viewAll": "View All",
+    "emptyProperties": "There are currently no properties to display.",
+    "showDestination": "Show destination {number}",
+    "showProperty": "Show property {number}",
+    "iconAlt": "Icon"
+  },
+  "AboutUsSection": {
+    "label": "About Us",
+    "title": "Get to Know Delta Better!",
+    "description": "The Delta team aims to be by your side at every moment by providing excellent service staff and real estate services.",
+    "supportTitle": "24/7 Support",
+    "supportDescription": "Our support team is available throughout the day.",
+    "reviewsTitle": "150,000+ User Reviews",
+    "reviewsDescription": "Satisfied travelers who have used the Delta platform.",
+    "housesTitle": "120,000+ Active Homes",
+    "housesDescription": "Homes with guaranteed cleanliness and security!",
+    "experienceTitle": "10+ Years of Experience",
+    "experienceDescription": "Providing hospitality to our valued travelers.",
+    "middleText": "Lorem ipsum is placeholder text commonly used in the graphic design and printing industry. It helps demonstrate how written content will look in a layout before the final text is available.",
+    "iconAlt": "Icon"
+  },
+  "PropertyForSaleSection": {
+    "topLabel": "Looking for a place of your own?",
+    "buyAndSell": "Property Buying and Selling",
+    "inDelta": "on Delta",
+    "viewAll": "View All",
+    "emptyProperties": "There are currently no properties to display.",
+    "latestPoints": "Latest Listings",
+    "latestRecreationalAreas": "Latest Recreational Areas",
+    "emptyDestinations": "There are currently no destinations to display.",
+    "showProperty": "Show property {number}",
+    "showDestination": "Show destination {number}",
+    "iconAlt": "Icon"
+  },
+  "TestimonialsSection": {
+    "iconAlt": "Icon",
+    "label": "User Reviews",
+    "title": "Your Satisfaction Builds Delta's Reputation and Value!",
+    "description": "The Delta team aims to be by your side at every moment by providing excellent service staff and real estate services.",
+    "userImageAlt": "User image",
+    "emptyComments": "No reviews have been submitted yet.",
+    "loadingComments": "Loading reviews...",
+    "paginationLabel": "Review pages",
+    "goToPage": "Go to page {number}"
   }
 }

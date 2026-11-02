@@ -2,7 +2,8 @@
 
 import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Building2, MapPin, Star } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { ArrowLeft, ArrowRight, Building2, MapPin, Star } from "lucide-react";
 
 import FileContainer from "@/src/components/Ui/FileContainer";
 import { House } from "@/src/services/houseService";
@@ -24,6 +25,10 @@ const OfferCard: FC<IOfferCardProps> = ({
   const [hovered, setHovered] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("OfferCard");
+
+  const isFa = locale === "fa";
 
   if (isLoading) {
     return <OfferCardSkeleton />;
@@ -57,6 +62,7 @@ const OfferCard: FC<IOfferCardProps> = ({
     >
       <FileContainer
         background={hovered ? "#8CFF45" : "#393939"}
+        direction={locale === "fa" ? "rtl" : "ltr"}
         radius="md"
         size="md"
         width="100%"
@@ -79,9 +85,12 @@ const OfferCard: FC<IOfferCardProps> = ({
             >
               <Star size={14} fill="currentColor" />
               <span>
-                {(Number(offer.rate) || 0).toLocaleString("fa-IR", {
-                  minimumFractionDigits: 1,
-                })}
+                {(Number(offer.rate) || 0).toLocaleString(
+                  isFa ? "fa-IR" : "en-US",
+                  {
+                    minimumFractionDigits: 1,
+                  },
+                )}
               </span>
             </div>
           </div>
@@ -95,7 +104,7 @@ const OfferCard: FC<IOfferCardProps> = ({
                 : "bg-[#414141] text-white"
             }`}
           >
-            <ArrowLeft size={18} />
+            {isFa ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
           </button>
         }
       >
@@ -105,7 +114,7 @@ const OfferCard: FC<IOfferCardProps> = ({
               key={image}
               src={image}
               fallbackSrc="/images/offer.jpg"
-              alt={offer.title || "تصویر ملک"}
+              alt={offer.title || t("propertyImage")}
               fill
               sizes="274px"
               className="object-cover"
@@ -117,7 +126,7 @@ const OfferCard: FC<IOfferCardProps> = ({
                   <button
                     key={index}
                     type="button"
-                    aria-label={`نمایش تصویر ${index + 1}`}
+                    aria-label={t("showImage", { number: index + 1 })}
                     onClick={(event) => {
                       event.stopPropagation();
                       setActiveImageIndex(index);
@@ -142,20 +151,23 @@ const OfferCard: FC<IOfferCardProps> = ({
 
         {discount > 0 && (
           <span className="shrink-0 rounded-[12px] bg-[#FF545E] px-[10px] py-[6px] text-[12px] font-medium text-white">
-            ٪{discount.toLocaleString("fa-IR")}
+            {isFa ? "٪" : "%"}
+            {discount.toLocaleString(isFa ? "fa-IR" : "en-US")}
           </span>
         )}
       </div>
 
       <div className="mt-[8px] flex items-center gap-[5px] px-[2px] text-[12px] text-white/50">
         <MapPin size={14} className="shrink-0" />
-        <span>{offer.address || "آدرس ثبت نشده"}</span>
+        <span>{offer.address || t("noAddress")}</span>
       </div>
 
       <div className="mt-[12px] flex items-center gap-[5px] px-[2px] text-[12px] text-white/50">
         <Building2 size={14} className="shrink-0" />
         <span>
-          {offer.rooms} خواب، {offer.capacity} نفر ظرفیت
+          {isFa
+            ? `${offer.rooms} خواب، ${offer.capacity} نفر ظرفیت`
+            : `${offer.rooms} bedrooms, ${offer.capacity} guests`}
         </span>
       </div>
 
@@ -165,7 +177,8 @@ const OfferCard: FC<IOfferCardProps> = ({
         }`}
       >
         <span className="shrink-0 text-[11px] font-semibold">
-          {price.toLocaleString("fa-IR")}ت / هر شب
+          {price.toLocaleString(isFa ? "fa-IR" : "en-US")}
+          {isFa ? "ت / هر شب" : "T / night"}
         </span>
 
         {discount > 0 && (
@@ -181,7 +194,8 @@ const OfferCard: FC<IOfferCardProps> = ({
                 hovered ? "text-black/40" : "text-white/45"
               }`}
             >
-              {originalPrice.toLocaleString("fa-IR")}ت
+              {originalPrice.toLocaleString(isFa ? "fa-IR" : "en-US")}
+              {isFa ? "ت" : "T"}
             </span>
           </>
         )}
