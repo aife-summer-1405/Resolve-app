@@ -28,23 +28,36 @@ export interface FileContainerProps {
   labelWidth?: string;
   labelHeight?: string;
   tagHeight?: string;
+  direction?: "rtl" | "ltr";
   classNames?: Partial<ClassNames>;
 }
 
 interface IHollowProps {
   background: string;
+  direction: "rtl" | "ltr";
   className?: string;
 }
 
-const HollowSizeMD: FC<IHollowProps> = ({ background, className }) => {
+const HollowSizeMD: FC<IHollowProps> = ({
+  background,
+  direction,
+  className,
+}) => {
   return (
     <div
       style={{
-        boxShadow: `4px 6px ${background}`,
+        boxShadow:
+          direction === "rtl"
+            ? `4px 6px ${background}`
+            : `-4px 6px ${background}`,
         color: background,
         pointerEvents: "none",
       }}
-      className={`absolute bottom-0 left-[-19px] z-10 h-5 w-5 rounded-br-full ${className ?? ""}`}
+      className={`absolute bottom-0 z-10 h-5 w-5 ${
+        direction === "rtl"
+          ? "left-[-19px] rounded-br-full"
+          : "right-[-19px] rounded-bl-full"
+      } ${className ?? ""}`}
     />
   );
 };
@@ -58,21 +71,36 @@ const HollowSizeLG: FC<IHollowSizeLGProps> = ({
   background,
   radius,
   labelHeight,
+  direction,
   className,
 }) => {
   return (
     <div
-      className="absolute -left-6 bottom-0 skew-x-[-45deg]"
+      className={`absolute bottom-0 ${
+        direction === "rtl"
+          ? "-left-6 skew-x-[-45deg]"
+          : "-right-6 skew-x-[45deg]"
+      }`}
       style={{
         backgroundColor: background,
         height: labelHeight,
         width: "80%",
-        borderTopLeftRadius: radius,
+        borderTopLeftRadius: direction === "rtl" ? radius : "0",
+        borderTopRightRadius: direction === "ltr" ? radius : "0",
       }}
     >
       <div
-        className={`absolute bottom-0 left-[-19px] z-10 h-5 w-5 rounded-br-full ${className ?? ""}`}
-        style={{ boxShadow: `4px 6px ${background}` }}
+        className={`absolute bottom-0 z-10 h-5 w-5 ${
+          direction === "rtl"
+            ? "left-[-19px] rounded-br-full"
+            : "right-[-19px] rounded-bl-full"
+        } ${className ?? ""}`}
+        style={{
+          boxShadow:
+            direction === "rtl"
+              ? `4px 6px ${background}`
+              : `-4px 6px ${background}`,
+        }}
       />
     </div>
   );
@@ -90,6 +118,7 @@ const FileContainer: FC<FileContainerProps> = ({
   labelWidth,
   labelHeight,
   tagHeight,
+  direction = "rtl",
   classNames,
 }) => {
   const labelRef = useRef<HTMLDivElement>(null);
@@ -97,22 +126,36 @@ const FileContainer: FC<FileContainerProps> = ({
 
   return (
     <div
+      dir={direction}
       className={`relative z-30 h-fit ${classNames?.base ?? ""}`}
       style={{
         width,
         height,
         borderRadius: RADIUS_SIZE[radius],
-        borderTopRightRadius: "0px",
+        borderTopRightRadius: direction === "rtl" ? "0px" : RADIUS_SIZE[radius],
+        borderTopLeftRadius: direction === "ltr" ? "0px" : RADIUS_SIZE[radius],
         backgroundColor: background,
         marginTop: labelHeight,
       }}
     >
       <div
         ref={labelRef}
-        className={`absolute right-0 z-30 ${classNames?.wrapperLabel ?? ""}`}
+        className={`absolute z-30 ${
+          direction === "rtl" ? "right-0" : "left-0"
+        } ${classNames?.wrapperLabel ?? ""}`}
         style={{
-          borderTopRightRadius: RADIUS_SIZE[radius],
-          borderTopLeftRadius: size === "lg" ? "30%" : RADIUS_SIZE[radius],
+          borderTopRightRadius:
+            direction === "rtl"
+              ? RADIUS_SIZE[radius]
+              : size === "lg"
+                ? "30%"
+                : RADIUS_SIZE[radius],
+          borderTopLeftRadius:
+            direction === "ltr"
+              ? RADIUS_SIZE[radius]
+              : size === "lg"
+                ? "30%"
+                : RADIUS_SIZE[radius],
           backgroundColor: background,
           height: labelHeight,
           width: labelWidth,
@@ -130,11 +173,13 @@ const FileContainer: FC<FileContainerProps> = ({
             background={background}
             radius={RADIUS_SIZE[radius]}
             labelHeight={labelHeight}
+            direction={direction}
             className={classNames?.coverHollow}
           />
         ) : (
           <HollowSizeMD
             background={background}
+            direction={direction}
             className={classNames?.coverHollow}
           />
         )}
@@ -142,7 +187,9 @@ const FileContainer: FC<FileContainerProps> = ({
 
       <div
         ref={tagRef}
-        className={`absolute left-0 flex h-fit items-start justify-end ${classNames?.wrapperTag ?? ""}`}
+        className={`absolute flex h-fit items-start ${
+          direction === "rtl" ? "left-0 justify-end" : "right-0 justify-start"
+        } ${classNames?.wrapperTag ?? ""}`}
         style={{
           width: `calc(95% - ${labelWidth})`,
           height: tagHeight || labelHeight,

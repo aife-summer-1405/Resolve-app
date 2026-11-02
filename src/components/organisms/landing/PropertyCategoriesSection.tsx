@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MoveLeft } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
+import { MoveLeft, MoveRight } from "lucide-react";
 import Image from "next/image";
 import FileContainer from "@/src/components/Ui/FileContainer";
 import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 import { getCategories } from "@/src/services/getCategoryService";
 
 const PropertyCategoriesSection = () => {
+  const t = useTranslations("PropertyCategoriesSection");
+  const locale = useLocale();
+
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [active, setActive] = useState<string | null>(null);
 
@@ -26,7 +30,11 @@ const PropertyCategoriesSection = () => {
 
   return (
     <section className="relative mb-30 w-full overflow-hidden px-5 pb-16 pt-30 text-white">
-      <div className="pointer-events-none absolute -left-16 top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px]" />
+      <div
+        className={`pointer-events-none absolute top-20 h-64 w-64 rounded-full bg-[#8CFF4552]/32 blur-[80px] ${
+          locale === "fa" ? "-left-16" : "-right-16"
+        }`}
+      />
 
       <div className="relative z-10 mx-auto max-w-344 text-foreground">
         <div className="flex flex-col items-center text-center text-foreground">
@@ -34,24 +42,24 @@ const PropertyCategoriesSection = () => {
             <Image src="/icons/Group 33.png" alt="" width={48} height={16} />
 
             <span className="text-[16px] font-medium text-[#8CFF45]">
-              دسته بندی املاک دلتا
+              {t("label")}
             </span>
 
             <Image src="/icons/Group 34.png" alt="" width={48} height={16} />
           </div>
 
           <h2 className="text-[32px] font-medium leading-8 md:text-xl">
-            هر ملکی بخوای اینجا پیدا میشه!
+            {t("title")}
           </h2>
 
-          <p className="mt-3 text-[12px] leading-6">
-            با کلیک به روی هر دسته بندی می توانید تمام آگهی مربوط به آن را
-            مشاهده کنید و به ملک مورد علاقه خود برسید.
-          </p>
+          <p className="mt-3 text-[12px] leading-6">{t("description")}</p>
         </div>
 
         <div className="category-scroll mt-8 overflow-x-auto pb-3 pt-9">
-          <div className="flex min-w-max items-start gap-4 px-1">
+          <div
+            dir={locale === "fa" ? "rtl" : "ltr"}
+            className="flex min-w-max items-start gap-4 px-1"
+          >
             {categories.map((category) => {
               const isActive = active === category.id;
 
@@ -64,6 +72,7 @@ const PropertyCategoriesSection = () => {
                   onBlur={() => setActive(null)}
                 >
                   <FileContainer
+                    direction={locale === "fa" ? "rtl" : "ltr"}
                     background={isActive ? "#8CFF45" : "#303030"}
                     radius="sm"
                     size="md"
@@ -80,7 +89,11 @@ const PropertyCategoriesSection = () => {
                         "flex h-full items-center justify-center p-1!",
                     }}
                     label={
-                      <div className="pointer-events-none absolute right-[15px] top-[-28px] z-50 flex size-[58px] items-center justify-center rounded-[16px] bg-[#393939]">
+                      <div
+                        className={`pointer-events-none absolute top-[-28px] z-50 flex size-[58px] items-center justify-center rounded-[16px] bg-[#393939] ${
+                          locale === "fa" ? "right-[15px]" : "left-[15px]"
+                        }`}
+                      >
                         <Image
                           src="/icons/v.png"
                           alt=""
@@ -91,7 +104,17 @@ const PropertyCategoriesSection = () => {
                       </div>
                     }
                     tag={
-                      <MoveLeft size={18} className="me-1 mt-3 text-white/70" />
+                      locale === "fa" ? (
+                        <MoveLeft
+                          size={18}
+                          className="me-1 mt-3 text-white/70"
+                        />
+                      ) : (
+                        <MoveRight
+                          size={18}
+                          className="ms-1 mt-3 text-white/70"
+                        />
+                      )
                     }
                   >
                     <button
