@@ -1,5 +1,11 @@
+"use client";
 
 import Image from "next/image";
+
+const GOOGLE_AUTH_URL =
+  process.env.NEXT_PUBLIC_API_URL
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`
+    : "https://aife-api.hexorix.net/api/auth/google";
 
 export default function SocialLogin() {
   return (
@@ -17,8 +23,8 @@ export default function SocialLogin() {
         />
       </button>
 
-      <button
-        type="button"
+      <a
+        href={GOOGLE_AUTH_URL}
         className="flex items-center justify-center gap-2 rounded-2xl bg-[#91FF45] px-2 py-3.5 text-sm font-medium text-[#222] transition hover:bg-[#a1ff60]"
       >
         ورود با حساب گوگل
@@ -28,7 +34,7 @@ export default function SocialLogin() {
           width={18}
           height={18}
         />
-      </button>
+      </a>
     </div>
   );
 }
