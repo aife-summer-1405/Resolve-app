@@ -26,7 +26,7 @@ interface IMortgageFiltersProps {
 type FilterState = {
   location: string;
   propertyType: string;
-  transactionType: string; // "" = هر دو | "rental" | "mortgage"
+  transactionType: string; 
   sort: string;
   order: "ASC" | "DESC";
   search: string;
@@ -143,13 +143,11 @@ export default function MortgageFilters({
     [pathname, router, searchParams],
   );
 
-  // فیلدهای انتخابی: بلافاصله اعمال می‌شوند
   const handleSelectChange = (patch: Partial<FilterState>) => {
     clearSearchTimeout();
     applyFilters({ ...draft, ...patch });
   };
 
-  // جست‌وجو و فیلدهای عددی: با تأخیر
   const handleDebouncedChange = (patch: Partial<FilterState>) => {
     const nextDraft = { ...draft, ...patch };
 
@@ -187,7 +185,6 @@ export default function MortgageFilters({
     router.replace(pathname || "/", { scroll: false });
   };
 
-  // همگام‌سازی با URL (مثلاً دکمه‌ی برگشت مرورگر)، مگر وقتی کاربر در حال تایپ است
   useEffect(() => {
     if (searchTimeout.current) return;
     setDraft(stateFromFilters(filters));
@@ -272,7 +269,6 @@ export default function MortgageFilters({
             />
           </div>
 
-          {/* نوع ملک */}
           <div className="relative min-w-0">
             <label
               htmlFor="mortgage-property-type"
@@ -311,7 +307,6 @@ export default function MortgageFilters({
             />
           </div>
 
-          {/* مرتب‌سازی */}
           <div className="relative min-w-0">
             <label
               htmlFor="mortgage-sort"
@@ -351,7 +346,6 @@ export default function MortgageFilters({
             />
           </div>
 
-          {/* محل */}
           <div className="relative min-w-0">
             <label
               htmlFor="mortgage-location"
