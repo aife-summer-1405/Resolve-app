@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ChevronLeft, Clock3 } from "lucide-react";
 import FileContainer from "@/src/components/Ui/FileContainer";
 
@@ -26,57 +27,66 @@ export default function ArticlesList() {
   );
 
   return (
-    <section dir="rtl" className="mx-auto w-full max-w-[1600px] px-6 pb-16 pt-10">
+    <section
+      dir="rtl"
+      className="mx-auto w-full max-w-[1600px] px-6 pb-16 pt-10"
+    >
       <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {currentArticles.map((article) => (
-          <article key={article.id} className="w-full text-white">
-            <FileContainer
-              background="#303030"
-              direction="rtl"
-              radius="md"
-              size="md"
-              width="100%"
-              height="190px"
-              labelWidth="112px"
-              labelHeight="34px"
-              tagHeight="30px"
-              classNames={{
-                base: "transition-colors duration-200",
-                innerLabel: "h-full p-0!",
-              }}
-              label={
-                <div className="flex h-full items-center justify-center">
-                  <div className="mt-2 flex h-[27px] items-center justify-center gap-1 rounded-[10px] bg-white px-3 text-[11px] font-medium text-[#292929] shadow-[0_4px_12px_#FFFFFF33]">
-                    <Clock3 size={12} />
-                    <span>{article.duration}</span>
+          <Link
+            key={article.id}
+            href={`/Articles/${article.id}`}
+            className="block w-full cursor-pointer"
+          >
+            <article className="w-full text-white transition-transform duration-200 hover:-translate-y-1">
+              <FileContainer
+                background="#303030"
+                direction="rtl"
+                radius="md"
+                size="md"
+                width="100%"
+                height="190px"
+                labelWidth="112px"
+                labelHeight="34px"
+                tagHeight="30px"
+                classNames={{
+                  base: "transition-colors duration-200",
+                  innerLabel: "h-full p-0!",
+                }}
+                label={
+                  <div className="flex h-full items-center justify-center">
+                    <div className="mt-2 flex h-[27px] items-center justify-center gap-1 rounded-[10px] bg-white px-3 text-[11px] font-medium text-[#292929] shadow-[0_4px_12px_#FFFFFF33]">
+                      <Clock3 size={12} />
+                      <span>{article.duration}</span>
+                    </div>
                   </div>
+                }
+                tag={
+                  <div className="flex h-[25px] w-[42px] items-center justify-center rounded-lg bg-[#414141] text-white">
+                    <ChevronLeft size={19} />
+                  </div>
+                }
+              >
+                <div className="h-full px-3 pt-[14px]">
+                  <div className="h-[160px] w-full rounded-[20px] bg-[#444444]" />
                 </div>
-              }
-              tag={
-                <div className="flex h-[25px] w-[42px] items-center justify-center rounded-lg bg-[#414141] text-white">
-                  <ChevronLeft size={19} />
-                </div>
-              }
-            >
-              <div className="h-full px-3 pt-[14px]">
-                <div className="h-[160px] w-full rounded-[20px] bg-[#444444]" />
+              </FileContainer>
+
+              <div className="px-2 pt-4 text-right">
+                <p className="text-[11px] text-white/45">
+                  {article.date}
+                </p>
+
+                <h2 className="mt-4 text-[16px] font-semibold leading-7">
+                  {article.title}
+                </h2>
+
+                <p className="mt-4 line-clamp-3 text-[12px] leading-7 text-white/50">
+                  {article.description}
+                </p>
               </div>
-            </FileContainer>
-
-            <div className="px-2 pt-4 text-right">
-              <p className="text-[11px] text-white/45">
-                {article.date}
-              </p>
-
-              <h2 className="mt-4 text-[16px] font-semibold leading-7">
-                {article.title}
-              </h2>
-
-              <p className="mt-4 line-clamp-3 text-[12px] leading-7 text-white/50">
-                {article.description}
-              </p>
-            </div>
-          </article>
+            </article>
+          </Link>
         ))}
       </div>
 
