@@ -8,7 +8,6 @@ import UserDataProvider from "@/src/providers/UserDataProvider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 export const instant = false;
-
 const vazirmatn = localFont({
   src: [
     {
@@ -73,7 +72,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang={locale}
-      dir={locale === "fa" ? "rtl" : " rtl"}
+      dir={locale === "fa" ? "rtl" : "ltr"}
       suppressHydrationWarning
       className={`${vazirmatn.variable} h-full antialiased`}
     >

@@ -202,7 +202,7 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
                 </div>
 
                 <Link
-                  href="/profile"
+                  href="/dashboard"
                   onClick={() => setIsProfileMenuOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2.5 transition hover:bg-surface hover:text-primary"
                 >
