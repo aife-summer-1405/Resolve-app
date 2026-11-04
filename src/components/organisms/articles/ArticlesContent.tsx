@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, Clock3 } from "lucide-react";
 import FileContainer from "@/src/components/Ui/FileContainer";
+
 export default function ArticlesContent() {
   return (
     <main
@@ -75,6 +76,7 @@ export default function ArticlesContent() {
   );
 }
 
+
 interface ArticleCardProps {
   large?: boolean;
   horizontal?: boolean;
@@ -105,7 +107,7 @@ function ArticleCard({
           <div className="flex h-full items-center justify-center">
             <div className="mt-2 flex h-[27px] items-center justify-center gap-1 rounded-[10px] bg-white px-3 text-[11px] font-medium text-[#292929] shadow-[0_4px_12px_#FFFFFF33]">
               <Clock3 size={12} />
-              <span>۳۰ دقیقه</span>
+              <span>۳۰ دقیقه</span>              
             </div>
           </div>
         }
@@ -126,14 +128,13 @@ function ArticleCard({
             }`}
           >
 
-            <div className="absolute left-3 top-3 flex items-center justify-center rounded-lg ">
-                <Image
-                  src="/images/Group 9949.png"
-                  alt="اتش"
-                  width={50}
-                  height={12}
-                  className="h-auto w-[50px]"
-                />
+            <div className="absolute left-3 top-3 flex  items-center justify-center rounded-lg ">
+              <Image
+                src="/images/Group 9949.png"
+                alt="اتش "
+                width={50}
+                height={12}
+              />                  
             </div>
           </div>
         </div>
