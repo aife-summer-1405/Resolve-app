@@ -29,8 +29,8 @@ const HeaderSlider = ({ result }: ISliderProps) => {
     };
 
     return (
-        <div className="flex h-[400px] w-full gap-3">
-            <div className="grid w-48 grid-cols-2 gap-2">
+        <div className="flex h-[400px]  gap-3">
+            <div className="md:grid w-48 grid-cols-2 gap-2 hidden ">
                 {photos.map((image, index) => (
                     <button
                         key={`${image}-${index}`}
@@ -52,7 +52,7 @@ const HeaderSlider = ({ result }: ISliderProps) => {
                 onSwiper={setThumbsSwiper}
                 modules={[Pagination]}
                 pagination={{ clickable: true }}
-                className="house-swiper h-full min-w-0 flex-1 overflow-hidden rounded-2xl"
+                className="house-swiper h-full md:w-350 w-80  flex-1 overflow-hidden rounded-2xl"
             >
                 {photos.map((image, index) => (
                     <SwiperSlide key={`${image}-${index}`}>
