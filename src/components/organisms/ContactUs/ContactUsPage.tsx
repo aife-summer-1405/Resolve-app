@@ -128,8 +128,8 @@ const ContactUsPage = () => {
                 type="submit"
                 className="flex h-[42px] w-full items-center justify-center gap-2 rounded-xl bg-[#8CFF45] text-[12px] font-medium text-[#222222] transition hover:bg-[#79E83A]"
               >
-                <ChevronLeft size={15} />
                 ارسال درخواست
+                <ChevronLeft size={15} />
               </button>
             </form>
           </section>
