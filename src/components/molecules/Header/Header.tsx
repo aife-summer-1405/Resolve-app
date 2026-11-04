@@ -32,7 +32,7 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
     { label: t("quickReserve"), href: "/HouseReserve", hasMenu: true },
     { label: t("mortgage"), href: "/Mortgage", hasMenu: true },
     { label: t("about"), href: "#about" },
-    { label: t("articles"), href: "#blog" },
+    { label: t("articles"), href: "/Articles" },
     { label: t("contact"), href: "/ContactUs" },
   ];
 
