@@ -1,7 +1,11 @@
+
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import {
+    Controller,
+    useForm,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -42,15 +46,14 @@ interface IBookingPageProps {
 const travelerSchema = z.object({
     firstName: z.string().trim().min(1, "نام الزامی است"),
     lastName: z.string().trim().min(1, "نام خانوادگی الزامی است"),
-    nationalId: z.string().regex(/^\d{10}$/, "کد ملی باید ۱۰ رقم باشد"),
+    nationalId: z
+        .string()
+        .regex(/^\d{10}$/, "کد ملی باید ۱۰ رقم باشد"),
     birthDate: z.string().min(1, "تاریخ تولد الزامی است"),
     gender: z
         .string()
         .min(1, "انتخاب جنسیت الزامی است")
-        .refine(
-            (value) => value === "male" || value === "female",
-            "جنسیت معتبر نیست",
-        ),
+        .pipe(z.enum(["male", "female"])),
 });
 
 const bookingSchema = z.object({
@@ -63,10 +66,17 @@ const bookingSchema = z.object({
         .email("لطفاً یک ایمیل معتبر وارد کنید"),
     sharedMobile: z
         .string()
-        .regex(/^09\d{9}$/, "شماره موبایل باید ۱۱ رقم و با 09 شروع شود"),
+        .regex(
+            /^09\d{9}$/,
+            "شماره موبایل باید ۱۱ رقم و با 09 شروع شود",
+        ),
 });
 
-type IBookingFormValues = z.infer<typeof bookingSchema>;
+type IBookingFormInput = z.input<typeof bookingSchema>;
+type IBookingFormOutput = z.output<typeof bookingSchema>;
+
+type ITravelerFormValues =
+    IBookingFormInput["traveler_details"][number];
 
 const inputClass =
     "w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted focus:border-primary disabled:cursor-not-allowed disabled:opacity-60";
@@ -76,13 +86,36 @@ const labelClass = "mb-2 block text-xs text-muted";
 const dateInputClass =
     "w-full bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted";
 
-const createEmptyTraveler = (): ITravelerDetails => ({
+const createEmptyTraveler = (): ITravelerFormValues => ({
     firstName: "",
     lastName: "",
     nationalId: "",
     birthDate: "",
     gender: "",
 });
+
+
+type ITravelerFormInput =
+    IBookingFormInput["traveler_details"][number];
+const createTravelers = (
+    reservationDetail: IReservation,
+): ITravelerFormInput[] => {
+    return Array.from(
+        { length: reservationDetail.guests },
+        (_, index) => {
+            const traveler =
+                reservationDetail.traveler_details?.[index];
+
+            return {
+                firstName: traveler?.firstName ?? "",
+                lastName: traveler?.lastName ?? "",
+                nationalId: traveler?.nationalId ?? "",
+                birthDate: traveler?.birthDate ?? "",
+                gender: traveler?.gender ?? "",
+            };
+        },
+    );
+};
 
 const formatApiDate = (date: DateObject | null): string => {
     if (!date) return "";
@@ -130,49 +163,34 @@ const TravelerInfo = ({
         control,
         handleSubmit,
         setValue,
+        reset,
         formState: { errors },
-    } = useForm<IBookingFormValues>({
+    } = useForm<
+        IBookingFormInput,
+        unknown,
+        IBookingFormOutput
+    >({
         resolver: zodResolver(bookingSchema),
         defaultValues: {
-            traveler_details: Array.from(
-                { length: reservationDetail.guests },
-                (_, index) =>
-                    reservationDetail.traveler_details?.[index] ??
-                    createEmptyTraveler(),
-            ),
+            traveler_details: createTravelers(reservationDetail),
             sharedEmail: reservationDetail.sharedEmail ?? "",
             sharedMobile: reservationDetail.sharedMobile ?? "",
         },
         mode: "onBlur",
     });
 
-    const { fields, replace } = useFieldArray({
-        control,
-        name: "traveler_details",
-    });
-
     useEffect(() => {
-        const travelers = Array.from(
-            { length: reservationDetail.guests },
-            (_, index) =>
-                reservationDetail.traveler_details?.[index] ??
-                createEmptyTraveler(),
-        );
-
-        replace(travelers);
-
-        setValue("sharedEmail", reservationDetail.sharedEmail ?? "");
-        setValue("sharedMobile", reservationDetail.sharedMobile ?? "");
+        reset({
+            traveler_details: createTravelers(reservationDetail),
+            sharedEmail: reservationDetail.sharedEmail ?? "",
+            sharedMobile: reservationDetail.sharedMobile ?? "",
+        });
     }, [
-        reservationDetail.guests,
-        reservationDetail.traveler_details,
-        reservationDetail.sharedEmail,
-        reservationDetail.sharedMobile,
-        replace,
-        setValue,
+        reservationDetail,
+        reset,
     ]);
 
-    const onValid = (data: IBookingFormValues) => {
+    const onValid = (data: IBookingFormOutput) => {
         if (isSubmitting) return;
 
         onContinue({
@@ -215,7 +233,10 @@ const TravelerInfo = ({
 
                 <div className="flex flex-col justify-center gap-3 border-y border-border py-4 md:border-y-0 md:border-x md:px-5 md:py-0">
                     <div className="flex items-center gap-2 text-xs">
-                        <CalendarDays size={15} className="text-primary" />
+                        <CalendarDays
+                            size={15}
+                            className="text-primary"
+                        />
                         <span className="text-muted">تاریخ ورود:</span>
                         <span className="text-foreground">
                             {reservationDetail.checkIn}
@@ -223,7 +244,10 @@ const TravelerInfo = ({
                     </div>
 
                     <div className="flex items-center gap-2 text-xs">
-                        <CalendarDays size={15} className="text-primary" />
+                        <CalendarDays
+                            size={15}
+                            className="text-primary"
+                        />
                         <span className="text-muted">تاریخ خروج:</span>
                         <span className="text-foreground">
                             {reservationDetail.checkOut}
@@ -258,241 +282,227 @@ const TravelerInfo = ({
                 </div>
 
                 <div className="space-y-5">
-                    {fields.map((field, index) => (
-                        <div
-                            key={field.id}
-                            className="rounded-xl border border-border p-4"
-                        >
-                            <div className="mb-4 flex items-center gap-2">
-                                <span className="flex size-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
-                                    <UserRound size={15} />
-                                </span>
+                    {Array.from(
+                        { length: reservationDetail.guests },
+                        (_, index) => {
+                            const travelerErrors =
+                                errors.traveler_details?.[index];
 
-                                <h3 className="text-sm font-bold text-foreground">
-                                    مسافر {index + 1}
-                                </h3>
+                            return (
+                                <div
+                                    key={index}
+                                    className="rounded-xl border border-border p-4"
+                                >
+                                    <div className="mb-4 flex items-center gap-2">
+                                        <span className="flex size-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                                            <UserRound size={15} />
+                                        </span>
 
-                                {index === 0 && (
-                                    <span className="rounded-md bg-primary/10 px-2 py-1 text-[10px] text-primary">
-                                        سرپرست مسافران
-                                    </span>
-                                )}
-                            </div>
+                                        <h3 className="text-sm font-bold text-foreground">
+                                            مسافر {index + 1}
+                                        </h3>
 
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                                <div>
-                                    <label className={labelClass}>
-                                        نام <span className="text-red-500">*</span>
-                                    </label>
-
-                                    <input
-                                        {...register(
-                                            `traveler_details.${index}.firstName`,
+                                        {index === 0 && (
+                                            <span className="rounded-md bg-primary/10 px-2 py-1 text-[10px] text-primary">
+                                                سرپرست مسافران
+                                            </span>
                                         )}
-                                        disabled={isSubmitting}
-                                        className={`${inputClass} ${
-                                            errors.traveler_details?.[index]
-                                                ?.firstName
-                                                ? "border-red-500"
-                                                : ""
-                                        }`}
-                                        placeholder="نام مسافر"
-                                    />
+                                    </div>
 
-                                    {errors.traveler_details?.[index]
-                                        ?.firstName && (
-                                        <p className="mt-1 text-xs text-red-500">
-                                            {
-                                                errors.traveler_details[index]
-                                                    .firstName.message
-                                            }
-                                        </p>
-                                    )}
-                                </div>
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                                        <div>
+                                            <label className={labelClass}>
+                                                نام{" "}
+                                                <span className="text-red-500">*</span>
+                                            </label>
 
-                                <div>
-                                    <label className={labelClass}>
-                                        نام خانوادگی{" "}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-
-                                    <input
-                                        {...register(
-                                            `traveler_details.${index}.lastName`,
-                                        )}
-                                        disabled={isSubmitting}
-                                        className={`${inputClass} ${
-                                            errors.traveler_details?.[index]
-                                                ?.lastName
-                                                ? "border-red-500"
-                                                : ""
-                                        }`}
-                                        placeholder="نام خانوادگی"
-                                    />
-
-                                    {errors.traveler_details?.[index]
-                                        ?.lastName && (
-                                        <p className="mt-1 text-xs text-red-500">
-                                            {
-                                                errors.traveler_details[index]
-                                                    .lastName.message
-                                            }
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className={labelClass}>
-                                        کد ملی{" "}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-
-                                    <input
-                                        {...register(
-                                            `traveler_details.${index}.nationalId`,
-                                            {
-                                                onChange: (event) => {
-                                                    const value =
-                                                        event.target.value
-                                                            .replace(/\D/g, "")
-                                                            .slice(0, 10);
-
-                                                    setValue(
-                                                        `traveler_details.${index}.nationalId`,
-                                                        value,
-                                                        {
-                                                            shouldValidate: true,
-                                                            shouldDirty: true,
-                                                        },
-                                                    );
-                                                },
-                                            },
-                                        )}
-                                        disabled={isSubmitting}
-                                        inputMode="numeric"
-                                        maxLength={10}
-                                        className={`${inputClass} ${
-                                            errors.traveler_details?.[index]
-                                                ?.nationalId
-                                                ? "border-red-500"
-                                                : ""
-                                        }`}
-                                        placeholder="کد ملی"
-                                    />
-
-                                    {errors.traveler_details?.[index]
-                                        ?.nationalId && (
-                                        <p className="mt-1 text-xs text-red-500">
-                                            {
-                                                errors.traveler_details[index]
-                                                    .nationalId.message
-                                            }
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className={labelClass}>
-                                        تاریخ تولد{" "}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-
-                                    <Controller
-                                        control={control}
-                                        name={`traveler_details.${index}.birthDate`}
-                                        render={({ field, fieldState }) => (
-                                            <>
-                                                <div
-                                                    className={`flex items-center gap-2 rounded-xl border bg-surface px-4 ${
-                                                        fieldState.error
-                                                            ? "border-red-500"
-                                                            : "border-border"
-                                                    }`}
-                                                >
-                                                    <DatePicker
-                                                        value={parseApiDate(
-                                                            field.value,
-                                                        )}
-                                                        onChange={(value) => {
-                                                            const date =
-                                                                Array.isArray(
-                                                                    value,
-                                                                )
-                                                                    ? value[0] ??
-                                                                      null
-                                                                    : value;
-
-                                                            field.onChange(
-                                                                formatApiDate(
-                                                                    date,
-                                                                ),
-                                                            );
-                                                        }}
-                                                        calendar={persian}
-                                                        locale={persian_fa}
-                                                        calendarPosition="bottom-right"
-                                                        inputClass={dateInputClass}
-                                                        containerClassName="w-full"
-                                                        placeholder="انتخاب تاریخ تولد"
-                                                        minDate={minBirthDate}
-                                                        maxDate={maxBirthDate}
-                                                        className="bg-dark"
-                                                        editable={false}
-                                                        disabled={isSubmitting}
-                                                    />
-
-                                                    <CalendarDays
-                                                        size={15}
-                                                        className="shrink-0 text-muted"
-                                                    />
-                                                </div>
-
-                                                {fieldState.error && (
-                                                    <p className="mt-1 text-xs text-red-500">
-                                                        {fieldState.error.message}
-                                                    </p>
+                                            <input
+                                                {...register(
+                                                    `traveler_details.${index}.firstName`,
                                                 )}
-                                            </>
-                                        )}
-                                    />
+                                                disabled={isSubmitting}
+                                                className={`${inputClass} ${
+                                                    travelerErrors?.firstName
+                                                        ? "border-red-500"
+                                                        : ""
+                                                }`}
+                                                placeholder="نام مسافر"
+                                            />
+
+                                            {travelerErrors?.firstName && (
+                                                <p className="mt-1 text-xs text-red-500">
+                                                    {travelerErrors.firstName.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className={labelClass}>
+                                                نام خانوادگی{" "}
+                                                <span className="text-red-500">*</span>
+                                            </label>
+
+                                            <input
+                                                {...register(
+                                                    `traveler_details.${index}.lastName`,
+                                                )}
+                                                disabled={isSubmitting}
+                                                className={`${inputClass} ${
+                                                    travelerErrors?.lastName
+                                                        ? "border-red-500"
+                                                        : ""
+                                                }`}
+                                                placeholder="نام خانوادگی"
+                                            />
+
+                                            {travelerErrors?.lastName && (
+                                                <p className="mt-1 text-xs text-red-500">
+                                                    {travelerErrors.lastName.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className={labelClass}>
+                                                کد ملی{" "}
+                                                <span className="text-red-500">*</span>
+                                            </label>
+
+                                            <input
+                                                {...register(
+                                                    `traveler_details.${index}.nationalId`,
+                                                    {
+                                                        onChange: (event) => {
+                                                            const value =
+                                                                event.target.value
+                                                                    .replace(/\D/g, "")
+                                                                    .slice(0, 10);
+
+                                                            setValue(
+                                                                `traveler_details.${index}.nationalId`,
+                                                                value,
+                                                                {
+                                                                    shouldValidate: true,
+                                                                    shouldDirty: true,
+                                                                },
+                                                            );
+                                                        },
+                                                    },
+                                                )}
+                                                disabled={isSubmitting}
+                                                inputMode="numeric"
+                                                maxLength={10}
+                                                className={`${inputClass} ${
+                                                    travelerErrors?.nationalId
+                                                        ? "border-red-500"
+                                                        : ""
+                                                }`}
+                                                placeholder="کد ملی"
+                                            />
+
+                                            {travelerErrors?.nationalId && (
+                                                <p className="mt-1 text-xs text-red-500">
+                                                    {travelerErrors.nationalId.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className={labelClass}>
+                                                تاریخ تولد{" "}
+                                                <span className="text-red-500">*</span>
+                                            </label>
+
+                                            <Controller
+                                                control={control}
+                                                name={`traveler_details.${index}.birthDate`}
+                                                render={({ field, fieldState }) => (
+                                                    <>
+                                                        <div
+                                                            className={`flex items-center gap-2 rounded-xl border bg-surface px-4 ${
+                                                                fieldState.error
+                                                                    ? "border-red-500"
+                                                                    : "border-border"
+                                                            }`}
+                                                        >
+                                                            <DatePicker
+                                                                value={parseApiDate(
+                                                                    field.value,
+                                                                )}
+                                                                onChange={(value) => {
+                                                                    const date =
+                                                                        Array.isArray(value)
+                                                                            ? value[0] ?? null
+                                                                            : value;
+
+                                                                    field.onChange(
+                                                                        formatApiDate(date),
+                                                                    );
+                                                                }}
+                                                                calendar={persian}
+                                                                locale={persian_fa}
+                                                                calendarPosition="bottom-right"
+                                                                inputClass={dateInputClass}
+                                                                containerClassName="w-full"
+                                                                placeholder="انتخاب تاریخ تولد"
+                                                                minDate={minBirthDate}
+                                                                maxDate={maxBirthDate}
+                                                                className="bg-dark"
+                                                                editable={false}
+                                                                disabled={isSubmitting}
+                                                            />
+
+                                                            <CalendarDays
+                                                                size={15}
+                                                                className="shrink-0 text-muted"
+                                                            />
+                                                        </div>
+
+                                                        {fieldState.error && (
+                                                            <p className="mt-1 text-xs text-red-500">
+                                                                {fieldState.error.message}
+                                                            </p>
+                                                        )}
+                                                    </>
+                                                )}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className={labelClass}>
+                                                جنسیت{" "}
+                                                <span className="text-red-500">*</span>
+                                            </label>
+
+                                            <select
+                                                {...register(
+                                                    `traveler_details.${index}.gender`,
+                                                )}
+                                                disabled={isSubmitting}
+                                                className={`${inputClass} ${
+                                                    travelerErrors?.gender
+                                                        ? "border-red-500"
+                                                        : ""
+                                                }`}
+                                            >
+                                                <option value="">
+                                                    انتخاب کنید
+                                                </option>
+                                                <option value="male">مرد</option>
+                                                <option value="female">زن</option>
+                                            </select>
+
+                                            {travelerErrors?.gender && (
+                                                <p className="mt-1 text-xs text-red-500">
+                                                    {travelerErrors.gender.message}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <div>
-                                    <label className={labelClass}>
-                                        جنسیت{" "}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-
-                                    <select
-                                        {...register(
-                                            `traveler_details.${index}.gender`,
-                                        )}
-                                        disabled={isSubmitting}
-                                        className={`${inputClass} ${
-                                            errors.traveler_details?.[index]
-                                                ?.gender
-                                                ? "border-red-500"
-                                                : ""
-                                        }`}
-                                    >
-                                        <option value="">انتخاب کنید</option>
-                                        <option value="male">مرد</option>
-                                        <option value="female">زن</option>
-                                    </select>
-
-                                    {errors.traveler_details?.[index]
-                                        ?.gender && (
-                                        <p className="mt-1 text-xs text-red-500">
-                                            {
-                                                errors.traveler_details[index]
-                                                    .gender.message
-                                            }
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                            );
+                        },
+                    )}
                 </div>
             </section>
 
@@ -548,7 +558,8 @@ const TravelerInfo = ({
 
                     <div>
                         <label className={labelClass}>
-                            ایمیل <span className="text-red-500">*</span>
+                            ایمیل{" "}
+                            <span className="text-red-500">*</span>
                         </label>
 
                         <input

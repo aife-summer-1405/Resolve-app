@@ -128,22 +128,20 @@ const BookingPage = ({
                     return (
                         <div key={step} className="flex shrink-0 items-center gap-2">
                             <div
-                                className={`flex items-center gap-2 whitespace-nowrap text-xs ${
-                                    isCompleted
-                                        ? "text-primary"
-                                        : isActive
-                                          ? "text-foreground"
-                                          : "text-muted"
-                                }`}
+                                className={`flex items-center gap-2 whitespace-nowrap text-xs ${isCompleted
+                                    ? "text-primary"
+                                    : isActive
+                                        ? "text-foreground"
+                                        : "text-muted"
+                                    }`}
                             >
                                 <span
-                                    className={`flex size-7 items-center justify-center rounded-full border ${
-                                        isCompleted
-                                            ? "border-primary bg-primary text-black"
-                                            : isActive
-                                              ? "border-primary text-primary"
-                                              : "border-border"
-                                    }`}
+                                    className={`flex size-7 items-center justify-center rounded-full border ${isCompleted
+                                        ? "border-primary bg-primary text-black"
+                                        : isActive
+                                            ? "border-primary text-primary"
+                                            : "border-border"
+                                        }`}
                                 >
                                     {isCompleted ? <Check size={14} /> : index + 1}
                                 </span>
@@ -157,39 +155,40 @@ const BookingPage = ({
                     );
                 })}
             </div>
+            <div className="md:h-200 h-350">
+                {level === "traveler-info" && (
+                    <TravelerInfo
+                        reservationDetail={reservationDetail}
+                        result={result}
+                        onBack={onBack}
+                        onContinue={handleTravelerContinue}
+                        isSubmitting={false}
+                    />
+                )}
 
-            {level === "traveler-info" && (
-                <TravelerInfo
-                    reservationDetail={reservationDetail}
-                    result={result}
-                    onBack={onBack}
-                    onContinue={handleTravelerContinue}
-                    isSubmitting={false}
-                />
-            )}
+                {level === "confirm" && (
+                    <ConfirmInfo
+                        result={result}
+                        reservationDetail={reservationDetail}
+                        onBack={() => setLevel("traveler-info")}
+                        onEdit={() => setLevel("traveler-info")}
+                        onPay={handlePay}
+                        isSubmitting={isSubmitting}
+                    />
+                )}
 
-            {level === "confirm" && (
-                <ConfirmInfo
-                    result={result}
-                    reservationDetail={reservationDetail}
-                    onBack={() => setLevel("traveler-info")}
-                    onEdit={() => setLevel("traveler-info")}
-                    onPay={handlePay}
-                    isSubmitting={isSubmitting}
-                />
-            )}
-
-            {level === "done" && (
-                <div className="mt-4 rounded-2xl border border-border bg-card p-8 text-center">
-                    <CheckCircle2 size={56} className="mx-auto text-green-500" />
-                    <h2 className="mt-4 text-xl font-bold text-foreground">
-                        پرداخت با موفقیت انجام شد
-                    </h2>
-                    <p className="mt-3 text-sm text-muted">
-                        رزرو شما با موفقیت ثبت شد.
-                    </p>
-                </div>
-            )}
+                {level === "done" && (
+                    <div className="mt-40 p-8 text-center">
+                        <CheckCircle2 size={56} className="mx-auto text-green-500" />
+                        <h2 className="mt-4 text-xl font-bold text-foreground">
+                            رزرو بلیط شما با موفقیت انجام شد !                    </h2>
+                        <div className="flex flex-col md:flex-row gap-5 justify-center mt-3">
+                            <button onClick={onBack} className="text-white border border-white rounded-full p-2">بازگشت به صفحه اصلی</button>
+                            <button className="text-primary border border-primary rounded-full p-2">بلیط های من</button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </>
     );
 };

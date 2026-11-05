@@ -42,13 +42,13 @@ const HotelAdList = ({ houses }: HotelAdListProps) => {
 
     return (
         <div className="flex flex-col">
-            <div className="mb-12 flex w-full flex-row-reverse items-center justify-between rounded-xl bg-card px-4 py-3">
-                <div className="flex flex-row-reverse items-center gap-2">
+            <div className="mb-12 flex w-full  items-center justify-between rounded-xl bg-card px-4 py-3">
+                <div className="flex  items-center gap-2">
                     <Home />
                     <p>آگهی‌های مشابه</p>
                 </div>
 
-                <div className="flex flex-row-reverse items-center gap-1 text-primary">
+                <div className="flex  items-center gap-1 text-primary">
                     <p>مشاهده همه</p>
                     <ChevronLeft />
                 </div>

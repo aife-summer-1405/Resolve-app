@@ -85,7 +85,7 @@ const dateInputCls =
     "w-full bg-transparent py-1 text-xs text-white focus:outline-none";
 
 const sectionTitleCls =
-    "m-auto flex w-2/3 flex-row-reverse items-center justify-center gap-1 rounded-b-full bg-[#646464] px-4 py-2 text-xs font-bold text-white";
+    "m-auto flex w-2/3  items-center justify-center gap-1 rounded-b-full bg-[#646464] px-4 py-2 text-xs font-bold text-white";
 
 const stepperBtnCls =
     "grid size-6 place-items-center rounded-md bg-primary text-neutral-900 transition-opacity hover:opacity-90 disabled:opacity-40";

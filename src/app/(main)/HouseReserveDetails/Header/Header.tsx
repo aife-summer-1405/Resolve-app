@@ -7,9 +7,9 @@ interface IHeader {
 const Header = ({ result }: IHeader) => {
   return (
     <div className="mx-auto mt-10  px-4 text-right  space-y-5 ">
-      <h1 className="font-bold text-4xl">{result.title}</h1>
-      <div className="flex flex-row-reverse items-center gap-1">
-        <p className="text-[#AAAAAA]">: آدرس</p>
+      <h1 className="font-bold text-xl md:text-4xl">{result.title}</h1>
+      <div className="flex items-center gap-1">
+        <p className="text-[#AAAAAA]">آدرس</p>
         <p>{result.address}</p>
       </div>
 

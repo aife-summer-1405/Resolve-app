@@ -51,7 +51,6 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
         setIsRestored(true);
     }, [result.id]);
 
-    // بعد از پرداخت موفق دیگر ذخیره نکن
     useEffect(() => {
         if (!isRestored || !reservation || paid) return;
 
@@ -81,11 +80,18 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-14">
+        <div className="flex flex-col gap-14" dir="lrt">
             <Header result={result} />
 
             <div className="flex flex-col gap-10 md:flex-row">
-                <div className="md:w-1/5">
+              
+
+                <TabInfoBox
+                    about={<AboutHouse result={result} />}
+                    facilities={<HouseFacilities result={result} />}
+                    reviews={<UserReviews houseId={result.id} />}
+                />
+                  <div className="md:w-1/5">
                     <ReservationBox
                         result={result}
                         onReserve={(data) => {
@@ -95,12 +101,6 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
                         }}
                     />
                 </div>
-
-                <TabInfoBox
-                    about={<AboutHouse result={result} />}
-                    facilities={<HouseFacilities result={result} />}
-                    reviews={<UserReviews houseId={result.id} />}
-                />
             </div>
         </div>
     );
