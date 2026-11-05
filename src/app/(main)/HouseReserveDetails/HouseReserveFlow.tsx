@@ -23,10 +23,17 @@ export interface IReservation extends IBookingData {
     checkOut: string;
 }
 
+const clearStorage = () => {
+    sessionStorage.removeItem("reservation");
+    sessionStorage.removeItem("reservationHouseId");
+    sessionStorage.removeItem("bookingId");
+};
+
 export const HouseReserveFlow = ({ result }: IPageProps) => {
     const [showBooking, setShowBooking] = useState(false);
     const [reservation, setReservation] = useState<IReservation | null>(null);
     const [isRestored, setIsRestored] = useState(false);
+    const [paid, setPaid] = useState(false);
 
     useEffect(() => {
         const savedReservation = sessionStorage.getItem("reservation");
@@ -37,20 +44,20 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
                 setReservation(JSON.parse(savedReservation));
                 setShowBooking(true);
             } catch {
-                sessionStorage.removeItem("reservation");
-                sessionStorage.removeItem("reservationHouseId");
+                clearStorage();
             }
         }
 
         setIsRestored(true);
     }, [result.id]);
 
+    // بعد از پرداخت موفق دیگر ذخیره نکن
     useEffect(() => {
-        if (!isRestored || !reservation) return;
+        if (!isRestored || !reservation || paid) return;
 
         sessionStorage.setItem("reservation", JSON.stringify(reservation));
         sessionStorage.setItem("reservationHouseId", String(result.id));
-    }, [reservation, result.id, isRestored]);
+    }, [reservation, result.id, isRestored, paid]);
 
     if (!isRestored) return null;
 
@@ -58,14 +65,17 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
         return (
             <BookingPage
                 result={result}
+                reservationDetail={reservation}
+                setReservation={setReservation}
                 onBack={() => {
                     setShowBooking(false);
                     setReservation(null);
-                    sessionStorage.removeItem("reservation");
-                    sessionStorage.removeItem("reservationHouseId");
+                    clearStorage();
                 }}
-                reservationDetail={reservation}
-                setReservation={setReservation}
+                onPaymentSuccess={() => {
+                    setPaid(true);
+                    clearStorage();
+                }}
             />
         );
     }
@@ -79,6 +89,7 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
                     <ReservationBox
                         result={result}
                         onReserve={(data) => {
+                            setPaid(false);
                             setReservation(data);
                             setShowBooking(true);
                         }}
