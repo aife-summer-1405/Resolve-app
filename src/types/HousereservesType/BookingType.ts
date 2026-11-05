@@ -19,3 +19,23 @@ export interface IBookingResult {
     data?: unknown;
     message?: string;
 }
+export interface IReservation extends IBookingData {
+    guests: number;
+    nights: number;
+    total: number;
+    checkIn: string;
+    checkOut: string;
+}
+
+export interface IBookingResponse {
+    id: number;
+    houseId: string;
+    reservedDates: string[];
+    traveler_details: ITravelerDetails[];
+    sharedEmail: string;
+    sharedMobile: string;
+    user_id: number;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
