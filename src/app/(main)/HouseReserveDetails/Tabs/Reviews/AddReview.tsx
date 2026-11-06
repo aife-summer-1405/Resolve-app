@@ -86,15 +86,15 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
                 ) : (
                     <div className="md:hidden">
                         <Field legend="امتیاز شما">
-                            <div className="flex w-full flex-row-reverse items-center gap-4 rounded-xl">
-                                <div className="flex flex-row-reverse items-center gap-1">
+                            <div className="flex w-full  items-center gap-4 rounded-xl">
+                                <div className="flex  items-center gap-1">
                                     <Star className="size-4 fill-current" />
                                     <span>{rating[0].toLocaleString("fa-IR")}</span>
                                 </div>
 
                                 <Slider
                                     dir="rtl"
-                                    min={0}
+                                    min={1}
                                     max={5}
                                     step={0.5}
                                     value={rating}
@@ -146,15 +146,15 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
                     ) : (
                         <div className="hidden w-2/4 md:block">
                             <Field legend="امتیاز شما">
-                                <div className="flex w-full flex-row-reverse items-center gap-4 rounded-xl">
-                                    <div className="flex flex-row-reverse items-center gap-1">
+                                <div className="flex w-full  items-center gap-4 rounded-xl">
+                                    <div className="flex  items-center gap-1">
                                         <Star className="size-4 fill-current" />
                                         <span>{rating[0].toLocaleString("fa-IR")}</span>
                                     </div>
 
                                     <Slider
                                         dir="rtl"
-                                        min={0}
+                                        min={1}
                                         max={5}
                                         step={0.5}
                                         value={rating}

@@ -6,10 +6,14 @@ import PropertyCategoriesSection from "../components/organisms/landing/PropertyC
 import PropertyForSaleSection from "../components/organisms/landing/PropertyForSaleSection";
 import TestimonialsSection from "../components/organisms/landing/TestimonialsSection";
 
-const Landing = () => {
+import { getLocations } from "@/src/services/locationService";
+
+const Landing = async () => {
+  const locationsResponse = await getLocations();
+
   return (
     <div className={`flex flex-col items-center gap-10 md:pb-30 pb-10 bg-ba `}>
-      <HeroSection />
+      <HeroSection locations={locationsResponse.data} />
       <PropertyCategoriesSection />
       <OffersSection />
       <PopularDestinationsSection />

@@ -29,8 +29,27 @@ const HeaderSlider = ({ result }: ISliderProps) => {
     };
 
     return (
-        <div className="flex h-[400px] w-full gap-3">
-            <div className="grid w-48 grid-cols-2 gap-2">
+        <div className="flex h-[400px]  gap-3">
+            
+
+            <Swiper
+                onSwiper={setThumbsSwiper}
+                modules={[Pagination]}
+                pagination={{ clickable: true }}
+                className="house-swiper h-full md:w-350 w-75 flex-1 overflow-hidden rounded-2xl"
+            >
+                {photos.map((image, index) => (
+                    <SwiperSlide key={`${image}-${index}`}>
+                        <img
+                            src={image || DEFAULT_IMAGE}
+                            onError={handleImageError}
+                            alt={`تصویر اقامتگاه ${index + 1}`}
+                            className="h-full w-full object-cover"
+                        />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+            <div className="md:grid w-48 grid-cols-2 gap-2 hidden ">
                 {photos.map((image, index) => (
                     <button
                         key={`${image}-${index}`}
@@ -47,24 +66,6 @@ const HeaderSlider = ({ result }: ISliderProps) => {
                     </button>
                 ))}
             </div>
-
-            <Swiper
-                onSwiper={setThumbsSwiper}
-                modules={[Pagination]}
-                pagination={{ clickable: true }}
-                className="house-swiper h-full min-w-0 flex-1 overflow-hidden rounded-2xl"
-            >
-                {photos.map((image, index) => (
-                    <SwiperSlide key={`${image}-${index}`}>
-                        <img
-                            src={image || DEFAULT_IMAGE}
-                            onError={handleImageError}
-                            alt={`تصویر اقامتگاه ${index + 1}`}
-                            className="h-full w-full object-cover"
-                        />
-                    </SwiperSlide>
-                ))}
-            </Swiper>
         </div>
     );
 };

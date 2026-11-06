@@ -1,6 +1,6 @@
 export const MainPartLoading = () => {
     return (
-        <div className="flex h-full min-h-0 flex-col gap-4 lg:flex-row-reverse lg:gap-6">
+        <div className="flex h-full min-h-0 flex-col gap-4 lg:flex lg:gap-6">
             <div className="min-h-0 flex-1 space-y-4 overflow-hidden lg:w-3/5">
                 {Array.from({ length: 4 }).map((_, index) => (
                     <div

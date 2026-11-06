@@ -52,9 +52,13 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <div className="text-right">
-        <div className="text-xs text-white/50">
-          خانه ‹　<span className="text-primary">ورود به حساب کاربری</span>
-        </div>
+      <div className="text-xs text-white/50">
+    <Link href="/" className="transition hover:text-primary">
+        خانه
+    </Link>
+    ‹　
+    <span className="text-primary">ورود به حساب کاربری</span>
+</div>
 
         <div className="mt-8 text-sm font-medium text-primary">
           !خوش برگشتی

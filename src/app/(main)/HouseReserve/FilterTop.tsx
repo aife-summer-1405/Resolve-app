@@ -290,8 +290,8 @@ export const FilterTop = ({
 
   return (
     <>
-      <div className="flex flex-row-reverse flex-wrap items-center justify-between gap-4 rounded-3xl bg-card-2 px-6 py-6">
-        <div className="hidden w-2/3 flex-row-reverse gap-4 md:flex">
+      <div className="flex  flex-wrap items-center justify-between gap-4 rounded-3xl bg-card-2 px-6 py-6">
+        <div className="hidden w-2/3  gap-4 md:flex">
           <Filters {...filterProps} />
         </div>
 

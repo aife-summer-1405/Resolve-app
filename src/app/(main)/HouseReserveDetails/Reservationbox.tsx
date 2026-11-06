@@ -20,22 +20,14 @@ import {
 } from "lucide-react";
 
 import type { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
-import type { IBookingData } from "@/src/types/HousereservesType/BookingType";
-import { useCreateBooking } from "@/src/hooks/useCreateBooking";
+import type { IBookingData, IReservation } from "@/src/types/HousereservesType/BookingType";
 import { useUserStore } from "@/src/store/userStore";
 import Field from "@/src/components/Ui/Field";
-import Link from "next/link";
 import LoginRequiredModal from "@/src/components/organisms/auth/LoginRequiredModal";
 
 interface IReservationBoxProps {
     result: IHouseDetails;
-    onReserve?: (
-        data: IBookingData & {
-            guests: number;
-            nights: number;
-            total: number;
-        },
-    ) => void;
+    onReserve?: (data: IReservation) => void;
 }
 
 interface IFieldProps {
@@ -93,7 +85,7 @@ const dateInputCls =
     "w-full bg-transparent py-1 text-xs text-white focus:outline-none";
 
 const sectionTitleCls =
-    "m-auto flex w-2/3 flex-row-reverse items-center justify-center gap-1 rounded-b-full bg-[#646464] px-4 py-2 text-xs font-bold text-white";
+    "m-auto flex w-2/3  items-center justify-center gap-1 rounded-b-full bg-[#646464] px-4 py-2 text-xs font-bold text-white";
 
 const stepperBtnCls =
     "grid size-6 place-items-center rounded-md bg-primary text-neutral-900 transition-opacity hover:opacity-90 disabled:opacity-40";
@@ -124,10 +116,7 @@ export default function ReservationBox({
         sharedMobile: user?.phoneNumber ?? "",
     });
 
-    const {
-        mutate: createBooking,
-        isPending,
-    } = useCreateBooking();
+  
 
     const guests = bookingData.traveler_details.length;
 
@@ -263,45 +252,33 @@ export default function ReservationBox({
             };
         });
     }
-    function handleReserve() {
-        if (!user) {
-            setShowLoginModal(true);
-            return;
-        }
-
-        if (!checkIn || !checkOut || nights < 1) {
-            toast.error("لطفاً تاریخ ورود و خروج را انتخاب کنید.");
-            return;
-        }
-
-        if (isPending) return;
-
-        const reservationPayload = {
-            ...bookingData,
-            houseId: Number(result.id),
-            reservedDates: [
-                formatApiDate(checkIn),
-                formatApiDate(checkOut),
-            ],
-        };
-
-        onReserve?.({
-            ...reservationPayload,
-            guests,
-            nights,
-            total: finalTotal,
-        });
-
-        createBooking(reservationPayload, {
-            onSuccess: () => {
-                toast.success("درخواست رزرو با موفقیت ثبت شد");
-            },
-            onError: () => {
-                toast.error("ثبت رزرو ناموفق بود");
-            },
-        });
+  function handleReserve() {
+    if (!user) {
+        setShowLoginModal(true);
+        return;
     }
 
+    if (!checkIn || !checkOut || nights < 1) {
+        toast.error("لطفاً تاریخ ورود و خروج را انتخاب کنید.");
+        return;
+    }
+
+    const checkInDate = formatApiDate(checkIn);
+    const checkOutDate = formatApiDate(checkOut);
+
+    const reservationPayload: IReservation = {
+        ...bookingData,
+        houseId: Number(result.id),
+        reservedDates: [checkInDate, checkOutDate],
+        guests,
+        nights,
+        total: finalTotal,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+    };
+
+    onReserve?.(reservationPayload);
+}
     const minCheckOut = checkIn
         ? new DateObject(checkIn).add(1, "day")
         : undefined;
@@ -471,17 +448,11 @@ export default function ReservationBox({
             <button
                 type="button"
                 onClick={handleReserve}
-                disabled={
-                    isPending ||
-                    nights < 1 ||
-                    guests > maxGuests
-                }
+                disabled={nights < 1 || guests > maxGuests}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-extrabold text-neutral-900 transition-opacity hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <ChevronLeft size={14} />
-                {isPending
-                    ? "در حال ثبت رزرو..."
-                    : "همین الان رزرو کن"}
+                همین الان رزرو کن
             </button>
             <LoginRequiredModal
                 isOpen={showLoginModal}

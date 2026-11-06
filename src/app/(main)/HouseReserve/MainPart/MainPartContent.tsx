@@ -32,7 +32,7 @@
       }));
 
     return (
-      <div className="flex flex-col gap-4 rounded-3xl bg-[#303030] p-3 sm:p-5 lg:h-full lg:min-h-0 lg:flex-row-reverse lg:gap-6 lg:overflow-hidden lg:p-6 xl:gap-8">
+      <div className="flex flex-col gap-4 rounded-3xl bg-[#303030] p-3 sm:p-5 lg:h-full lg:min-h-0 lg:flex-row lg:gap-6 lg:overflow-hidden lg:p-6 xl:gap-8">
         <div className="flex min-w-0 flex-col lg:min-h-0 lg:w-3/5 lg:flex-none">
           <div className="shrink-0">
             <Filterbottom

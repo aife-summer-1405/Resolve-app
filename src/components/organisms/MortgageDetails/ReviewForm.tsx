@@ -32,7 +32,7 @@ export default function ReviewForm() {
           </div>
 
           <Slider
-            min={0}
+            min={1}
             max={5}
             step={0.5}
             value={rating}

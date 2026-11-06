@@ -23,7 +23,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           />
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20" />
-          <div className="absolute right-120 top-5 flex items-center gap-1 rounded-2xl bg-[#252525]/90 p-1.5 text-sm backdrop-blur-md">
+          {/* <div className="absolute right-120 top-5 flex items-center gap-1 rounded-2xl bg-[#252525]/90 p-1.5 text-sm backdrop-blur-md">
             <div className="flex gap-2 rounded-xl bg-white px-2 py-3 font-medium text-[#222222]">
               ورود با پسورد
               <Image
@@ -43,7 +43,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 height={3}
               />
             </div>
-          </div>
+          </div> */}
 
           <div dir="rtl" className="flex justify-between gap-5 w-100">
             <div className="absolute inset-x-4 flex items-center justify- gap-4 rounded-[28px] border border-white/25 bg-[#292929]/85 p-4 shadow-xl backdrop-blur-md sm:inset-x-5 sm:bottom-5 sm:p-5">
