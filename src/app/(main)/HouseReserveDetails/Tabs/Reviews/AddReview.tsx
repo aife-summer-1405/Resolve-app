@@ -94,7 +94,7 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
 
                                 <Slider
                                     dir="rtl"
-                                    min={0}
+                                    min={1}
                                     max={5}
                                     step={0.5}
                                     value={rating}
@@ -154,7 +154,7 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
 
                                     <Slider
                                         dir="rtl"
-                                        min={0}
+                                        min={1}
                                         max={5}
                                         step={0.5}
                                         value={rating}
