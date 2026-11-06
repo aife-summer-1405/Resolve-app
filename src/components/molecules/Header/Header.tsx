@@ -13,7 +13,7 @@ import {
   Languages,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useUserStore } from "@/src/store/userStore";
@@ -25,32 +25,51 @@ interface IHeaderProps {
 
 const Header = ({ isOverlay = false }: IHeaderProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("Header");
-
-  const links = [
-    { label: t("quickReserve"), href: "/HouseReserve", hasMenu: true },
-    { label: t("mortgage"), href: "/Mortgage", hasMenu: true },
-    { label: t("about"), href: "#about" },
-    { label: t("articles"), href: "/Articles" },
-    { label: t("contact"), href: "/ContactUs" },
-  ];
 
   const user = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
 
-  const [activeLink, setActiveLink] = useState("");
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
+  const links = [
+    { label: t("quickReserve"), href: "/HouseReserve", hasMenu: true },
+    { label: t("mortgage"), href: "/Mortgage", hasMenu: true },
+    // { label: t("about"), href: "/#about" },
+    { label: t("articles"), href: "/Articles" },
+    { label: t("contact"), href: "/ContactUs" },
+  ];
+
   useEffect(() => {
     const darkMode = document.documentElement.classList.contains("dark");
+
     setIsDark(darkMode);
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsProfileMenuOpen(false);
+  }, [pathname]);
+
+  const isActiveLink = (href: string) => {
+    const normalizedHref = href.split("#")[0];
+
+    if (!normalizedHref || normalizedHref === "/") {
+      return pathname === "/";
+    }
+
+    return (
+      pathname === normalizedHref ||
+      pathname?.startsWith(`${normalizedHref}/`)
+    );
+  };
 
   const toggleTheme = () => {
     const nextTheme = !isDark;
@@ -78,14 +97,12 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
     router.refresh();
   };
 
-  const avatar = user?.profilePicture || "images/user.png";
+  const avatar = user?.profilePicture || "/images/user.png";
 
   return (
     <header
-  className={`fixed left-1/2 z-50 flex h-12 w-[calc(100%-24px)] max-w-[2000px] -translate-x-1/2 items-center justify-between rounded-2xl bg-card ps-2 pe-3 text-xs text-foreground shadow-md sm:pe-4 ${
-    isOverlay ? "top-3 sm:top-4" : "top-3 sm:top-4"
-  }`}
->
+      className={`fixed left-1/2 top-3 z-50 flex h-12 w-[calc(100%-24px)] max-w-[2000px] -translate-x-1/2 items-center justify-between rounded-2xl bg-card ps-2 pe-3 text-xs text-foreground shadow-md sm:top-4 sm:pe-4`}
+    >
       <div className="flex h-full min-w-0 items-center gap-2 sm:gap-5">
         <Link
           href="/"
@@ -107,28 +124,31 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
         <span className="hidden h-6 w-px bg-border/30 lg:block" />
 
         <nav className="hidden h-full items-center gap-3 lg:flex xl:gap-6 2xl:gap-8">
-          {links.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setActiveLink(item.href)}
-              className={`group relative flex h-full shrink-0 items-center gap-1.5 border-b-[3px] pt-[3px] transition-colors duration-300 xl:gap-3 ${
-                activeLink === item.href
-                  ? "border-primary text-primary"
-                  : "border-transparent text-foreground/80 hover:border-primary hover:text-primary"
-              }`}
-            >
-              {item.label}
+          {links.map((item) => {
+            const isActive = isActiveLink(item.href);
 
-              {item.hasMenu && <ChevronDown size={14} />}
-
-              <span
-                className={`absolute -bottom-0.75 start-0 h-0.75 bg-primary transition-all duration-300 ${
-                  activeLink === item.href ? "w-full" : "w-0 group-hover:w-full"
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`group relative flex h-full shrink-0 items-center gap-1.5 border-b-[3px] pt-[3px] transition-colors duration-300 xl:gap-3 ${
+                  isActive
+                    ? "border-primary text-primary"
+                    : "border-transparent text-foreground/80 hover:border-primary hover:text-primary"
                 }`}
-              />
-            </Link>
-          ))}
+              >
+                {item.label}
+
+                {item.hasMenu && <ChevronDown size={14} />}
+
+                <span
+                  className={`absolute -bottom-0.75 start-0 h-0.75 bg-primary transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <Link
@@ -190,7 +210,7 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
             </button>
 
             {isProfileMenuOpen && (
-              <div className="absolute right-[-120px] inset-s-0 top-full z-60 mt-2 w-48 overflow-hidden rounded-xl border border-border bg-card p-2 text-foreground shadow-lg">
+              <div className="absolute end-0 top-full z-[60] mt-2 w-48 overflow-hidden rounded-xl border border-border bg-card p-2 text-foreground shadow-lg">
                 <div className="mb-2 border-b border-border px-3 py-2">
                   <p className="truncate text-sm font-semibold">
                     {user.fullName || t("user")}
@@ -237,24 +257,25 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
           id="mobile-menu"
           className="absolute start-0 top-[calc(100%+8px)] z-50 flex w-full flex-col gap-1 rounded-2xl border border-border bg-card p-3 text-foreground shadow-lg lg:hidden"
         >
-          {links.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => {
-                setActiveLink(item.href);
-                setIsMenuOpen(false);
-              }}
-              className={`flex min-h-11 items-center justify-between rounded-xl px-3 py-2 transition-colors ${
-                activeLink === item.href
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/80 hover:bg-surface hover:text-primary"
-              }`}
-            >
-              <span>{item.label}</span>
-              {item.hasMenu && <ChevronDown size={16} />}
-            </Link>
-          ))}
+          {links.map((item) => {
+            const isActive = isActiveLink(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className={`flex min-h-11 items-center justify-between rounded-xl px-3 py-2 transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/80 hover:bg-surface hover:text-primary"
+                }`}
+              >
+                <span>{item.label}</span>
+                {item.hasMenu && <ChevronDown size={16} />}
+              </Link>
+            );
+          })}
 
           <Link
             href="/seller"
