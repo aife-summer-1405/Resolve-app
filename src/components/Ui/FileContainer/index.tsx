@@ -148,7 +148,7 @@ const FileContainer: FC<FileContainerProps> = ({
             direction === "rtl"
               ? RADIUS_SIZE[radius]
               : size === "lg"
-                ? "30%"
+                ? "33%"
                 : RADIUS_SIZE[radius],
           borderTopLeftRadius:
             direction === "ltr"
