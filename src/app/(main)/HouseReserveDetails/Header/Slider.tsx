@@ -36,7 +36,7 @@ const HeaderSlider = ({ result }: ISliderProps) => {
                 onSwiper={setThumbsSwiper}
                 modules={[Pagination]}
                 pagination={{ clickable: true }}
-                className="house-swiper h-full md:w-400 w-75  flex-1 overflow-hidden rounded-2xl"
+                className="house-swiper h-full md:w-350 w-75 flex-1 overflow-hidden rounded-2xl"
             >
                 {photos.map((image, index) => (
                     <SwiperSlide key={`${image}-${index}`}>

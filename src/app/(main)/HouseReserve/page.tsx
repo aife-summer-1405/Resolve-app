@@ -74,7 +74,7 @@ async function HouseReserveContent({ searchParams }: IPageProps) {
     };
 
     return (
-        <div className="mt-10 flex flex-col lg:h-[calc(100dvh-40px)] lg:overflow-hidden">
+        <div className="mt-10 flex flex-col lg:h-[calc(100dvh-40px)] lg:overflow-hidden mt-20">
             <div className="flex flex-col gap-6 lg:min-h-0 lg:flex-1">
                 <div className="shrink-0">
                     <FilterTop

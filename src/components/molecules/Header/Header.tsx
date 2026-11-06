@@ -190,7 +190,7 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
             </button>
 
             {isProfileMenuOpen && (
-              <div className="absolute start-0 top-full z-[60] mt-2 w-48 overflow-hidden rounded-xl border border-border bg-card p-2 text-foreground shadow-lg">
+              <div className="absolute right-[-120px] inset-s-0 top-full z-60 mt-2 w-48 overflow-hidden rounded-xl border border-border bg-card p-2 text-foreground shadow-lg">
                 <div className="mb-2 border-b border-border px-3 py-2">
                   <p className="truncate text-sm font-semibold">
                     {user.fullName || t("user")}
