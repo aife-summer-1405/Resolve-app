@@ -86,3 +86,60 @@ body {
   width: 0;
   height: 0;
 }
+/*دارک تقویم*/
+
+body .rmdp-wrapper {
+  background: #363636 !important;
+  border: 1px solid #555555 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35) !important;
+}
+
+body .rmdp-wrapper .rmdp-calendar,
+body .rmdp-wrapper .rmdp-header,
+body .rmdp-wrapper .rmdp-day-picker,
+body .rmdp-wrapper .rmdp-month-picker,
+body .rmdp-wrapper .rmdp-year-picker {
+  background: #363636 !important;
+  color: #ffffff !important;
+}
+
+body .rmdp-wrapper .rmdp-header-values,
+body .rmdp-wrapper .rmdp-week-day,
+body .rmdp-wrapper .rmdp-day span,
+body .rmdp-wrapper .rmdp-month-picker div,
+body .rmdp-wrapper .rmdp-year-picker div {
+  color: #ffffff !important;
+}
+
+body .rmdp-wrapper .rmdp-arrow {
+  border-color: #ffffff !important;
+}
+
+body
+  .rmdp-wrapper
+  .rmdp-day:not(.rmdp-disabled):not(.rmdp-deactive)
+  span:hover {
+  background: #555555 !important;
+  color: #ffffff !important;
+}
+
+body .rmdp-wrapper .rmdp-day.rmdp-selected span {
+  background: #91ff45 !important;
+  color: #232323 !important;
+  box-shadow: none !important;
+}
+
+body .rmdp-wrapper .rmdp-day.rmdp-today span {
+  background: #555555 !important;
+  color: #91ff45 !important;
+}
+
+body .rmdp-wrapper .rmdp-day.rmdp-disabled span {
+  color: #777777 !important;
+}
+
+body .rmdp-wrapper .rmdp-month-picker div:hover,
+body .rmdp-wrapper .rmdp-year-picker div:hover {
+  background: #555555 !important;
+}

@@ -1,24 +1,183 @@
 "use client";
 
-import { ChevronLeft, Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronDown, Search, LocationEdit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import DateObject from "react-date-object";
 import Field from "../../Ui/Field";
 
-export default function HeroSection() {
+import type { ILocation } from "@/src/types/LocationType";
+
+interface IHeroSectionProps {
+  locations: ILocation[];
+}
+
+export default function HeroSection({ locations }: IHeroSectionProps) {
   const t = useTranslations("HeroSection");
+  const router = useRouter();
+
+  const [activeTab, setActiveTab] = useState<"booking" | "mortgage">("booking");
+  const [destination, setDestination] = useState("");
+  const [checkIn, setCheckIn] = useState<DateObject | null>(null);
+  const [checkOut, setCheckOut] = useState<DateObject | null>(null);
+  const [guests, setGuests] = useState("");
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+
+  const locationRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const fields = [
     {
+      name: "destination",
       label: t("destination"),
       placeholder: t("destinationPlaceholder"),
       wide: true,
     },
-    { label: t("checkIn"), placeholder: t("enterPlaceholder") },
-    { label: t("checkOut"), placeholder: t("enterPlaceholder") },
-    { label: t("guests"), placeholder: t("enterPlaceholder") },
+    {
+      name: "checkIn",
+      label: t("checkIn"),
+      placeholder: t("enterPlaceholder"),
+    },
+    {
+      name: "checkOut",
+      label: t("checkOut"),
+      placeholder: t("enterPlaceholder"),
+    },
+    {
+      name: "guests",
+      label: t("guests"),
+      placeholder: t("enterPlaceholder"),
+    },
   ];
+
+  const updateMenuPosition = () => {
+    if (!locationRef.current) return;
+
+    const rect = locationRef.current.getBoundingClientRect();
+
+    setMenuPosition({
+      top: rect.bottom + 4,
+      left: rect.left,
+      width: rect.width,
+    });
+  };
+
+  useEffect(() => {
+    if (!isLocationOpen) return;
+
+    updateMenuPosition();
+
+    window.addEventListener("resize", updateMenuPosition);
+
+    const handleScroll = (event: Event) => {
+      if (menuRef.current?.contains(event.target as Node)) return;
+
+      setIsLocationOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll, true);
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      if (
+        !locationRef.current?.contains(target) &&
+        !menuRef.current?.contains(target)
+      ) {
+        setIsLocationOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsLocationOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", handleScroll, true);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isLocationOpen]);
+
+  const handleCheckInChange = (date: DateObject | null) => {
+    setCheckIn(date);
+
+    if (
+      date &&
+      checkOut &&
+      checkOut.toDate().getTime() < date.toDate().getTime()
+    ) {
+      setCheckOut(null);
+    }
+  };
+
+  const handleSearch = () => {
+    if (activeTab === "mortgage") {
+      const params = new URLSearchParams();
+
+      if (destination) {
+        params.set("location", destination);
+      }
+
+      setDestination("");
+      setCheckIn(null);
+      setCheckOut(null);
+      setGuests("");
+
+      router.push(
+        `/Mortgage${params.toString() ? `?${params.toString()}` : ""}`,
+      );
+
+      return;
+    }
+
+    if (!destination && !checkIn && !checkOut) return;
+
+    const params = new URLSearchParams();
+
+    if (destination) {
+      params.set("location", destination);
+    }
+
+    if (checkIn) {
+      params.set("checkIn", checkIn.format("YYYY/MM/DD"));
+    }
+
+    if (checkOut) {
+      params.set("checkOut", checkOut.format("YYYY/MM/DD"));
+    }
+
+    if (guests) {
+      params.set("guests", guests);
+    }
+
+    setDestination("");
+    setCheckIn(null);
+    setCheckOut(null);
+    setGuests("");
+
+    router.push(
+      `/HouseReserve${params.toString() ? `?${params.toString()}` : ""}`,
+    );
+  };
 
   return (
     <section className="relative flex w-full flex-col items-center overflow-hidden bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323] px-4 pt-20 text-white xl:h-225.25 xl:px-2 xl:pt-6">
@@ -117,36 +276,54 @@ export default function HeroSection() {
       </div>
 
       <div className="relative z-40 mt-8 w-full max-w-286.25 pb-6 xl:absolute xl:bottom-4.5 xl:left-1/2 xl:mt-0 xl:w-286.25 xl:max-w-[calc(100%-16px)] xl:-translate-x-1/2 xl:pb-0">
-        <div className="mb-3 flex cursor-pointer items-center gap-4 pe-2 text-xs max-sm:overflow-x-auto">
-          <div className="flex h-6.25 w-28 items-center gap-3 border-l">
+        <div className="mb-3 flex cursor-pointer items-center gap-4 pe-2 text-xs max-sm:overflow-x-auto ">
+          <button
+            type="button"
+            onClick={() => setActiveTab("booking")}
+            className={`flex h-6.25 w-23 items-center gap-2 border-l cursor-pointer ${
+              activeTab === "booking" ? "text-white" : "text-[#8C8C8C]"
+            }`}
+          >
             <Image
               src="/icons/booking (1).png"
               alt={t("bookingIconAlt")}
               width={20}
               height={20}
+              className={`brightness-0 invert ${
+                activeTab === "booking" ? "opacity-100" : "opacity-40"
+              }`}
             />
             <p>{t("booking")}</p>
-          </div>
+          </button>
 
-          <div className="flex h-6.25 w-28 items-center gap-3 border-l">
+          <button
+            type="button"
+            onClick={() => setActiveTab("mortgage")}
+            className={`flex h-6.25 w-23 items-center gap-2 cursor-pointer ${
+              activeTab === "mortgage" ? "text-white" : "text-[#8C8C8C]"
+            }`}
+          >
             <Image
               src="/icons/house-building (1).png"
               alt={t("mortgageIconAlt")}
               width={20}
               height={20}
+              className={`brightness-0 invert ${
+                activeTab === "mortgage" ? "opacity-100" : "opacity-40"
+              }`}
             />
-            <p className="text-[#8C8C8C]">{t("mortgage")}</p>
-          </div>
+            <p>{t("mortgage")}</p>
+          </button>
 
-          <div className="flex h-6.25 w-25 items-center gap-3">
+          {/* <div className="flex h-6.25 w-25 items-center gap-3">
             <Image
               src="/icons/money-check-edit.png"
               alt={t("buyAndSellIconAlt")}
               width={20}
               height={20}
             />
-            <p className="text-[#8C8C8C] ">{t("buyAndSell")}</p>
-          </div>
+            <p className="text-[#8C8C8C]">{t("buyAndSell")}</p>
+          </div> */}
         </div>
 
         <div
@@ -155,27 +332,166 @@ export default function HeroSection() {
         >
           {fields.map((field) => (
             <Field key={field.label} legend={field.label}>
-              <input
-                type="text"
-                placeholder={field.placeholder}
-                className={`w-full min-w-0 bg-transparent text-xs text-foreground outline-none ${
-                  field.wide
-                    ? "placeholder:text-foreground"
-                    : "placeholder:text-muted"
-                }`}
-              />
+              {field.name === "destination" ? (
+                <div
+                  ref={locationRef}
+                  className="flex w-full items-center gap-2"
+                >
+                  <LocationEdit
+                    size={20}
+                    className="shrink-0 text-foreground"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setIsLocationOpen((prev) => !prev)}
+                    dir="rtl"
+                    className="flex w-full min-w-0 items-center justify-between bg-transparent text-xs text-foreground outline-none"
+                  >
+                    <span>{destination || "همه شهرها"}</span>
+
+                    <ChevronDown
+                      size={20}
+                      className={`shrink-0 transition-transform ${
+                        isLocationOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+              ) : field.name === "checkIn" ? (
+                <div className="flex items-center gap-2">
+                  <DatePicker
+                    value={checkIn}
+                    onChange={(date) =>
+                      handleCheckInChange(
+                        date instanceof DateObject ? date : null,
+                      )
+                    }
+                    calendar={persian}
+                    locale={persian_fa}
+                    format="YYYY/MM/DD"
+                    calendarPosition="bottom-right"
+                    portal
+                    render={(value, openCalendar) => (
+                      <button
+                        type="button"
+                        onClick={openCalendar}
+                        dir="rtl"
+                        className="w-full min-w-0 bg-transparent text-right text-xs text-foreground outline-none"
+                      >
+                        {value || field.placeholder}
+                      </button>
+                    )}
+                  />
+                </div>
+              ) : field.name === "checkOut" ? (
+                <div className="flex items-center gap-2">
+                  <DatePicker
+                    value={checkOut}
+                    onChange={(date) =>
+                      setCheckOut(date instanceof DateObject ? date : null)
+                    }
+                    calendar={persian}
+                    locale={persian_fa}
+                    format="YYYY/MM/DD"
+                    minDate={checkIn || undefined}
+                    calendarPosition="bottom-right"
+                    portal
+                    render={(value, openCalendar) => (
+                      <button
+                        type="button"
+                        onClick={openCalendar}
+                        dir="rtl"
+                        className="w-full min-w-0 text-xs text-foreground outline-none"
+                      >
+                        {value || field.placeholder}
+                      </button>
+                    )}
+                  />
+                </div>
+              ) : (
+                <div className="flex w-full items-center gap-2">
+                  <input
+                    type="number"
+                    min={1}
+                    value={guests}
+                    placeholder={field.placeholder}
+                    onChange={(event) => setGuests(event.target.value)}
+                    dir="rtl"
+                    className="w-full bg-transparent text-xs text-foreground outline-none"
+                  />
+                  <span className="shrink-0 text-xs text-foreground">نفر</span>
+                </div>
+              )}
             </Field>
           ))}
 
           <button
             type="button"
-            className="flex items-center justify-center gap-2 rounded-xl bg-[#91FF45] px-7 py-4 text-xs font-bold text-black transition hover:opacity-90"
+            onClick={handleSearch}
+            disabled={
+              activeTab === "mortgage"
+                ? false
+                : !destination && !checkIn && !checkOut
+            }
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#91FF45] px-7 py-4 text-xs font-bold text-black transition hover:opacity-90 disabled:opacity-40"
           >
             <Search size={14} />
             {t("search")}
           </button>
         </div>
       </div>
+
+      {isLocationOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            ref={menuRef}
+            dir="rtl"
+            style={{
+              position: "fixed",
+              top: menuPosition.top,
+              left: menuPosition.left,
+              width: menuPosition.width,
+              zIndex: 9999,
+            }}
+            className="max-h-70 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] border border-[#8C8C8C] bg-[#363636] py-1 shadow-xl"
+          >
+            <button
+              type="button"
+              onClick={() => {
+                setDestination("");
+                setIsLocationOpen(false);
+              }}
+              className={`w-full px-3 py-2 text-right text-xs transition hover:bg-[#555555] ${
+                destination === ""
+                  ? "bg-[#93C5FD] text-[#363636]"
+                  : "text-white"
+              }`}
+            >
+              همه شهرها
+            </button>
+
+            {locations.map((location) => (
+              <button
+                key={location.id}
+                type="button"
+                onClick={() => {
+                  setDestination(location.areaName);
+                  setIsLocationOpen(false);
+                }}
+                className={`w-full px-3 py-2 text-right text-xs transition hover:bg-[#555555] ${
+                  destination === location.areaName
+                    ? "bg-[#93C5FD] text-[#363636]"
+                    : "text-white"
+                }`}
+              >
+                {location.areaName}
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }

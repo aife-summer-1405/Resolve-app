@@ -53,7 +53,7 @@ export default async function MortgagePage({ searchParams }: IPageProps) {
   const filters: IHouseFilters = {
     page: getPositiveInt(params.page, 1),
     limit: getPositiveInt(params.limit, DEFAULT_LIMIT, MAX_LIMIT),
-    transactionType:["rental","mortgage"],
+    transactionType: ["rental", "mortgage"],
     search: getString(params.search).trim(),
     order: params.order === "ASC" ? "ASC" : "DESC",
     sort: ALLOWED_SORTS.includes(sort) ? sort : DEFAULT_SORT,
