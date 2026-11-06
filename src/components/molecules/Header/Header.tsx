@@ -79,16 +79,13 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
   };
 
   const avatar = user?.profilePicture || "images/user.png";
-  console.log(1111, avatar);
 
   return (
     <header
-      className={`${
-        isOverlay
-          ? "absolute left-1/2 top-3 z-50 -translate-x-1/2 sm:top-4"
-          : "relative mx-auto mt-3 sm:mt-4"
-      } flex h-12 w-[calc(100%-24px)] max-w-334 items-center justify-between rounded-2xl bg-card ps-2 pe-3 text-xs text-foreground shadow-md sm:pe-4`}
-    >
+  className={`fixed left-1/2 z-50 flex h-12 w-[calc(100%-24px)] max-w-[2000px] -translate-x-1/2 items-center justify-between rounded-2xl bg-card ps-2 pe-3 text-xs text-foreground shadow-md sm:pe-4 ${
+    isOverlay ? "top-3 sm:top-4" : "top-3 sm:top-4"
+  }`}
+>
       <div className="flex h-full min-w-0 items-center gap-2 sm:gap-5">
         <Link
           href="/"

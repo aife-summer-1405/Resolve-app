@@ -16,7 +16,8 @@ function MainLayoutContent({ children }: MainLayoutProps) {
     return (
         <>
             <Header isOverlay={pathname === "/"} />
-            {children}
+<div className="mx-auto w-full max-w-[2000px] ">    {children}
+</div>
             <Footer />
         </>
     );
@@ -25,7 +26,7 @@ function MainLayoutContent({ children }: MainLayoutProps) {
 export default function MainLayout({ children }: MainLayoutProps) {
     return (
         <Suspense fallback={null}>
-            <MainLayoutContent>
+            <MainLayoutContent >
                 {children}
             </MainLayoutContent>
         </Suspense>

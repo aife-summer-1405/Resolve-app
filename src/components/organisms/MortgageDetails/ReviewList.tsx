@@ -42,8 +42,7 @@ export default function ReviewList() {
           <article
             key={review.id}
             className="relative flex min-w-0 flex-col rounded-[18px] bg-[#363636] p-3 pt-8 sm:p-4 sm:pt-8"
-          >
-            <div className="absolute -top-2 right-4 flex h-6 items-center gap-1 rounded-lg bg-white px-2 text-[11px] font-semibold text-[#222222]">
+          >y            <div className="absolute -top-2 right-4 flex h-6 items-center gap-1 rounded-lg bg-white px-2 text-[11px] font-semibold text-[#222222]">
               <Star size={12} className="fill-current" />
               <span>{review.rating.toLocaleString("fa-IR")}</span>
             </div>
