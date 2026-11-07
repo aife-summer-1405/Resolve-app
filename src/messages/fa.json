@@ -158,5 +158,47 @@
     "telegram": "تلگرام",
     "instagram": "اینستاگرام",
     "linkedin": "لینکدین"
+  },
+  "DashboardHeader": {
+    "userName": "نام کاربر",
+    "role": "فروشنده",
+    "dashboard": "داشبورد",
+    "profile": "اطلاعات کاربری",
+    "properties": "مدیریت املاک",
+    "reservations": "مدیریت رزروها",
+    "finance": "مدیریت مالی",
+    "ads": "مدیریت نظرات",
+    "notifications": "اعلان‌ها",
+    "comments": "نظرات جدید",
+    "notificationLabel": "اعلان‌ها",
+    "lightMode": "حالت روشن",
+    "darkMode": "حالت تاریک"
+  },
+  "DashboardSidebar": {
+    "dashboard": "داشبورد",
+    "profile": "اطلاعات کاربری",
+    "properties": "مدیریت املاک",
+    "reservations": "مدیریت رزرو ها",
+    "finance": "مدیریت مالی",
+    "ads": "مدیریت نظرات",
+    "notifications": "اعلان‌ها",
+    "newComments": "نظرات جدید",
+    "commentsCount": "{count} نظر",
+    "homeLabel": "بازگشت به صفحه اصلی",
+    "logoAlt": "لوگوی دلتا"
+  },
+  "DashboardStatCard": {
+    "activeReservations": "رزروهای فعال",
+    "view": "مشاهده"
+  },
+  "DashboardOverviewSection": {
+    "incomeTitle": "آمار درآمد ها",
+    "currentMonthIncome": "درآمد ماه جاری",
+    "totalIncome": "درآمد کل",
+    "currency": "تومان",
+    "profileStatus": "وضعیت پروفایل شما",
+    "edit": "ویرایش",
+    "profileDescription": "برای اینکه بازدید خوبی داشته باشید، پروفایل شما باید حداقل ۷۰٪ تکمیل شده باشد.",
+    "lastUpdate": "آخرین تغییرات در ۳ دقیقه پیش"
   }
 }
