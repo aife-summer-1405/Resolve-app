@@ -61,7 +61,7 @@ const OffersSection = () => {
   const seconds = timeLeft % 60;
 
   return (
-    <section className="relative mx-auto w-full max-w-[1376px] text-white">
+    <section className="relative mx-auto w-full max-w-[1440px] text-white">
       <div
         className={`pointer-events-none absolute -top-[151px] z-0 h-[218px] w-[218px] rounded-full bg-[#7569FF]/32 blur-[128px] ${
           locale === "fa" ? "-right-[262px]" : "-left-[262px]"
