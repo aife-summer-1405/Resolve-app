@@ -21,7 +21,7 @@ export default function HeroSection() {
   ];
 
   return (
-    <section className="relative flex w-full flex-col items-center overflow-hidden bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323] px-4 pt-20 text-white xl:h-225.25 xl:px-2 xl:pt-6">
+    <section className="relative flex w-full flex-col items-center overflow-hidden bg-gradient-to-b from-[#85898c] via-[#666a6d] to-[#232323] px-4 pt-20 text-white xl:h-225.25 xl:px-2 xl:pt-6 max-w-full">
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-35 h-48 bg-gradient-to-t from-[#232323] via-[#232323]/80 to-transparent xl:h-105" />
 
       <div className="relative mt-4 flex w-full max-w-321 flex-col items-center xl:mt-6 xl:block xl:h-196.25">
