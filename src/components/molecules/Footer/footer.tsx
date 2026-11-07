@@ -270,7 +270,7 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10 mt-6 px-3 pb-3 lg:-mt-20 lg:px-[17px] lg:pb-4">
-        <div className="mx-auto w-full max-w-[2000px] rounded-[26px] bg-[#171717] px-5 pb-5 pt-6 text-neutral-400 sm:rounded-[32px] sm:px-8 sm:pt-7 lg:px-10">
+        <div className="mx-auto w-full max-w-[1440px] rounded-[26px] bg-[#171717] px-5 pb-5 pt-6 text-neutral-400 sm:rounded-[32px] sm:px-8 sm:pt-7 lg:px-10">
           <div className="grid grid-cols-1 gap-8 pb-7 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr]">
             <section className="sm:col-span-2 lg:col-span-1">
               <h3 className="mb-3.5 text-xl font-extrabold text-white">

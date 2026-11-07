@@ -156,7 +156,7 @@ const PropertyForSaleSection: FC = () => {
         }`}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1376px]">
+      <div className="relative z-10 mx-auto w-full max-w-[1440px]">
         <div className="mb-3 flex items-center gap-3">
           <span className="text-[16px] font-medium text-[#8CFF45]">
             {t("topLabel")}

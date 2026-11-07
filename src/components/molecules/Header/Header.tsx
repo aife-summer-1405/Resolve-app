@@ -101,7 +101,7 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
 
   return (
     <header
-      className={`fixed left-1/2 top-3 z-50 flex h-12 w-[calc(100%-24px)] max-w-[2000px] -translate-x-1/2 items-center justify-between rounded-2xl bg-card ps-2 pe-3 text-xs text-foreground shadow-md sm:top-4 sm:pe-4`}
+      className={`fixed left-1/2 top-3 z-50 flex h-12 w-[calc(100%-24px)] max-w-[1440px] -translate-x-1/2 items-center justify-between rounded-2xl bg-card ps-2 pe-3 text-xs text-foreground shadow-md sm:top-4 sm:pe-4`}
     >
       <div className="flex h-full min-w-0 items-center gap-2 sm:gap-5">
         <Link
