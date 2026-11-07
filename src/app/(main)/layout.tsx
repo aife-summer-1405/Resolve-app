@@ -16,7 +16,7 @@ function MainLayoutContent({ children }: MainLayoutProps) {
     return (
         <>
             <Header isOverlay={pathname === "/"} />
-<div className="mx-auto w-full max-w-[2000px] ">    {children}
+<div className="mx-auto w-full  ">    {children}
 </div>
             <Footer />
         </>
