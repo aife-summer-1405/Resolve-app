@@ -1,4 +1,8 @@
-import { Suspense } from "react";
+import {
+    HydrationBoundary,
+    QueryClient,
+    dehydrate,
+} from "@tanstack/react-query";
 import UserProvider from "./UserProvider";
 import { getUserAction } from "@/src/actions/authActions";
 
@@ -6,20 +10,21 @@ interface IUserDataProps {
     children: React.ReactNode;
 }
 
-async function UserData({ children }: IUserDataProps) {
-    const user = await getUserAction();
+export default async function UserDataProvider({
+    children,
+}: IUserDataProps) {
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery({
+        queryKey: ["user"],
+        queryFn: getUserAction,
+    });
 
     return (
-        <UserProvider initialUser={user}>
-            {children}
+        <UserProvider>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                {children}
+            </HydrationBoundary>
         </UserProvider>
-    );
-}
-
-export default function UserDataProvider({ children }: IUserDataProps) {
-    return (
-        <Suspense fallback={<UserProvider initialUser={null}>{children}</UserProvider>}>
-            <UserData>{children}</UserData>
-        </Suspense>
     );
 }
