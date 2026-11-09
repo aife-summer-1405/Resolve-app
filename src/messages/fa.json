@@ -172,33 +172,52 @@
     "comments": "نظرات جدید",
     "notificationLabel": "اعلان‌ها",
     "lightMode": "حالت روشن",
-    "darkMode": "حالت تاریک"
+    "darkMode": "حالت تاریک",
+    "wallet": "شارژ کردن کیف پول",
+    "notificationSettings": "تنظیمات نوتیفیکیشن",
+    "logout": "خروج",
+    "reservationNotifications": "نوتیفیکیشن رزرو",
+    "paymentNotifications": "نوتیفیکیشن پرداخت",
+    "discountNotifications": "نوتیفیکیشن تخفیف",
+    "systemNotifications": "نوتیفیکیشن سیستم",
+    "logoutConfirmation": "آیا از خروج خود مطمئن هستید؟",
+    "cancel": "انصراف"
   },
   "DashboardSidebar": {
+    "brandName": "دلتا",
     "dashboard": "داشبورد",
     "profile": "اطلاعات کاربری",
-    "properties": "مدیریت املاک",
-    "reservations": "مدیریت رزرو ها",
-    "finance": "مدیریت مالی",
-    "ads": "مدیریت نظرات",
+    "reservations": "مدیریت رزروها",
+    "favorites": "علاقه‌مندی‌ها",
+    "payments": "پرداخت‌ها",
     "notifications": "اعلان‌ها",
-    "newComments": "نظرات جدید",
-    "commentsCount": "{count} نظر",
-    "homeLabel": "بازگشت به صفحه اصلی",
-    "logoAlt": "لوگوی دلتا"
+    "wallet": "کیف پول",
+    "noBalance": "عدم موجودی",
+    "homeLabel": "بازگشت به صفحه اصلی"
   },
   "DashboardStatCard": {
-    "activeReservations": "رزروهای فعال",
     "view": "مشاهده"
   },
   "DashboardOverviewSection": {
-    "incomeTitle": "آمار درآمد ها",
-    "currentMonthIncome": "درآمد ماه جاری",
-    "totalIncome": "درآمد کل",
-    "currency": "تومان",
+    "allReservations": "کل رزروها",
+    "activeReservations": "رزروهای فعال",
+    "unpaidReservations": "رزروهای پرداخت نشده",
+    "favorites": "علاقه‌مندی‌ها",
+    "reservationsChart": "نمودار رزرو های شما",
     "profileStatus": "وضعیت پروفایل شما",
     "edit": "ویرایش",
     "profileDescription": "برای اینکه بازدید خوبی داشته باشید، پروفایل شما باید حداقل ۷۰٪ تکمیل شده باشد.",
     "lastUpdate": "آخرین تغییرات در ۳ دقیقه پیش"
+  },
+  "DashboardRecentReservationsSection": {
+    "title": "رزروهای اخیر",
+    "viewAll": "مشاهده همه",
+    "status": "وضعیت",
+    "price": "قیمت",
+    "date": "تاریخ رزرو",
+    "accommodation": "نام اقامتگاه",
+    "confirmed": "تایید شده",
+    "currency": "تومان",
+    "unconfirmed": "تأیید نشده"
   }
 }

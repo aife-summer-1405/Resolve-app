@@ -3,12 +3,12 @@
 import { useTranslations } from "next-intl";
 import { Pin, Play } from "lucide-react";
 
-const DashboardStatCard = () => {
+const DashboardStatCard = ({ title }: { title: string }) => {
   const t = useTranslations("DashboardStatCard");
 
   return (
-    <div className="relative flex h-[130px] w-[264px] shrink-0 flex-col overflow-hidden rounded-[12px] bg-surface">
-      <div className="absolute right-[18px] top-0 flex h-[57px] w-[50px] items-center justify-center rounded-b-[13px] bg-background">
+    <div className="relative flex aspect-[2.05/1] w-full shrink-0 flex-col overflow-hidden rounded-[12px] bg-surface">
+      <div className="absolute right-[22px] top-0 flex h-1/2 w-2/10 items-center justify-center rounded-b-[13px] bg-background">
         <Pin
           size={27}
           fill="currentColor"
@@ -16,19 +16,22 @@ const DashboardStatCard = () => {
           className="rotate-45 text-foreground"
         />
       </div>
-      <div className="absolute right-[78px] top-[30px] flex  items-end gap-[9px]">
+
+      <div className="absolute right-[100px] top-[28px] flex items-end gap-[10px]">
         <span className="text-[12px] font-medium leading-none text-foreground">
           ۵
         </span>
+
         <span className="whitespace-nowrap text-[14px] font-medium leading-none text-foreground">
-          {t("activeReservations")}
+          رلترنالنا
         </span>
       </div>
-      <div className="absolute left-[19px] right-[19px] top-[76px] border-t border-dashed border-border" />
+
+      <div className="absolute left-[23px] right-[23px] top-[89px] border-t border-dashed border-border" />
 
       <div
         dir="ltr"
-        className="absolute bottom-0 flex h-[53px] w-full items-center justify-between px-[21px]"
+        className="absolute bottom-0 flex h-4/10 w-full items-center justify-between px-[25px]"
       >
         <div className="flex items-center gap-[12px]">
           <Play
@@ -53,7 +56,7 @@ const DashboardStatCard = () => {
           />
         </div>
 
-        <span className="text-[12px] font-normal text-muted">{t("view")}</span>
+        <span className="text-[14px] font-normal text-muted">{t("view")}</span>
       </div>
     </div>
   );

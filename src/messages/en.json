@@ -172,33 +172,52 @@
     "comments": "New Comments",
     "notificationLabel": "Notifications",
     "lightMode": "Light Mode",
-    "darkMode": "Dark Mode"
+    "darkMode": "Dark Mode",
+    "wallet": "Charge Wallet",
+    "notificationSettings": "Notification Settings",
+    "logout": "Logout",
+    "reservationNotifications": "Reservation Notifications",
+    "paymentNotifications": "Payment Notifications",
+    "discountNotifications": "Discount Notifications",
+    "systemNotifications": "System Notifications",
+    "logoutConfirmation": "Are you sure you want to log out?",
+    "cancel": "Cancel"
   },
   "DashboardSidebar": {
+    "brandName": "Delta",
     "dashboard": "Dashboard",
     "profile": "User Profile",
-    "properties": "Properties Management",
     "reservations": "Reservations Management",
-    "finance": "Finance Management",
-    "ads": "Comments Management",
+    "favorites": "Favorites",
+    "payments": "Payments",
     "notifications": "Notifications",
-    "newComments": "New Comments",
-    "commentsCount": "{count} comments",
-    "homeLabel": "Back to Home",
-    "logoAlt": "Delta Logo"
+    "wallet": "Wallet",
+    "noBalance": "No balance",
+    "homeLabel": "Back to Home"
   },
   "DashboardStatCard": {
-    "activeReservations": "Active Reservations",
     "view": "View"
   },
   "DashboardOverviewSection": {
-    "incomeTitle": "Income Statistics",
-    "currentMonthIncome": "Current Month Income",
-    "totalIncome": "Total Income",
-    "currency": "Toman",
+    "allReservations": "All Reservations",
+    "activeReservations": "Active Reservations",
+    "unpaidReservations": "Unpaid Reservations",
+    "favorites": "Favorites",
+    "reservationsChart": "Your Reservations Chart",
     "profileStatus": "Your Profile Status",
     "edit": "Edit",
     "profileDescription": "To get good views, your profile should be at least 70% complete.",
     "lastUpdate": "Last updated 3 minutes ago"
+  },
+  "DashboardRecentReservationsSection": {
+    "title": "Recent Reservations",
+    "viewAll": "View All",
+    "status": "Status",
+    "price": "Price",
+    "date": "Reservation Date",
+    "accommodation": "Accommodation Name",
+    "confirmed": "Confirmed",
+    "currency": "Toman",
+    "unconfirmed": "Unconfirmed"
   }
 }
