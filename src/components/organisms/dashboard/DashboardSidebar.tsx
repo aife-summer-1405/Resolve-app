@@ -1,23 +1,21 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   UserRound,
-  Settings,
   CirclePlus,
-  Wallet,
-  Megaphone,
+  Heart,
+  CreditCard,
   Bell,
   LogOut,
-  MessageSquare,
+  Wallet,
 } from "lucide-react";
 
 const DashboardSidebar = () => {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const t = useTranslations("DashboardSidebar");
 
   const menuItems = [
@@ -32,24 +30,19 @@ const DashboardSidebar = () => {
       icon: UserRound,
     },
     {
-      title: t("properties"),
-      href: "/dashboard/properties",
-      icon: Settings,
-    },
-    {
       title: t("reservations"),
       href: "/dashboard/reservations",
       icon: CirclePlus,
     },
     {
-      title: t("finance"),
-      href: "/dashboard/finance",
-      icon: Wallet,
+      title: t("favorites"),
+      href: "/dashboard/favorites",
+      icon: Heart,
     },
     {
-      title: t("ads"),
-      href: "/dashboard/ads",
-      icon: Megaphone,
+      title: t("payments"),
+      href: "/dashboard/payments",
+      icon: CreditCard,
     },
     {
       title: t("notifications"),
@@ -59,63 +52,62 @@ const DashboardSidebar = () => {
   ];
 
   return (
-    <aside className="m-[20px] flex h-[775px] w-[270px] shrink-0 flex-col rounded-[12px] bg-surface px-3 py-5">
-      <div className="mb-8 flex items-center justify-between px-2">
-        <Image
-          src="/images/dashboard-logo.png"
-          alt={t("logoAlt")}
-          width={46}
-          height={32}
-          className="h-auto w-[46px] object-contain"
-        />
-
+    <aside className="m-5 flex h-[775px] w-2/10 shrink-0 flex-col rounded-[12px] bg-surface px-4 py-5">
+      <div className="mb-8 flex items-center justify-between px-1">
+        <span className="text-[25px] font-bold text-foreground">
+          {t("brandName")}
+        </span>
         <Link
           href="/"
           aria-label={t("homeLabel")}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-background"
+          className="flex items-center justify-center rounded-lg text-foreground transition-colors hover:bg-background"
         >
           <LogOut size={20} />
         </Link>
       </div>
-
       <nav className="flex flex-col gap-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
 
+          const isActive = Boolean(
+            pathname === item.href ||
+            (item.href !== "/dashboard" &&
+              pathname.startsWith(`${item.href}/`)),
+          );
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                 isActive
                   ? "bg-background font-semibold text-foreground"
                   : "text-foreground hover:bg-background"
               }`}
             >
-              <Icon size={19} />
+              <Icon
+                size={19}
+                fill={item.icon === Heart ? "currentColor" : "none"}
+              />
+
               <span>{item.title}</span>
             </Link>
           );
         })}
       </nav>
-
       <div className="mt-auto pt-8">
         <Link
-          href="/dashboard/comments"
-          className="flex items-center justify-between rounded-xl border border-dashed border-border px-3 py-3 transition-colors hover:bg-background"
+          href="/dashboard/wallet"
+          className="flex w-full items-center justify-between rounded-xl border border-dashed border-border px-4 py-3 transition-colors hover:bg-background"
         >
           <div className="flex items-center gap-3">
-            <MessageSquare size={19} />
+            <Wallet size={19} className="text-foreground" />
 
             <div className="flex flex-col gap-1">
               <span className="text-sm font-medium text-foreground">
-                {t("newComments")}
+                {t("wallet")}
               </span>
 
-              <span className="text-xs text-muted">
-                {t("commentsCount", { count: 5 })}
-              </span>
+              <span className="text-[10px] text-muted">{t("noBalance")}</span>
             </div>
           </div>
         </Link>

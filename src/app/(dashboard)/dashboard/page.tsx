@@ -1,10 +1,12 @@
 import DashboardOverviewSection from "@/src/components/organisms/dashboard/DashboardOverviewSection";
+import DashboardRecentReservationsSection from "@/src/components/organisms/dashboard/DashboardRecentReservationsSection";
 import React from "react";
 
 const page = () => {
   return (
-    <div className="min-w-0 flex-1 p-6">
+    <div className="flex flex-col gap-5 mt-5">
       <DashboardOverviewSection />
+      <DashboardRecentReservationsSection />
     </div>
   );
 };

@@ -8,7 +8,7 @@ interface IDashboardLayoutProps {
 
 const DashboardLayout: FC<IDashboardLayoutProps> = ({ children }) => {
   return (
-    <div className="flex min-h-screen w-full bg-background" dir="rtl">
+    <div className="flex  min-h-screen w-full bg-background" dir="rtl">
       <DashboardSidebar />
 
       <main className="min-w-0 flex-1 p-6">
