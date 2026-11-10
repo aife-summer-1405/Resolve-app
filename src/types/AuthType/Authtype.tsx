@@ -66,3 +66,22 @@ export interface IUserResponse {
     user: IUser;
     additionalPercentage: number;
 }
+
+export interface IUserProfile {
+  id: string;
+  role: string;
+  membershipDate: string | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  emailVerified: boolean;
+  profilePicture: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IUserProfileResponse {
+  user: IUserProfile;
+  additionalPercentage: number;
+}

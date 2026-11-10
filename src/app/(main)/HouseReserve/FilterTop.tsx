@@ -7,7 +7,7 @@ import {
   usePathname,
 } from "next/navigation";
 
-import type { ILocation } from "@/src/types/LocationType";
+import type { ILocation } from "@/src/types/HousereservesType/LocationType";
 import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 
@@ -290,35 +290,35 @@ export const FilterTop = ({
 
   return (
     <>
-<div className="w-full bg-card-2">
-  <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-4 rounded-3xl px-6 py-6">
-    <div className="hidden w-2/3 gap-4 md:flex">
-      <Filters {...filterProps} />
-    </div>
+      <div className="w-full bg-card-2">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-4 rounded-3xl px-6 py-6">
+          <div className="hidden w-2/3 gap-4 md:flex">
+            <Filters {...filterProps} />
+          </div>
 
-    <div className="hidden items-center gap-2 rounded-2xl border border-gray-500 p-3 text-textgray md:flex">
-      <Megaphone size={20} />
-      <p>تعداد آگهی: 33</p>
-    </div>
+          <div className="hidden items-center gap-2 rounded-2xl border border-gray-500 p-3 text-textgray md:flex">
+            <Megaphone size={20} />
+            <p>تعداد آگهی: 33</p>
+          </div>
 
-    <div className="flex w-full items-center gap-3 md:hidden">
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-gray-500 px-4 py-3 text-textgray"
-      >
-        <Search size={20} />
-        <span className="flex-1 text-right">جستجوی موقعیت و...</span>
-        <SlidersHorizontal size={20} />
-      </button>
+          <div className="flex w-full items-center gap-3 md:hidden">
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-gray-500 px-4 py-3 text-textgray"
+            >
+              <Search size={20} />
+              <span className="flex-1 text-right">جستجوی موقعیت و...</span>
+              <SlidersHorizontal size={20} />
+            </button>
 
-      <div className="flex shrink-0 items-center gap-2 text-sm text-textgray">
-        <Megaphone size={18} />
-        <span>33 آگهی</span>
+            <div className="flex shrink-0 items-center gap-2 text-sm text-textgray">
+              <Megaphone size={18} />
+              <span>33 آگهی</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       {isOpen && (
         <div

@@ -1,7 +1,11 @@
 import "server-only";
 
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, {
+    AxiosError,
+    InternalAxiosRequestConfig,
+} from "axios";
 import { cookies } from "next/headers";
+import { refreshTokenAction } from "@/src/actions/authActions";
 
 const apiServer = axios.create({
     baseURL: process.env.API_URL,
@@ -9,25 +13,11 @@ const apiServer = axios.create({
         "Content-Type": "application/json",
         Accept: "application/json",
     },
-    timeout: 15000,
-});
-
-const refreshClient = axios.create({
-    baseURL: process.env.API_URL,
-    headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-    },
-    timeout: 15000,
+    timeout: 300000,
 });
 
 interface IRetryConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
-}
-
-interface IRefreshResponse {
-    accessToken: string;
-    refreshToken?: string;
 }
 
 apiServer.interceptors.request.use(async (config) => {
@@ -49,8 +39,7 @@ apiServer.interceptors.response.use(
         if (
             error.response?.status !== 401 ||
             !originalRequest ||
-            originalRequest._retry ||
-            originalRequest.url?.includes("/api/auth/refresh")
+            originalRequest._retry
         ) {
             return Promise.reject(error);
         }
@@ -58,42 +47,7 @@ apiServer.interceptors.response.use(
         originalRequest._retry = true;
 
         try {
-            const cookieStore = await cookies();
-            const refreshToken = cookieStore.get("refreshToken")?.value;
-
-            if (!refreshToken) {
-                throw new Error("Refresh token not found");
-            }
-
-            const response = await refreshClient.post<IRefreshResponse>(
-                "/api/auth/refresh",
-                { token: refreshToken }
-            );
-
-            const { accessToken, refreshToken: newRefreshToken } =
-                response.data;
-
-            if (!accessToken) {
-                throw new Error("New access token not received");
-            }
-
-            cookieStore.set("accessToken", accessToken,     {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-                 maxAge: 60 * 60,
-            });
-
-            if (newRefreshToken) {
-                cookieStore.set("refreshToken", newRefreshToken, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite: "lax",
-                    path: "/",
-                    maxAge: 60 * 60 * 24 * 30,
-                });
-            }
+            const accessToken = await refreshTokenAction();
 
             originalRequest.headers.set(
                 "Authorization",
@@ -102,10 +56,6 @@ apiServer.interceptors.response.use(
 
             return apiServer(originalRequest);
         } catch (refreshError) {
-            cookieStore.delete("accessToken");
-            cookieStore.delete("refreshToken");
-            cookieStore.delete("userId");
-
             return Promise.reject(refreshError);
         }
     }

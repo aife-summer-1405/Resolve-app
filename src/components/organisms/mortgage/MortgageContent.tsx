@@ -5,7 +5,7 @@ import MortgageCard from "./MortgageCard";
 import MortgagePagination from "./MortgagePagination";
 import { getHouses } from "@/src/services/houseService";
 import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
-import type { ILocation } from "@/src/types/LocationType";
+import type { ILocation } from "@/src/types/HousereservesType/LocationType";
 import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 
 interface IMortgageListProps {
@@ -34,13 +34,13 @@ const MortgageListSkeleton = () => (
 );
 
 const MortgageList = async ({ filters }: IMortgageListProps) => {
-  console.log("filters",filters)
+  console.log("filters", filters)
 
   const result = await getHouses(filters);
   const limit = filters.limit ?? 10;
-const totalPages = Math.max(1, Math.ceil((result.totalCount ?? 0) / limit));
+  const totalPages = Math.max(1, Math.ceil((result.totalCount ?? 0) / limit));
   const houses = result.houses ?? [];
-  console.log("result.totalCount",result.totalCount)
+  console.log("result.totalCount", result.totalCount)
 
   if (houses.length === 0) {
     return (
@@ -73,7 +73,7 @@ export default function MortgageContent({
   locations,
   categories,
 }: IMortgageContentProps) {
-  
+
   return (
     <div
       dir="rtl"
