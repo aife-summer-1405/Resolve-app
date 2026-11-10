@@ -222,5 +222,26 @@
     "loading": "Loading...",
     "error": "Failed to load reservations",
     "empty": "No reservations have been made yet"
+  },
+
+  "UserInformation": {
+    "profileImage": "Your Profile Picture",
+    "profileImageDescription": "You can change your profile picture",
+    "personalInformation": "Personal Information",
+    "personalInformationDescription": "You can change your personal information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Mobile Number",
+    "security": "Security",
+    "securityDescription": "You can change your password here",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "repeatPassword": "Repeat New Password",
+    "applyChanges": "Apply Changes",
+    "cancel": "Cancel",
+    "selectProfile": "Select Profile",
+    "close": "Close",
+    "select": "Select"
   }
 }
