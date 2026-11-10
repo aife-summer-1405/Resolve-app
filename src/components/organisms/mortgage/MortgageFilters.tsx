@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import type { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
-import type { ILocation } from "@/src/types/LocationType";
+import type { ILocation } from "@/src/types/HousereservesType/LocationType";
 import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 
 interface IMortgageFiltersProps {
@@ -26,7 +26,7 @@ interface IMortgageFiltersProps {
 type FilterState = {
   location: string;
   propertyType: string;
-  transactionType: string; 
+  transactionType: string;
   sort: string;
   order: "ASC" | "DESC";
   search: string;

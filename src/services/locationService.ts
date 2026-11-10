@@ -1,4 +1,4 @@
-import type { ILocationsResponse } from "@/src/types/LocationType";
+import type { ILocationsResponse } from "@/src/types/HousereservesType/LocationType";
 
 export async function getLocations(): Promise<ILocationsResponse> {
     const response = await fetch(

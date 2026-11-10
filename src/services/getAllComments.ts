@@ -1,4 +1,4 @@
-import { IHouseCommentsResponse } from "../types/HouseCommentsType";
+import { IHouseCommentsResponse } from "../types/HousereservesType/HouseCommentsType";
 
 export async function getAllComments(): Promise<IHouseCommentsResponse> {
   const response = await fetch(

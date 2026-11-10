@@ -120,7 +120,7 @@ const BookingPage = ({
 
     return (
         <>
-            <div className="flex my-5 items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-card p-4">
+            <div className="flex my-5 items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-card p-4 mt-20">
                 {steps.map((step, index) => {
                     const isCompleted = index < currentStep;
                     const isActive = index === currentStep;

@@ -16,7 +16,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useUserStore } from "@/src/store/userStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUser } from "@/src/hooks/useUser";
 import { logoutAction } from "@/src/actions/authActions";
 
 interface IHeaderProps {
@@ -28,20 +29,20 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("Header");
+  const queryClient = useQueryClient();
 
-  const user = useUserStore((state) => state.user);
-  const clearUser = useUserStore((state) => state.clearUser);
+  const { data: user } = useUser();
 
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const links = [
     { label: t("quickReserve"), href: "/HouseReserve", hasMenu: true },
     { label: t("mortgage"), href: "/Mortgage", hasMenu: true },
-    // { label: t("about"), href: "/#about" },
     { label: t("articles"), href: "/Articles" },
     { label: t("contact"), href: "/ContactUs" },
   ];
@@ -91,13 +92,21 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
   };
 
   const handleLogout = async () => {
-    await logoutAction();
-    clearUser();
-    router.replace("/login");
-    router.refresh();
+    try {
+      setIsLoggingOut(true);
+
+      await logoutAction();
+
+      queryClient.clear();
+
+      router.replace("/login");
+      router.refresh();
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
-  const avatar = user?.profilePicture || "/images/user.png";
+  const avatar = user?.user.profilePicture || "/images/user.png";
 
   return (
     <header
@@ -213,9 +222,9 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
               <div className="absolute end-0 top-full z-[60] mt-2 w-48 overflow-hidden rounded-xl border border-border bg-card p-2 text-foreground shadow-lg">
                 <div className="mb-2 border-b border-border px-3 py-2">
                   <p className="truncate text-sm font-semibold">
-                    {user.fullName || t("user")}
+                    {user.user.firstName || t("user")} {user.user.lastName || t("user")}
                   </p>
-                  <p className="truncate text-xs text-muted">{user.email}</p>
+                  <p className="truncate text-xs text-muted">{user.user.email}</p>
                 </div>
 
                 <Link
@@ -230,11 +239,11 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  disabled={isPending}
+                  disabled={isLoggingOut}
                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-start text-red-500 transition hover:bg-surface disabled:opacity-50"
                 >
                   <LogOut size={16} />
-                  {isPending ? t("loggingOut") : t("logout")}
+                  {isLoggingOut ? t("loggingOut") : t("logout")}
                 </button>
               </div>
             )}

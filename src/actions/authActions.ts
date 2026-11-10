@@ -2,7 +2,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 import apiServer from "@/lib/server";
 
 import { loginSchema, ILoginForm } from "@/src/schemas/auth/loginSchema";
@@ -23,6 +23,7 @@ import {
     ILoginResponse,
     IResetPasswordRequest,
     IUser,
+    IUserProfileResponse,
     IUserResponse,
     IVerifyOtpRequest,
     IVerifyResetCodeRequest,
@@ -481,10 +482,11 @@ export async function actionResetPassword(
         };
     }
 }
-export async function getUserAction(): Promise<IUser | null> {
+export async function getUserAction(): Promise<IUserProfileResponse | null> {
     try {
         const cookieStore = await cookies();
         const userId = cookieStore.get("userId")?.value;
+        console.log(444555555555);
 
         if (!userId || !/^\d+$/.test(userId)) {
             return null;
@@ -494,16 +496,38 @@ export async function getUserAction(): Promise<IUser | null> {
             `/api/users/${userId}`,
         );
 
-        return response.data.user;
+        const { user, additionalPercentage } = response.data;
+
+        return {
+            user: {
+                id: user.id,
+                role: user.role,
+                membershipDate: user.membershipDate,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+                emailVerified: user.emailVerified,
+                profilePicture: user.profilePicture,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            },
+            additionalPercentage,
+        };
     } catch (error) {
         if (isAxiosError(error)) {
-            console.error(
-                "Get user error:",
-                error.response?.data?.message,
-            );
+            console.error("Get user error:", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+                code: error.code,
+                url: error.config?.url,
+            });
+        } else {
+            console.error("Unexpected error:", error);
         }
 
-        return null;
+        throw error;
     }
 }
 
@@ -522,5 +546,80 @@ export async function logoutAction() {
         cookieStore.delete("accessToken");
         cookieStore.delete("refreshToken");
         cookieStore.delete("userId");
+    }
+}
+
+
+
+
+
+
+interface IRefreshResponse {
+    accessToken: string;
+    refreshToken?: string;
+}
+
+const refreshClient = axios.create({
+    baseURL: process.env.API_URL,
+    headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+    },
+    timeout: 300000,
+});
+
+export async function refreshTokenAction(): Promise<string> {
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get("refreshToken")?.value;
+
+    if (!refreshToken) {
+        throw new Error("Refresh token not found");
+    }
+
+    try {
+        const response = await refreshClient.post<IRefreshResponse>(
+            "/api/auth/refresh",
+            { token: refreshToken }
+        );
+
+        const {
+            accessToken,
+            refreshToken: newRefreshToken,
+        } = response.data;
+
+        if (!accessToken) {
+            throw new Error("New access token not received");
+        }
+
+        cookieStore.set("accessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60,
+        });
+
+        if (newRefreshToken) {
+            cookieStore.set("refreshToken", newRefreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: 60 * 60 * 24 * 30,
+            });
+        }
+
+        return accessToken;
+    } catch (error) {
+        if (
+            axios.isAxiosError(error) &&
+            error.response?.status === 401
+        ) {
+            cookieStore.delete("accessToken");
+            cookieStore.delete("refreshToken");
+            cookieStore.delete("userId");
+        }
+
+        throw error;
     }
 }

@@ -1,29 +1,33 @@
 "use client";
 
-import { useEffect } from "react";
-import type { ReactNode } from "react";
-import { useUserStore } from "@/src/store/userStore";
-import { IUser } from "../types/AuthType/Authtype";
+import {
+    QueryClient,
+    QueryClientProvider,
+} from "@tanstack/react-query";
+import { useState } from "react";
 
 interface IUserProviderProps {
-    children: ReactNode;
-    initialUser: IUser | null;
+    children: React.ReactNode;
 }
 
 export default function UserProvider({
     children,
-    initialUser,
 }: IUserProviderProps) {
-    const setUser = useUserStore((state) => state.setUser);
-    const clearUser = useUserStore((state) => state.clearUser);
+    const [queryClient] = useState(
+        () =>
+            new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        staleTime: 5 * 60 * 1000,
+                        refetchOnWindowFocus: false,
+                    },
+                },
+            }),
+    );
 
-    useEffect(() => {
-        if (initialUser) {
-            setUser(initialUser);
-        } else {
-            clearUser();
-        }
-    }, [initialUser, setUser, clearUser]);
-
-    return <>{children}</>;
+    return (
+        <QueryClientProvider client={queryClient}>
+            {children}
+        </QueryClientProvider>
+    );
 }

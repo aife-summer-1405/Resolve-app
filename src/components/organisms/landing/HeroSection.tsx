@@ -13,7 +13,7 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import DateObject from "react-date-object";
 import Field from "../../Ui/Field";
 
-import type { ILocation } from "@/src/types/LocationType";
+import type { ILocation } from "@/src/types/HousereservesType/LocationType";
 
 interface IHeroSectionProps {
   locations: ILocation[];
@@ -280,18 +280,16 @@ export default function HeroSection({ locations }: IHeroSectionProps) {
           <button
             type="button"
             onClick={() => setActiveTab("booking")}
-            className={`flex h-6.25 w-23 items-center gap-2 border-l cursor-pointer ${
-              activeTab === "booking" ? "text-white" : "text-[#8C8C8C]"
-            }`}
+            className={`flex h-6.25 w-23 items-center gap-2 border-l cursor-pointer ${activeTab === "booking" ? "text-white" : "text-[#8C8C8C]"
+              }`}
           >
             <Image
               src="/icons/booking (1).png"
               alt={t("bookingIconAlt")}
               width={20}
               height={20}
-              className={`brightness-0 invert ${
-                activeTab === "booking" ? "opacity-100" : "opacity-40"
-              }`}
+              className={`brightness-0 invert ${activeTab === "booking" ? "opacity-100" : "opacity-40"
+                }`}
             />
             <p>{t("booking")}</p>
           </button>
@@ -299,18 +297,16 @@ export default function HeroSection({ locations }: IHeroSectionProps) {
           <button
             type="button"
             onClick={() => setActiveTab("mortgage")}
-            className={`flex h-6.25 w-23 items-center gap-2 cursor-pointer ${
-              activeTab === "mortgage" ? "text-white" : "text-[#8C8C8C]"
-            }`}
+            className={`flex h-6.25 w-23 items-center gap-2 cursor-pointer ${activeTab === "mortgage" ? "text-white" : "text-[#8C8C8C]"
+              }`}
           >
             <Image
               src="/icons/house-building (1).png"
               alt={t("mortgageIconAlt")}
               width={20}
               height={20}
-              className={`brightness-0 invert ${
-                activeTab === "mortgage" ? "opacity-100" : "opacity-40"
-              }`}
+              className={`brightness-0 invert ${activeTab === "mortgage" ? "opacity-100" : "opacity-40"
+                }`}
             />
             <p>{t("mortgage")}</p>
           </button>
@@ -352,9 +348,8 @@ export default function HeroSection({ locations }: IHeroSectionProps) {
 
                     <ChevronDown
                       size={20}
-                      className={`shrink-0 transition-transform ${
-                        isLocationOpen ? "rotate-180" : ""
-                      }`}
+                      className={`shrink-0 transition-transform ${isLocationOpen ? "rotate-180" : ""
+                        }`}
                     />
                   </button>
                 </div>
@@ -463,11 +458,10 @@ export default function HeroSection({ locations }: IHeroSectionProps) {
                 setDestination("");
                 setIsLocationOpen(false);
               }}
-              className={`w-full px-3 py-2 text-right text-xs transition hover:bg-[#555555] ${
-                destination === ""
+              className={`w-full px-3 py-2 text-right text-xs transition hover:bg-[#555555] ${destination === ""
                   ? "bg-[#93C5FD] text-[#363636]"
                   : "text-white"
-              }`}
+                }`}
             >
               همه شهرها
             </button>
@@ -480,11 +474,10 @@ export default function HeroSection({ locations }: IHeroSectionProps) {
                   setDestination(location.areaName);
                   setIsLocationOpen(false);
                 }}
-                className={`w-full px-3 py-2 text-right text-xs transition hover:bg-[#555555] ${
-                  destination === location.areaName
+                className={`w-full px-3 py-2 text-right text-xs transition hover:bg-[#555555] ${destination === location.areaName
                     ? "bg-[#93C5FD] text-[#363636]"
                     : "text-white"
-                }`}
+                  }`}
               >
                 {location.areaName}
               </button>

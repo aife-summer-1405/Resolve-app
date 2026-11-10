@@ -218,6 +218,9 @@
     "accommodation": "Accommodation Name",
     "confirmed": "Confirmed",
     "currency": "Toman",
-    "unconfirmed": "Unconfirmed"
+    "unconfirmed": "Unconfirmed",
+    "loading": "Loading...",
+    "error": "Failed to load reservations",
+    "empty": "No reservations have been made yet"
   }
 }
