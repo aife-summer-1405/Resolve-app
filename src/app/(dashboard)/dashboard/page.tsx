@@ -1,7 +1,11 @@
-import DashboardOverviewSection from "@/src/components/organisms/dashboard/DashboardOverviewSection";
-import DashboardRecentReservationsSection from "@/src/components/organisms/dashboard/DashboardRecentReservationsSection";
+import DashboardOverviewSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardOverviewSection";
+import DashboardRecentReservationsSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardRecentReservationsSection";
 import { getBookings } from "@/src/hooks/dashboard/getBookings";
-import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import {
+  QueryClient,
+  dehydrate,
+  HydrationBoundary,
+} from "@tanstack/react-query";
 
 const Page = async () => {
   const queryClient = new QueryClient();

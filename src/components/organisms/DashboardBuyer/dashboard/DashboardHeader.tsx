@@ -260,11 +260,6 @@ const DashboardHeader = () => {
 
         <div className="flex shrink-0 items-center gap-3" dir="rtl">
           <h1 className="whitespace-nowrap text-sm font-bold">{title}</h1>
-          <div className="flex items-center gap-1">
-            <Play size={8} fill="currentColor" />
-            <Play size={8} fill="currentColor" />
-            <Play size={8} fill="currentColor" />
-          </div>
         </div>
       </header>
 
