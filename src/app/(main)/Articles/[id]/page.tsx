@@ -6,10 +6,18 @@ export const metadata: Metadata = {
   description: "مشاهده جزئیات مقاله در دلتا",
 };
 
-export default function ArticlePage() {
+interface ArticlePageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { id } = await params;
+
   return (
     <main className="min-h-screen">
-      <ArticleDetails />
+      <ArticleDetails id={id} />
     </main>
   );
 }
