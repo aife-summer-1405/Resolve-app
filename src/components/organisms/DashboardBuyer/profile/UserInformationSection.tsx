@@ -1,272 +1,323 @@
+
 "use client";
 
-import { useRef, useState, type FC, type ChangeEvent } from "react";
+import { useState, type FC, type ChangeEvent, type FormEvent, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Camera, X } from "lucide-react";
-import Image from "next/image";
 import FormInput from "@/src/components/molecules/FormInput/FormInput";
+import { useUser } from "@/src/hooks/useUser";
+import { useUpdateUser } from "@/src/hooks/dashboard/useUpdateUser";
+import useChangePassword from "@/src/hooks/dashboard/useChangePassword";
+import ProfilePictureSection from "./ProfilePictureSection";
+
+interface IUserForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}
+
+interface IPasswordForm {
+  currentPassword: string;
+  newPassword: string;
+  repeatPassword: string;
+}
+
+const initialPasswordForm: IPasswordForm = {
+  currentPassword: "",
+  newPassword: "",
+  repeatPassword: "",
+};
+
+const initialForm: IUserForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+};
 
 const UserInformationSection: FC = () => {
   const locale = useLocale();
   const t = useTranslations("UserInformation");
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [form, setForm] = useState<IUserForm>(initialForm);
+  const [passwordForm, setPasswordForm] =
+    useState<IPasswordForm>(initialPasswordForm);
 
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState("");
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const { data: userData } = useUser();
+  const updateUser = useUpdateUser();
+  const changePassword = useChangePassword();
 
-    if (file) {
-      const reader = new FileReader();
+  const user = userData?.user;
 
-      reader.onload = () => {
-        setSelectedImage(reader.result as string);
-      };
+  useEffect(() => {
+    if (!user) return;
 
-      reader.readAsDataURL(file);
+    setForm({
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
+      email: user.email ?? "",
+      phoneNumber: user.phoneNumber ?? "",
+    });
+  }, [user]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setPasswordError("");
+    changePassword.reset();
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!user?.id) return;
+
+    updateUser.mutate({
+      id: user.id,
+      payload: {
+        ...form,
+        fullName: `${form.firstName} ${form.lastName}`.trim(),
+      },
+    });
+  };
+
+  const handlePasswordSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const { currentPassword, newPassword, repeatPassword } = passwordForm;
+
+    if (!currentPassword || !newPassword || !repeatPassword) {
+      setPasswordError("لطفاً تمام فیلدها را تکمیل کنید.");
+      return;
     }
 
-    e.target.value = "";
-  };
-
-  const handleImageSelect = () => {
-    if (selectedImage) {
-      setProfileImage(selectedImage);
-      setSelectedImage(null);
-      setIsImageModalOpen(false);
-    } else {
-      fileInputRef.current?.click();
+    if (newPassword !== repeatPassword) {
+      setPasswordError("رمز عبور جدید و تکرار آن یکسان نیستند.");
+      return;
     }
+
+    changePassword.mutate(
+      {
+        currentPassword,
+        newPassword,
+      },
+      {
+        onSuccess: () => {
+          setPasswordForm(initialPasswordForm);
+          setPasswordError("");
+        },
+      }
+    );
   };
 
-  const handleImageCancel = () => {
-    setIsImageModalOpen(false);
-    setSelectedImage(null);
+  const handleCancel = () => {
+    if (!user) return;
+
+    setForm({
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
+      email: user.email ?? "",
+      phoneNumber: user.phoneNumber ?? "",
+    });
   };
 
-  return (
-    <>
-      <div
-        dir={locale === "fa" ? "rtl" : "ltr"}
-        className="flex  w-full flex-col rounded-xl bg-surface px-[1.7%] text-foreground"
+return (
+  <div
+    dir={locale === "fa" ? "rtl" : "ltr"}
+    className="flex w-full flex-col rounded-xl bg-surface px-[1.7%] text-foreground"
+  >
+    <ProfilePictureSection
+      profilePicture={user?.profilePicture}
+    />
+
+    <form onSubmit={handleSubmit}>
+      <section
+        dir="ltr"
+        className="grid min-h-[310px] w-full border-b border-border py-10"
       >
-        <section className="relative flex h-[154px] w-full shrink-0 items-start justify-between border-b border-border pt-4">
-          <div className="flex w-4/10 flex-col gap-2">
-            <h2 className="text-sm font-bold">{t("profileImage")}</h2>
-            <p className="text-[11px] text-muted">
-              {t("profileImageDescription")}
+        <div className="col-start-2 flex flex-col gap-[23px]">
+          <FormInput
+            name="firstName"
+            label={t("firstName")}
+            value={form.firstName}
+            onChange={handleChange}
+          />
+
+          <FormInput
+            name="lastName"
+            label={t("lastName")}
+            value={form.lastName}
+            onChange={handleChange}
+          />
+
+          <FormInput
+            name="email"
+            label={t("email")}
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+          />
+
+          <FormInput
+            name="phoneNumber"
+            label={t("phone")}
+            type="tel"
+            value={form.phoneNumber}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div
+          dir={locale === "fa" ? "rtl" : "ltr"}
+          className="col-start-4 flex w-full flex-col items-center gap-3"
+        >
+          <div className="flex w-full flex-col gap-3">
+            <h2 className="text-sm font-bold">
+              {t("personalInformation")}
+            </h2>
+
+            <p className="text-right text-[11px] text-muted">
+              {t("personalInformationDescription")}
             </p>
           </div>
 
-          <div className="absolute left-1/2 top-4 flex -translate-x-1/2 justify-center">
-            <div className="relative aspect-square w-[104px] overflow-hidden rounded-full bg-[#D9D9D9]">
-              {profileImage && (
-                <Image
-                  src={profileImage}
-                  alt="Profile"
-                  fill
-                  unoptimized
-                  className="object-cover"
-                />
-              )}
-            </div>
+          <div className="mt-2 flex w-full gap-9">
+            <button
+              type="submit"
+              disabled={updateUser.isPending}
+              className="rounded-xl bg-primary px-5 py-2 text-[10px] text-black disabled:opacity-50"
+            >
+              {updateUser.isPending
+                ? "در حال ذخیره..."
+                : t("applyChanges")}
+            </button>
 
             <button
               type="button"
-              onClick={() => setIsImageModalOpen(true)}
-              className="absolute -right-0.5 top-4 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#91FF45] text-black"
+              onClick={handleCancel}
+              className="text-[10px] text-muted"
             >
-              <Camera size={11} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setProfileImage(null)}
-              className="absolute -right-0.5 bottom-4 flex h-5 w-5 items-center justify-center rounded-full border-1 border-white bg-red-500 text-black"
-            >
-              <X size={11} />
+              {t("cancel")}
             </button>
           </div>
-        </section>
-        <section
-          dir="ltr"
-          className="grid min-h-[310px] w-full border-b border-border py-10"
-        >
-          <div className="col-start-2 flex flex-col gap-[23px]">
-            <FormInput
-              name="firstName"
-              label={t("firstName")}
-              defaultValue="امیر محمد"
-            />
 
-            <FormInput
-              name="lastName"
-              label={t("lastName")}
-              defaultValue="ملایی"
-            />
+          {updateUser.isError && (
+            <p className="text-[11px] text-red-500">
+              ذخیره اطلاعات با خطا مواجه شد.
+            </p>
+          )}
 
-            <FormInput
-              name="email"
-              label={t("email")}
-              type="email"
-              defaultValue="example@gamil.com"
-            />
-
-            <FormInput
-              name="phone"
-              label={t("phone")}
-              type="tel"
-              defaultValue="09123456789"
-            />
-          </div>
-
-          <div
-            dir={locale === "fa" ? "rtl" : "ltr"}
-            className="col-start-4 flex w-full flex-col items-center gap-3"
-          >
-            <div className="flex w-full flex-col  gap-3">
-              <h2 className="text-sm font-bold">{t("personalInformation")}</h2>
-
-              <p className="text-right text-[11px] text-muted">
-                {t("personalInformationDescription")}
-              </p>
-            </div>
-
-            <div className="mt-2 flex w-full gap-9">
-              <button
-                type="button"
-                className="rounded-xl bg-[#91FF45] px-5 py-2 text-[10px] text-black"
-              >
-                {t("applyChanges")}
-              </button>
-
-              <button type="button" className="text-[10px] text-muted">
-                {t("cancel")}
-              </button>
-            </div>
-          </div>
-        </section>
-        <section dir="ltr" className="grid min-h-[242px] w-full py-5">
-          <div className="col-start-2 flex flex-col gap-[23px]">
-            <FormInput
-              name="currentPassword"
-              label={t("currentPassword")}
-              type="password"
-            />
-
-            <FormInput
-              name="newPassword"
-              label={t("newPassword")}
-              type="password"
-            />
-
-            <FormInput
-              name="repeatPassword"
-              label={t("repeatPassword")}
-              type="password"
-            />
-          </div>
-
-          <div
-            dir={locale === "fa" ? "rtl" : "ltr"}
-            className="col-start-4 flex w-full flex-col items-center gap-3"
-          >
-            <div className="flex w-full flex-col  gap-3">
-              <h2 className="text-sm font-bold">{t("security")}</h2>
-
-              <p className="text-right text-[11px] text-muted">
-                {t("securityDescription")}
-              </p>
-            </div>
-
-            <div className="mt-2 flex w-full  gap-9">
-              <button
-                type="button"
-                className="rounded-xl bg-[#91FF45] px-5 py-2 text-[10px] text-black"
-              >
-                {t("applyChanges")}
-              </button>
-
-              <button type="button" className="text-[10px] text-muted">
-                {t("cancel")}
-              </button>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {isImageModalOpen && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-          onClick={handleImageCancel}
-        >
-          <div
-            dir={locale === "fa" ? "rtl" : "ltr"}
-            onClick={(e) => e.stopPropagation()}
-            className="relative flex aspect-[500/510] w-full max-w-[500px] min-w-[320px] flex-col overflow-hidden rounded-xl bg-surface"
-          >
-            <div className="flex h-[13%] shrink-0 items-center justify-between border-b border-dashed border-border px-[4%]">
-              <h3 className="text-sm font-medium">{t("selectProfile")}</h3>
-
-              <button
-                type="button"
-                onClick={handleImageCancel}
-                className="flex items-center gap-2 text-xs text-muted"
-              >
-                {t("close")}
-                <X size={14} />
-              </button>
-            </div>
-
-            <div className="relative flex-1">
-              <div className="absolute left-1/2 top-[4%] aspect-square w-[45%] -translate-x-1/2 overflow-hidden rounded-full bg-[#D9D9D9]">
-                {selectedImage && (
-                  <Image
-                    src={selectedImage}
-                    alt="Selected profile"
-                    fill
-                    unoptimized
-                    className="object-cover"
-                  />
-                )}
-              </div>
-
-              <div
-                dir="ltr"
-                className="absolute left-1/2 top-[75%] flex -translate-x-1/2 items-center justify-center gap-4"
-              >
-                <button
-                  type="button"
-                  onClick={handleImageSelect}
-                  className="rounded-xl bg-[#91FF45] px-5 py-2 text-[10px] text-black"
-                >
-                  {t("select")}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleImageCancel}
-                  className="text-[10px] text-muted"
-                >
-                  {t("cancel")}
-                </button>
-              </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </div>
-          </div>
+          {updateUser.isSuccess && (
+            <p className="text-[11px] text-green-500">
+              اطلاعات با موفقیت ذخیره شد.
+            </p>
+          )}
         </div>
-      )}
-    </>
-  );
+      </section>
+    </form>
+
+    <form onSubmit={handlePasswordSubmit}>
+      <section dir="ltr" className="grid min-h-[242px] w-full py-5">
+        <div className="col-start-2 flex flex-col gap-[23px]">
+          <FormInput
+            name="currentPassword"
+            label={t("currentPassword")}
+            type="password"
+            value={passwordForm.currentPassword}
+            onChange={handlePasswordChange}
+          />
+
+          <FormInput
+            name="newPassword"
+            label={t("newPassword")}
+            type="password"
+            value={passwordForm.newPassword}
+            onChange={handlePasswordChange}
+          />
+
+          <FormInput
+            name="repeatPassword"
+            label={t("repeatPassword")}
+            type="password"
+            value={passwordForm.repeatPassword}
+            onChange={handlePasswordChange}
+          />
+        </div>
+
+        <div
+          dir={locale === "fa" ? "rtl" : "ltr"}
+          className="col-start-4 flex w-full flex-col items-center gap-3"
+        >
+          <div className="flex w-full flex-col gap-3">
+            <h2 className="text-sm font-bold">{t("security")}</h2>
+
+            <p className="text-right text-[11px] text-muted">
+              {t("securityDescription")}
+            </p>
+          </div>
+
+          <div className="mt-2 flex w-full gap-9">
+            <button
+              type="submit"
+              disabled={changePassword.isPending}
+              className="rounded-xl bg-primary px-5 py-2 text-[10px] text-black disabled:opacity-50"
+            >
+              {changePassword.isPending
+                ? "در حال تغییر رمز..."
+                : t("applyChanges")}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setPasswordForm(initialPasswordForm);
+                setPasswordError("");
+                changePassword.reset();
+              }}
+              className="text-[10px] text-muted"
+            >
+              {t("cancel")}
+            </button>
+          </div>
+
+          {passwordError && (
+            <p className="text-[11px] text-red-500">
+              {passwordError}
+            </p>
+          )}
+
+          {changePassword.isError && (
+            <p className="text-[11px] text-red-500">
+              تغییر رمز عبور با خطا مواجه شد. رمز فعلی را بررسی کنید.
+            </p>
+          )}
+
+          {changePassword.isSuccess && (
+            <p className="text-[11px] text-green-500">
+              رمز عبور با موفقیت تغییر کرد.
+            </p>
+          )}
+        </div>
+      </section>
+    </form>
+  </div>
+);
 };
 
 export default UserInformationSection;

@@ -1,19 +1,24 @@
 import DashboardOverviewSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardOverviewSection";
 import DashboardRecentReservationsSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardRecentReservationsSection";
 import { getBookings } from "@/src/hooks/dashboard/getBookings";
+import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 import {
   QueryClient,
   dehydrate,
   HydrationBoundary,
 } from "@tanstack/react-query";
-
-const Page = async () => {
+export const defultFilter: IHouseFilters = {
+  sort: "updated_at",
+  order: "DESC",
+}
+const Page = async () => {      
   const queryClient = new QueryClient();
 
   const bookings = await queryClient.fetchQuery({
-    queryKey: ["bookings", "all"],
-    queryFn: () => getBookings(),
+    queryKey: ["bookings", "all", defultFilter],
+    queryFn: () => getBookings(defultFilter),
   });
+  console.log("bookings", bookings);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
