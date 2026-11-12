@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Search,
@@ -40,6 +40,20 @@ const BookingManagementSection = () => {
 
   const [search, setSearch] = useState("");
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  useEffect(() => {
+  if (activeMenu === null) return;
+  const handleClickOutside = (event: PointerEvent) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest(`[data-reservation-menu="${activeMenu}"]`)) {
+      setActiveMenu(null);
+    }
+  };
+  document.addEventListener("pointerdown", handleClickOutside);
+  return () => {
+    document.removeEventListener("pointerdown", handleClickOutside);
+  };
+}, [activeMenu]);
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -297,7 +311,10 @@ const BookingManagementSection = () => {
                     </span>
                   </td>
 
-                  <td className="relative px-3 py-3 text-center">
+                  <td
+                    data-reservation-menu={reservation.id}
+                    className="relative px-3 py-3 text-center"
+                  >
                     <button
                       type="button"
                       onClick={() =>
