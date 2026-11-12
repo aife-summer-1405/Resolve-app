@@ -19,9 +19,11 @@ import { resetPasswordSchema } from "../schemas/auth/resetPasswordSchema";
 
 import {
     IActionResponse,
+    IChangePasswordPayload,
     ICompleteRegistrationResponse,
     ILoginResponse,
     IResetPasswordRequest,
+    IUpdateUserPayload,
     IUser,
     IUserProfileResponse,
     IUserResponse,
@@ -623,3 +625,50 @@ export async function refreshTokenAction(): Promise<string> {
         throw error;
     }
 }
+export const updateUserAction = async (
+  id: string,
+  payload: IUpdateUserPayload
+): Promise<IUser> => {
+  const { data } = await apiServer.put(`api/users/${id}`, payload);
+
+  return data.user ?? data;
+};
+
+
+export const changePasswordAction = async (
+  payload: IChangePasswordPayload
+) => {
+  const response = await apiServer.put(
+    "api/users/change-password",
+    payload
+  );
+
+  return response.data;
+};
+
+export const uploadProfilePictureAction = async (picture: File) => {
+  const formData = new FormData();
+  formData.append("picture", picture);
+
+  try {
+    const response = await apiServer.put(
+      "api/users/upload/picture",
+      formData,
+      {
+        headers: {
+          "Content-Type": undefined,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("Status:", error.response?.status);
+      console.log("Response:", error.response?.data);
+      console.log("Message:", error.message);
+    }
+
+    throw error;
+  }
+};

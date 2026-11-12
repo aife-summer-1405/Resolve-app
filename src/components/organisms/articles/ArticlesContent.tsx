@@ -1,14 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, Clock3 } from "lucide-react";
-import FileContainer from "@/src/components/Ui/FileContainer";
+import { getArticles } from "@/src/services/articleService";
+import FileContainer from "../../Ui/FileContainer";
+import { IArticlesResponse } from "@/src/types/ArticleType/ArticleType";
 
-export default function ArticlesContent() {
+type Article = IArticlesResponse["data"][number];
+
+export default async function ArticlesContent() {
+  const response = await getArticles({
+    page: 1,
+    limit: 6,
+    sort: "created_at",
+    order: "DESC",
+  });
+
+  const articles = response.data;
+
   return (
-    <main
-      dir=""
-      className="mx-auto w-full px-4 py-6 sm:px-6 lg:px-8"
-    >
+    <main dir="rtl" className="mx-auto w-full px-4 py-6 sm:px-6 lg:px-8">
       <nav className="mb-5 flex items-center justify-start gap-2 text-[11px]">
         <Link href="/" className="text-white/40 transition hover:text-white">
           خانه
@@ -57,104 +67,120 @@ export default function ArticlesContent() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <ArticleCard />
-            <ArticleCard />
+            {articles.slice(0, 2).map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <ArticleCard large />
-          <ArticleCard large />
+          {articles.slice(2, 4).map((article) => (
+            <ArticleCard key={article.id} article={article} large />
+          ))}
         </div>
       </section>
 
-      <section className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
-        <ArticleCard horizontal />
-        <ArticleCard horizontal />
-      </section>
+      {articles.length > 4 && (
+        <section className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
+          {articles.slice(4, 6).map((article) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              horizontal
+            />
+          ))}
+        </section>
+      )}
     </main>
   );
 }
 
-
 interface ArticleCardProps {
+  article: Article;
   large?: boolean;
   horizontal?: boolean;
 }
 
 function ArticleCard({
+  article,
   large = false,
   horizontal = false,
 }: ArticleCardProps) {
+  const formattedDate = new Date(article.created_at).toLocaleDateString(
+    "fa-IR",
+  );
+
   return (
-    <article className="h-full w-full text-white">
-      <FileContainer
-        background="#303030"
-        direction="rtl"
-        radius="md"
-        size="md"
-        width="100%"
-        height={large ? "230px" : horizontal ? "175px" : "180px"}
-        labelWidth="112px"
-        labelHeight="34px"
-        tagHeight="30px"
-        classNames={{
-          base: "transition-colors duration-200",
-          wrapperLabel: "transition-colors duration-200",
-          innerLabel: "h-full p-0!",
-        }}
-        label={
-          <div className="flex h-full items-center justify-center">
-            <div className="mt-2 flex h-[27px] items-center justify-center gap-1 rounded-[10px] bg-white px-3 text-[11px] font-medium text-[#292929] shadow-[0_4px_12px_#FFFFFF33]">
-              <Clock3 size={12} />
-              <span>۳۰ دقیقه</span>              
+    <Link
+      href={`/Articles/${article.id}`}
+      className="block h-full w-full"
+    >
+      <article className="h-full w-full cursor-pointer text-white">
+        <FileContainer
+          background="#303030"
+          direction="rtl"
+          radius="md"
+          size="md"
+          width="100%"
+          height={large ? "230px" : horizontal ? "175px" : "180px"}
+          labelWidth="112px"
+          labelHeight="34px"
+          tagHeight="30px"
+          classNames={{
+            base: "transition-colors duration-200",
+            wrapperLabel: "transition-colors duration-200",
+            innerLabel: "h-full p-0!",
+          }}
+          label={
+            <div className="flex h-full items-center justify-center">
+              <div className="mt-2 flex h-[27px] items-center justify-center gap-1 rounded-[10px] bg-white px-3 text-[11px] font-medium text-[#292929] shadow-[0_4px_12px_#FFFFFF33]">
+                <Clock3 size={12} />
+                <span>{article.estimated_reading_time}</span>
+              </div>
+            </div>
+          }
+          tag={
+            <div className="flex h-[25px] w-[42px] items-center justify-center rounded-lg bg-[#414141] text-white">
+              <ChevronLeft size={19} />
+            </div>
+          }
+        >
+          <div className="h-full px-3 pt-[14px]">
+            <div
+              className={`relative w-full overflow-hidden rounded-[20px] bg-[#444444] ${
+                horizontal
+                  ? "h-[125px]"
+                  : large
+                    ? "h-[185px]"
+                    : "h-[125px]"
+              }`}
+            >
+              <div className="absolute left-3 top-3 flex items-center justify-center rounded-lg">
+                <Image
+                  src="/images/Group 9949.png"
+                  alt="مقاله منتخب"
+                  width={50}
+                  height={12}
+                />
+              </div>
             </div>
           </div>
-        }
-        tag={
-          <div className="flex h-[25px] w-[42px] items-center justify-center rounded-lg bg-[#414141] text-white">
-            <ChevronLeft size={19} />
-          </div>
-        }
-      >
-        <div className="h-full px-3 pt-[14px]">
-          <div
-            className={`relative w-full overflow-hidden rounded-[20px] bg-[#444444] ${
-              horizontal
-                ? "h-[125px]"
-                : large
-                  ? "h-[185px]"
-                  : "h-[125px]"
-            }`}
-          >
+        </FileContainer>
 
-            <div className="absolute left-3 top-3 flex  items-center justify-center rounded-lg ">
-              <Image
-                src="/images/Group 9949.png"
-                alt="اتش "
-                width={50}
-                height={12}
-              />                  
-            </div>
-          </div>
+        <div className="px-2 pt-4 text-right">
+          <p className="text-[11px] text-white/45">
+            {formattedDate}
+          </p>
+
+          <h2 className="mt-4 text-[15px] font-semibold leading-7 text-white">
+            {article.title}
+          </h2>
+
+          <p className="mt-4 line-clamp-4 text-[12px] leading-7 text-white/50">
+            {article.caption}
+          </p>
         </div>
-      </FileContainer>
-
-      <div className="px-2 pt-4 text-right">
-        <p className="flex items-center gap-1 text-[11px] text-white/45">
-          ۱۲ مرداد ۱۴۰۱ - ۱۲:۳۳
-        </p>
-
-        <h2 className="mt-4 text-[15px] font-semibold leading-7 text-white">
-          بهترین مناطق گردشگری در سال ۱۴۰۳؟
-        </h2>
-
-        <p className="mt-4 line-clamp-4 text-[12px] leading-7 text-white/50">
-          لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-          استفاده از طراحان گرافیک است. لورم ایپسوم متن ساختگی با تولید
-          سادگی نامفهوم از صنعت چاپ و ...
-        </p>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 }

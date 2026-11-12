@@ -2,14 +2,18 @@ interface IFormInputProps {
   name: string;
   label: string;
   type?: string;
+  value?: string;
   defaultValue?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FormInput = ({
   name,
   label,
   type = "text",
+  value,
   defaultValue = "",
+  onChange,
 }: IFormInputProps) => {
   return (
     <div className="relative w-full">
@@ -20,7 +24,9 @@ const FormInput = ({
       <input
         type={type}
         name={name}
-        defaultValue={defaultValue}
+        value={value}
+        defaultValue={value === undefined ? defaultValue : undefined}
+        onChange={onChange}
         className="h-[46px] w-full rounded-[14px] border border-[#BDBDBD] bg-transparent px-3 text-right text-[11px] text-foreground outline-none transition focus:border-[#91FF45]"
       />
     </div>

@@ -14,12 +14,14 @@ import {
   AlertTriangle,
   ChevronDown,
 } from "lucide-react";
+import { useUser } from "@/src/hooks/useUser";
 
 const DashboardHeader = () => {
   const locale = useLocale();
   const t = useTranslations("DashboardHeader");
   const pathname = usePathname();
   const router = useRouter();
+  const { data: user } = useUser();
 
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -97,9 +99,9 @@ const DashboardHeader = () => {
             >
               <div className="flex flex-col items-start gap-0.5">
                 <span className="whitespace-nowrap text-[11px] font-medium">
-                  {t("userName")}
+                  {user?.user.firstName}   {user?.user.lastName} 
                 </span>
-                <span className="text-[9px] text-muted">{t("role")}</span>
+                <span className="text-[9px] text-muted">{user?.user.role}</span>
               </div>
               <div className="h-[30px] w-[30px] shrink-0 rounded-md bg-[#D9D9D9]" />
               <ChevronDown
