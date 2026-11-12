@@ -323,5 +323,26 @@
     "toman": "Toman",
     "applyFilter": "Apply Filters",
     "searchPlaceholder": "Enter hotel name ...."
+  },
+  "NotificationsSection": {
+    "listTitle": "Your Notifications",
+    "markAllAsRead": "Mark All as Read",
+    "status": "Status",
+    "all": "All",
+    "unread": "Unread",
+    "read": "Read",
+    "notification": "Notification",
+    "date": "Date",
+    "markAsRead": "Mark as Read",
+    "emptyUnread": "There are no unread notifications",
+    "emptyRead": "There are no read notifications",
+    "page": "Page",
+    "confirmTitle": "Are you sure you want to mark all site notifications as read?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "messages": {
+      "welcome": "Welcome to the Delta website",
+      "reservation": "Amir Mohammad Maleki has registered a reservation for his villa"
+    }
   }
 }
