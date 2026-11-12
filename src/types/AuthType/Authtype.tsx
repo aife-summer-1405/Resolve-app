@@ -1,10 +1,10 @@
 export interface ILoginResponse {
-    accessToken: string;
-    refreshToken?: string;
-    message?: string;
-    user: {
-        id: number;
-    };
+  accessToken: string;
+  refreshToken?: string;
+  message?: string;
+  user: {
+    id: number;
+  };
 }
 export interface IActionResponse {
   success: boolean;
@@ -12,17 +12,17 @@ export interface IActionResponse {
   userId?: number;
 }
 export type AuthButtonProps = {
-    children: React.ReactNode;
-    type?: "button" | "submit";
-    disabled?: boolean;
-    onClick?: () => void;
+  children: React.ReactNode;
+  type?: "button" | "submit";
+  disabled?: boolean;
+  onClick?: () => void;
 };
 
 export interface IVerifyOtpRequest {
-    otp: string;
+  otp: string;
 }
 export interface ICompleteRegistrationResponse {
-    message?: string;
+  message?: string;
 }
 export interface IVerifyResetCodeProps {
   email: string;
@@ -46,25 +46,25 @@ export interface IResetPasswordProps {
   onBack: () => void;
 }
 export interface IUser {
-    id: string;
-    role: string;
-    membershipDate: string | null;
-    email: string;
-    phoneNumber: string;
-    emailVerified: boolean;
-    fullName: string;
-    firstName: string;
-    lastName: string;
-    profilePicture: string | null;
-    createdAt: string;
-    updatedAt: string;
-    created_at: string;
-    updated_at: string;
+  id: string;
+  role: string;
+  membershipDate: string | null;
+  email: string;
+  phoneNumber: string;
+  emailVerified: boolean;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string | null;
+  createdAt: string;
+  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface IUserResponse {
-    user: IUser;
-    additionalPercentage: number;
+  user: IUser;
+  additionalPercentage: number;
 }
 
 export interface IUserProfile {
@@ -84,4 +84,17 @@ export interface IUserProfile {
 export interface IUserProfileResponse {
   user: IUserProfile;
   additionalPercentage: number;
+}
+
+export interface IUpdateUserPayload {
+  email: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+}
+
+export interface IChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
 }

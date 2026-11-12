@@ -3,7 +3,14 @@
 import { useTranslations } from "next-intl";
 import { Pin, Play } from "lucide-react";
 
-const DashboardStatCard = ({ title }: { title: string }) => {
+interface IDashboardStatCardProps {
+  card: {
+    title: string;
+    summary: string | number;
+  };
+}
+
+const DashboardStatCard = ({ card }: IDashboardStatCardProps) => {
   const t = useTranslations("DashboardStatCard");
 
   return (
@@ -17,13 +24,13 @@ const DashboardStatCard = ({ title }: { title: string }) => {
         />
       </div>
 
-      <div className="absolute right-[100px] top-[28px] flex items-end gap-[10px]">
-        <span className="text-[12px] font-medium leading-none text-foreground">
-          ۵
+      <div className="absolute flex flex-col justify-start items-start right-[100px] top-[28px] flex items-end gap-[10px]">
+        <span className="text-[20px] font-medium leading-none text-foreground">
+          {card.summary}
         </span>
 
         <span className="whitespace-nowrap text-[14px] font-medium leading-none text-foreground">
-          رلترنالنا
+          {card.title}
         </span>
       </div>
 
@@ -56,7 +63,9 @@ const DashboardStatCard = ({ title }: { title: string }) => {
           />
         </div>
 
-        <span className="text-[14px] font-normal text-muted">{t("view")}</span>
+        <span className="text-[14px] font-normal text-muted">
+          {t("view")}
+        </span>
       </div>
     </div>
   );
