@@ -4,6 +4,10 @@ import DashboardStatCard from "./DashboardStatCard";
 import ProfilePercentagePage from "./profilePercentagepage";
 import { IBookingResponse, IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
 import DashboardReservationsChart from "./DashboardReservationsChart";
+import Dashboardsummary from "./Dashboardsummary";
+import DashboardSummarySkeleton from "@/src/components/Skeletons/DashboardSummarySkeleton";
+import DashboardSummary from "./Dashboardsummary";
+import { Suspense } from "react";
 interface IDashboardOverviewSectionProps {
   additionalPercentage?: number;
   reservation: IBookingsApiResponse;
@@ -16,22 +20,12 @@ const DashboardOverviewSection = async ({
   const t = await getTranslations("DashboardOverviewSection");
   const locale = await getLocale();
 
-  const cards = [
-    "allReservations",
-    "activeReservations",
-    "unpaidReservations",
-    "favorites",
-  ] as const;
-
 
   return (
     <section className="flex w-full flex-col gap-4">
-      <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {cards.map((card) => (
-          <DashboardStatCard key={card} title={t(card)} />
-        ))}
-      </div>
-
+    <Suspense fallback={<DashboardSummarySkeleton />}>
+      <DashboardSummary />
+    </Suspense>
       <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2">
     <div className="flex aspect-[2.14/1] w-full min-h-0 flex-col overflow-hidden rounded-xl bg-surface">
   <div className="flex h-[52px] shrink-0 items-center border-b border-dashed border-border px-5">
