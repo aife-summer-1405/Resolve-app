@@ -23,6 +23,7 @@ import ReservationFiltersModal, {
 import ReservationDetailsModal from "./modals/ReservationDetailsModal";
 import ReservationPaymentsModal from "./modals/ReservationPaymentsModal";
 import ReservationListModal from "./modals/ReservationListModal";
+import Pagination from "@/src/components/common/Pagination";
 
 type Reservation = {
   id: number;
@@ -384,39 +385,11 @@ const BookingManagementSection = () => {
           {t("page")} {currentPage}
         </span>
 
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background disabled:opacity-40"
-          >
-            <ChevronRight size={15} />
-          </button>
-
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              type="button"
-              onClick={() => setCurrentPage(page)}
-              className={`flex h-7 min-w-7 items-center justify-center rounded-lg px-2 text-xs transition-colors ${
-                currentPage === page
-                  ? "bg-primary text-black"
-                  : "text-foreground hover:bg-background"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => setCurrentPage((page) => page + 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background"
-          >
-            <ChevronLeft size={15} />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={5}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       <ReservationFiltersModal
