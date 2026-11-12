@@ -244,7 +244,7 @@
     "close": "بستن",
     "select": "انتخاب"
   },
-    "BookingManagementSection": {
+  "BookingManagementSection": {
     "listTitle": "لیست رزروهای شما",
     "searchPlaceholder": "جستجوی رزرو...",
     "filters": "فیلترها",
@@ -302,5 +302,29 @@
     "reservationPeriod": "تاریخ رزرو",
     "passengerInformation": "اطلاعات مسافران",
     "to": "تا"
+  },
+
+  "FavoritesSection": {
+    "savedList": "لیست رزروهای ذخیره شده",
+    "search": "جستجو",
+    "filters": "فیلترها",
+    "name": "نام اقامتگاه",
+    "price": "قیمت کل",
+    "address": "آدرس",
+    "actions": "عملیات",
+    "reserve": "رزرو",
+    "delete": "حذف",
+    "empty": "اقامتگاهی پیدا نشد.",
+    "page": "صفحه",
+    "filterTitle": "فیلترها",
+    "close": "بستن",
+    "propertyType": "نوع ملک",
+    "apartment": "آپارتمان",
+    "destination": "مقصد یا هتل شما",
+    "destinationPlaceholder": "استان، شهر، هتل، ...",
+    "minPrice": "حداقل قیمت",
+    "maxPrice": "حداکثر قیمت",
+    "toman": "تومان",
+    "applyFilter": "اعمال فیلتر"
   }
 }
