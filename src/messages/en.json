@@ -324,6 +324,7 @@
     "minPrice": "Minimum Price",
     "maxPrice": "Maximum Price",
     "toman": "Toman",
-    "applyFilter": "Apply Filters"
+    "applyFilter": "Apply Filters",
+    "searchPlaceholder": "Enter hotel name ...."
   }
 }

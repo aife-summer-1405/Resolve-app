@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import type { MouseEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   MoreHorizontal,
   PlusCircle,
   XCircle,
   SlidersHorizontal,
-  ChevronLeft,
-  ChevronRight,
   ChevronDown,
   X,
 } from "lucide-react";
 import FormInput from "@/src/components/molecules/FormInput/FormInput";
+import Pagination from "@/src/components/common/Pagination";
 
 interface IFavorite {
   id: number;
@@ -37,8 +38,8 @@ const FavoritesSection = () => {
 
   const [search, setSearch] = useState("");
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [currentPage, setCurrentPage] = useState(1);
-  const [deletedFavorites, setDeletedFavorites] = useState<number[]>([]);
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [filters, setFilters] = useState<IFavoriteFilters>({
@@ -115,35 +116,52 @@ const FavoritesSection = () => {
   );
 
   const filteredFavorites = useMemo(() => {
-    return favorites.filter((favorite) => {
-      const matchesSearch = favorite.name
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
-      return matchesSearch && !deletedFavorites.includes(favorite.id);
-    });
-  }, [favorites, search, deletedFavorites]);
+    return favorites.filter((favorite) =>
+      favorite.name.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [favorites, search]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: globalThis.MouseEvent) => {
       if (
         event.target instanceof Element &&
-        !event.target.closest("[data-favorite-menu]")
+        !event.target.closest("[data-favorite-menu]") &&
+        !event.target.closest("[data-favorite-popup]")
       ) {
         setActiveMenu(null);
       }
     };
 
+    const handleScroll = () => {
+      setActiveMenu(null);
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll, true);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, []);
 
-  const handleDelete = (id: number) => {
-    setDeletedFavorites((prev) => [...prev, id]);
-    setActiveMenu(null);
+  const handleMenuClick = (
+    event: MouseEvent<HTMLButtonElement>,
+    id: number,
+  ) => {
+    if (activeMenu === id) {
+      setActiveMenu(null);
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    setMenuPosition({
+      top: rect.bottom + 6,
+      left: Math.max(8, Math.min(rect.right - 80, window.innerWidth - 136)),
+    });
+
+    setActiveMenu(id);
   };
 
   const handleCloseFilters = () => {
@@ -155,10 +173,7 @@ const FavoritesSection = () => {
   };
 
   return (
-    <section
-      dir={locale === "fa" ? "rtl" : "ltr"}
-      className="w-full rounded-xl bg-surface p-4 sm:p-5"
-    >
+    <section dir="rtl" className="w-full rounded-xl bg-surface p-4 sm:p-5">
       <div className="flex flex-col gap-5 border-b border-dashed border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-sm font-semibold text-foreground">
           {t("savedList")}
@@ -169,6 +184,7 @@ const FavoritesSection = () => {
             <FormInput
               name="search"
               label={t("search")}
+              placeholder={t("searchPlaceholder")}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -192,17 +208,17 @@ const FavoritesSection = () => {
         <table className="w-full min-w-[680px] border-separate border-spacing-y-3 text-right">
           <thead>
             <tr className="bg-background text-xs text-foreground">
-              <th className="w-[10%] rounded-r-xl px-3 py-3 font-medium"></th>
+              <th className="w-1/10 rounded-r-xl px-3 py-3 font-medium"></th>
 
-              <th className="w-[24%] px-3 py-3 font-medium">{t("name")}</th>
+              <th className="w-1/4 px-3 py-3 font-medium">{t("name")}</th>
 
-              <th className="w-[17%] px-3 py-3 text-center font-medium">
+              <th className="w-1/6 px-3 py-3 text-center font-medium">
                 {t("price")}
               </th>
 
-              <th className="w-[39%] px-3 py-3 font-medium">{t("address")}</th>
+              <th className="w-2/5 px-3 py-3 font-medium">{t("address")}</th>
 
-              <th className="w-[10%] rounded-l-xl px-3 py-3 text-center font-medium"></th>
+              <th className="w-1/10 rounded-l-xl px-3 py-3 text-center font-medium"></th>
             </tr>
           </thead>
 
@@ -225,44 +241,15 @@ const FavoritesSection = () => {
                   <span className="block truncate">{favorite.address}</span>
                 </td>
 
-                <td
-                  data-favorite-menu
-                  className="relative px-3 py-3 text-center"
-                >
+                <td data-favorite-menu className="px-3 py-3 text-center">
                   <button
                     type="button"
-                    onClick={() =>
-                      setActiveMenu(
-                        activeMenu === favorite.id ? null : favorite.id,
-                      )
-                    }
+                    onClick={(e) => handleMenuClick(e, favorite.id)}
                     aria-label={t("actions")}
                     className="rounded-md p-1 text-foreground transition-colors hover:bg-background"
                   >
                     <MoreHorizontal size={19} />
                   </button>
-
-                  {activeMenu === favorite.id && (
-                    <div className="absolute end-0 top-1/2 z-30 w-32 -translate-y-1/2 rounded-xl border border-border bg-surface p-1.5 shadow-lg">
-                      <button
-                        type="button"
-                        onClick={() => setActiveMenu(null)}
-                        className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-foreground hover:bg-background"
-                      >
-                        {t("reserve")}
-                        <PlusCircle size={14} />
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(favorite.id)}
-                        className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-foreground hover:bg-background"
-                      >
-                        {t("delete")}
-                        <XCircle size={14} />
-                      </button>
-                    </div>
-                  )}
                 </td>
               </tr>
             ))}
@@ -286,40 +273,44 @@ const FavoritesSection = () => {
           {t("page")} {currentPage}
         </span>
 
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background disabled:opacity-40"
-          >
-            <ChevronRight size={15} />
-          </button>
-
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              type="button"
-              onClick={() => setCurrentPage(page)}
-              className={`flex h-7 min-w-7 items-center justify-center rounded-lg px-2 text-xs transition-colors ${
-                currentPage === page
-                  ? "bg-primary text-black"
-                  : "text-foreground hover:bg-background"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => setCurrentPage((page) => page + 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background"
-          >
-            <ChevronLeft size={15} />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={5}
+          onPageChange={setCurrentPage}
+        />
       </div>
+
+      {activeMenu !== null &&
+        createPortal(
+          <div
+            data-favorite-popup
+            style={{
+              position: "fixed",
+              top: menuPosition.top,
+              left: menuPosition.left,
+            }}
+            className="z-[9999] w-32 rounded-xl border border-border bg-surface p-1.5 shadow-lg"
+          >
+            <button
+              type="button"
+              onClick={() => setActiveMenu(null)}
+              className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-foreground hover:bg-background"
+            >
+              {t("reserve")}
+              <PlusCircle size={14} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveMenu(null)}
+              className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-foreground hover:bg-background"
+            >
+              {t("delete")}
+              <XCircle size={14} />
+            </button>
+          </div>,
+          document.body,
+        )}
 
       {isFiltersOpen && (
         <div
@@ -327,7 +318,7 @@ const FavoritesSection = () => {
           onClick={handleCloseFilters}
         >
           <div
-            dir={locale === "fa" ? "rtl" : "ltr"}
+            dir="rtl"
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-[520px] rounded-[10px] bg-surface p-4"
           >
