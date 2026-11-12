@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Search,
@@ -23,6 +23,7 @@ import ReservationFiltersModal, {
 import ReservationDetailsModal from "./modals/ReservationDetailsModal";
 import ReservationPaymentsModal from "./modals/ReservationPaymentsModal";
 import ReservationListModal from "./modals/ReservationListModal";
+import Pagination from "@/src/components/common/Pagination";
 
 type Reservation = {
   id: number;
@@ -40,6 +41,20 @@ const BookingManagementSection = () => {
 
   const [search, setSearch] = useState("");
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  useEffect(() => {
+  if (activeMenu === null) return;
+  const handleClickOutside = (event: PointerEvent) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest(`[data-reservation-menu="${activeMenu}"]`)) {
+      setActiveMenu(null);
+    }
+  };
+  document.addEventListener("pointerdown", handleClickOutside);
+  return () => {
+    document.removeEventListener("pointerdown", handleClickOutside);
+  };
+}, [activeMenu]);
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -278,7 +293,10 @@ const BookingManagementSection = () => {
                     </span>
                   </td>
 
-                  <td className="relative px-3 py-3 text-center">
+                  <td
+                    data-reservation-menu={reservation.id}
+                    className="relative px-3 py-3 text-center"
+                  >
                     <button
                       type="button"
                       onClick={() =>
@@ -346,39 +364,11 @@ const BookingManagementSection = () => {
           {t("page")} {currentPage}
         </span>
 
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background disabled:opacity-40"
-          >
-            <ChevronRight size={15} />
-          </button>
-
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              type="button"
-              onClick={() => setCurrentPage(page)}
-              className={`flex h-7 min-w-7 items-center justify-center rounded-lg px-2 text-xs transition-colors ${
-                currentPage === page
-                  ? "bg-primary text-black"
-                  : "text-foreground hover:bg-background"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => setCurrentPage((page) => page + 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background"
-          >
-            <ChevronLeft size={15} />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={5}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       <ReservationFiltersModal
