@@ -56,6 +56,7 @@ const UserReviewList = ({ houseId }: IUserReviewListProps) => {
         refetch,
         isFetching,
     } = useHouseComments(houseId);
+console.log("reviews", reviews);
 
     const [swiper, setSwiper] = useState<SwiperType | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);

@@ -38,14 +38,15 @@ const AddReview = ({ houseId}: IAddReviewProps) => {
     };
 
     const handleSubmit = () => {
+   
         if (!userlogin) {
             setShowLoginModal(true);
             return;
         }
 
         if (!caption.trim() || isPending) return;
-
         mutate(
+            
             {
                 house_id: Number(houseId),
                 title: title.trim() || "نظر کاربر",
@@ -55,6 +56,7 @@ const AddReview = ({ houseId}: IAddReviewProps) => {
             },
             {
                 onSuccess: () => {
+                    console.log("نظر با موفقیت ارسال شد");
                     resetForm();
                     clearReply();
                 },

@@ -15,6 +15,8 @@ export async function createCommentAction(
             data: response.data,
         };
     } catch (error) {
+        console.log("Error creating comment:", error);
+        
         const axiosError = error as AxiosError<{ message?: string }>;
 
         return {

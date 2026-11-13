@@ -9,9 +9,12 @@ export function useCreateComment(houseId: string) {
 
     return useMutation({
         mutationFn: async (input: ICreateCommentInput) => {
+            console.log("Sending comment:", input);
+            
             const result = await createCommentAction(input);
 
             if (!result.success) {
+                console.log("Error creating comment:", result.message);
                 throw new Error(
                     result.message ?? "ثبت نظر با خطا مواجه شد."
                 );
