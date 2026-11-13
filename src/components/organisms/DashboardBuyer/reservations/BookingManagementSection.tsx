@@ -112,8 +112,7 @@ const BookingManagementSection = () => {
 
       const matchesStatus =
         !appliedFilters?.reservationStatus ||
-        reservation.reservationStatus ===
-          appliedFilters.reservationStatus;
+        reservation.reservationStatus === appliedFilters.reservationStatus;
 
       return matchesSearch && matchesStatus;
     });
@@ -162,12 +161,8 @@ const BookingManagementSection = () => {
     setIsReservationsOpen(true);
   };
 
-
   return (
-    <section
-      dir="rtl"
-      className="w-full rounded-xl bg-surface p-4 sm:p-5"
-    >
+    <section dir="rtl" className="w-full rounded-xl bg-surface p-4 sm:p-5">
       <div className="flex flex-col gap-5 border-b border-dashed border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-sm font-semibold text-foreground">
           {t("listTitle")}
@@ -215,25 +210,17 @@ const BookingManagementSection = () => {
                 {t("accommodation")}
               </th>
 
-              <th className="px-3 py-3 font-medium">
-                {t("reservationDate")}
-              </th>
+              <th className="px-3 py-3 font-medium">{t("reservationDate")}</th>
 
-              <th className="px-3 py-3 font-medium">
-                {t("totalPrice")}
-              </th>
+              <th className="px-3 py-3 font-medium">{t("totalPrice")}</th>
 
-              <th className="px-3 py-3 font-medium">
-                {t("guestCount")}
-              </th>
+              <th className="px-3 py-3 font-medium">{t("guestCount")}</th>
 
               <th className="px-3 py-3 font-medium">
                 {t("reservationStatus")}
               </th>
 
-              <th className="px-3 py-3 font-medium">
-                {t("paymentStatus")}
-              </th>
+              <th className="px-3 py-3 font-medium">{t("paymentStatus")}</th>
 
               <th className="rounded-l-xl px-4 py-3 text-center font-medium">
                 {t("actions")}
@@ -247,15 +234,10 @@ const BookingManagementSection = () => {
                 reservation.reservationStatus,
               );
 
-              const paymentStatus = getStatus(
-                reservation.paymentStatus,
-              );
+              const paymentStatus = getStatus(reservation.paymentStatus);
 
               return (
-                <tr
-                  key={reservation.id}
-                  className="text-xs text-foreground"
-                >
+                <tr key={reservation.id} className="text-xs text-foreground">
                   <td className="px-2 py-1">
                     <div className="flex items-center gap-3">
                       <div className="h-[60px] w-[88px] shrink-0 rounded-xl bg-[#D9D9D9]" />
@@ -271,8 +253,7 @@ const BookingManagementSection = () => {
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3 text-center">
-                    <span>{reservation.price}</span>{" "}
-                    <span>{t("toman")}</span>
+                    <span>{reservation.price}</span> <span>{t("toman")}</span>
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3 text-center">
@@ -302,9 +283,7 @@ const BookingManagementSection = () => {
                       type="button"
                       onClick={() =>
                         setActiveMenu(
-                          activeMenu === reservation.id
-                            ? null
-                            : reservation.id,
+                          activeMenu === reservation.id ? null : reservation.id,
                         )
                       }
                       aria-label={t("actions")}
@@ -426,7 +405,7 @@ const BookingManagementSection = () => {
       <ReservationListModal
         isOpen={isReservationsOpen}
         onClose={() => setIsReservationsOpen(false)}
-      />      
+      />
     </section>
   );
 };

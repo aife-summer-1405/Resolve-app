@@ -244,7 +244,7 @@
     "close": "Close",
     "select": "Select"
   },
-    "BookingManagementSection": {
+  "BookingManagementSection": {
     "listTitle": "Your Reservations",
     "searchPlaceholder": "Search reservations...",
     "filters": "Filters",
@@ -296,10 +296,34 @@
     "paymentDate": "Date",
     "trackingNumber": "Tracking Number",
     "paymentAmount": "Amount",
-    "viewReceipt": "View Receipt" ,
+    "viewReceipt": "View Receipt",
     "reservationsListTitle": "Reservations List",
     "reservationPeriod": "Reservation Dates",
     "passengerInformation": "Passenger Information",
-    "to": "to"   
+    "to": "to"
+  },
+
+  "FavoritesSection": {
+    "savedList": "Saved Reservations",
+    "search": "Search",
+    "filters": "Filters",
+    "name": "Accommodation Name",
+    "price": "Total Price",
+    "address": "Address",
+    "actions": "Actions",
+    "reserve": "Reserve",
+    "delete": "Delete",
+    "empty": "No accommodation found.",
+    "page": "Page",
+    "filterTitle": "Filters",
+    "close": "Close",
+    "propertyType": "Property Type",
+    "apartment": "Apartment",
+    "destination": "Your Destination or Hotel",
+    "destinationPlaceholder": "Province, city, hotel, ...",
+    "minPrice": "Minimum Price",
+    "maxPrice": "Maximum Price",
+    "toman": "Toman",
+    "applyFilter": "Apply Filters"
   }
 }
