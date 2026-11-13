@@ -8,20 +8,21 @@ import { useUserStore } from "@/src/store/userStore";
 import { useCreateComment } from "@/src/hooks/useCreateComment";
 import LoginRequiredModal from "@/src/components/organisms/auth/LoginRequiredModal";
 import { ChevronLeft, Star } from "lucide-react";
+import { useUserData } from "@/src/providers/UserDataContextProvider";
 
 interface IAddReviewProps {
     houseId: string;
 }
 
-const AddReview = ({ houseId }: IAddReviewProps) => {
+const AddReview = ({ houseId}: IAddReviewProps) => {
     const [rating, setRating] = useState<number[]>([4.5]);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [title, setTitle] = useState("");
     const [caption, setCaption] = useState("");
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const { userlogin } = useUserData();
 
-    const user = useUserStore((state) => state.user);
 
     const replyId = useReplyStore((state) => state.replyId);
     const clearReply = useReplyStore((state) => state.clearReply);
@@ -37,7 +38,7 @@ const AddReview = ({ houseId }: IAddReviewProps) => {
     };
 
     const handleSubmit = () => {
-        if (!user) {
+        if (!userlogin) {
             setShowLoginModal(true);
             return;
         }

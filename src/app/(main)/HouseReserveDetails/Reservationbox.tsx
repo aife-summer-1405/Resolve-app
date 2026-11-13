@@ -24,6 +24,7 @@ import type { IBookingData, IReservation } from "@/src/types/HousereservesType/B
 import { useUserStore } from "@/src/store/userStore";
 import Field from "@/src/components/Ui/Field";
 import LoginRequiredModal from "@/src/components/organisms/auth/LoginRequiredModal";
+import { useUser } from "@/src/hooks/useUser";
 
 interface IReservationBoxProps {
     result: IHouseDetails;
@@ -94,7 +95,9 @@ export default function ReservationBox({
     result,
     onReserve,
 }: IReservationBoxProps) {
-    const user = useUserStore((state) => state.user);
+    const { data: userdata } = useUser()
+    const user = userdata?.user;
+    console.log("user3333333333", user);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [minDate, setMinDate] = useState<DateObject>();
     const [checkIn, setCheckIn] = useState<DateObject | null>(null);
@@ -116,7 +119,7 @@ export default function ReservationBox({
         sharedMobile: user?.phoneNumber ?? "",
     });
 
-  
+
 
     const guests = bookingData.traveler_details.length;
 
@@ -252,33 +255,33 @@ export default function ReservationBox({
             };
         });
     }
-  function handleReserve() {
-    if (!user) {
-        setShowLoginModal(true);
-        return;
+    function handleReserve() {
+        if (!user) {
+            setShowLoginModal(true);
+            return;
+        }
+
+        if (!checkIn || !checkOut || nights < 1) {
+            toast.error("لطفاً تاریخ ورود و خروج را انتخاب کنید.");
+            return;
+        }
+
+        const checkInDate = formatApiDate(checkIn);
+        const checkOutDate = formatApiDate(checkOut);
+
+        const reservationPayload: IReservation = {
+            ...bookingData,
+            houseId: Number(result.id),
+            reservedDates: [checkInDate, checkOutDate],
+            guests,
+            nights,
+            total: finalTotal,
+            checkIn: checkInDate,
+            checkOut: checkOutDate,
+        };
+
+        onReserve?.(reservationPayload);
     }
-
-    if (!checkIn || !checkOut || nights < 1) {
-        toast.error("لطفاً تاریخ ورود و خروج را انتخاب کنید.");
-        return;
-    }
-
-    const checkInDate = formatApiDate(checkIn);
-    const checkOutDate = formatApiDate(checkOut);
-
-    const reservationPayload: IReservation = {
-        ...bookingData,
-        houseId: Number(result.id),
-        reservedDates: [checkInDate, checkOutDate],
-        guests,
-        nights,
-        total: finalTotal,
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
-    };
-
-    onReserve?.(reservationPayload);
-}
     const minCheckOut = checkIn
         ? new DateObject(checkIn).add(1, "day")
         : undefined;

@@ -17,8 +17,7 @@ const HotelCard = ({ house }: HotelCardProps) => {
         >
             <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-2xl border-2 border-lime-400 md:h-[138px] md:w-[148px]">
                 <img
-                    src={house.photos[0] || "/images/hotel.jpg"}
-                    alt={house.title}
+                    src={house?.photos?.[0] || "/images/hotel.jpg"} alt={house?.title}
                     className="h-full w-full object-cover"
                 />
             </div>

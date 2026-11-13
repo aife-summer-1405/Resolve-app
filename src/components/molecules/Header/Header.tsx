@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/src/hooks/useUser";
 import { logoutAction } from "@/src/actions/authActions";
+import { useUserData } from "@/src/providers/UserDataContextProvider";
 
 interface IHeaderProps {
   isOverlay?: boolean;
@@ -32,6 +33,7 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
   const queryClient = useQueryClient();
 
   const { data: user } = useUser();
+    const { userlogin, setUserLogin } = useUserData();
 
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -98,7 +100,8 @@ const Header = ({ isOverlay = false }: IHeaderProps) => {
       await logoutAction();
 
       queryClient.clear();
-
+      
+      setUserLogin(false);
       router.replace("/login");
       router.refresh();
     } finally {

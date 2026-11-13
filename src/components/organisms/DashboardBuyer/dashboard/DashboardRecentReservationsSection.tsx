@@ -8,11 +8,10 @@ import {
   CircleCheck,
   CircleX,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
-
-interface IDashboardRecentReservationsSectionProps {
-  reservation: IBookingsApiResponse;
-}
+import { getBookingsAction } from "@/src/actions/bookingActions";
+import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 
 const formatDate = (date: string) =>
   new Date(date).toLocaleDateString("fa-IR", {
@@ -21,22 +20,25 @@ const formatDate = (date: string) =>
     year: "numeric",
   });
 
-const DashboardRecentReservationsSection = ({
-  reservation,
-}: IDashboardRecentReservationsSectionProps) => {
+const DashboardRecentReservationsSection = () => {
   const t = useTranslations("DashboardRecentReservationsSection");
+ const defultFilter: IHouseFilters = {
+  sort: "updated_at",
+  order: "DESC",
+};
+const { data: reservation, isLoading, isError } =
+  useQuery<IBookingsApiResponse>({
+    queryKey: ["bookings", "all", defultFilter],
+    queryFn: () => getBookingsAction(defultFilter),
+  });
 
-  const reservations = reservation.data.slice(0, 5);
+  const reservations = reservation?.data.slice(0, 5) ?? [];
 
   return (
     <section className="flex w-full flex-col overflow-hidden rounded-xl bg-surface">
       <div className="flex h-[42px] shrink-0 items-center justify-between border-b border-dashed border-border px-4">
         <div className="flex items-center gap-2">
-          <Bookmark
-            size={17}
-            fill="currentColor"
-            className="text-foreground"
-          />
+          <Bookmark size={17} fill="currentColor" className="text-foreground" />
           <span className="text-xs font-medium text-foreground">
             {t("title")}
           </span>
@@ -45,24 +47,9 @@ const DashboardRecentReservationsSection = ({
         <div className="flex items-center gap-3">
           <span className="text-[10px] text-muted">{t("viewAll")}</span>
           <div className="flex items-center gap-1">
-            <Play
-              size={11}
-              fill="currentColor"
-              strokeWidth={0}
-              className="rotate-180 text-muted"
-            />
-            <Play
-              size={9}
-              fill="currentColor"
-              strokeWidth={0}
-              className="rotate-180 text-muted opacity-50"
-            />
-            <Play
-              size={7}
-              fill="currentColor"
-              strokeWidth={0}
-              className="rotate-180 text-muted opacity-30"
-            />
+            <Play size={11} fill="currentColor" strokeWidth={0} className="rotate-180 text-muted" />
+            <Play size={9} fill="currentColor" strokeWidth={0} className="rotate-180 text-muted opacity-50" />
+            <Play size={7} fill="currentColor" strokeWidth={0} className="rotate-180 text-muted opacity-30" />
           </div>
         </div>
       </div>
@@ -81,7 +68,13 @@ const DashboardRecentReservationsSection = ({
           </div>
 
           <div className="mt-2 flex flex-col">
-            {reservations.length > 0 ? (
+            {isLoading ? (
+              <div className="h-40 animate-pulse rounded-lg bg-card" />
+            ) : isError ? (
+              <p className="py-8 text-center text-xs text-muted">
+                {t("error")}
+              </p>
+            ) : reservations.length > 0 ? (
               reservations.map((item) => (
                 <div
                   key={item.id}
@@ -89,10 +82,7 @@ const DashboardRecentReservationsSection = ({
                   className="grid grid-cols-[50px_100px_130px_155px_minmax(150px,1fr)] items-center gap-2 rounded-lg px-3 py-2 odd:bg-surface even:bg-background/40"
                 >
                   <div className="flex items-center justify-start">
-                    <MoreHorizontal
-                      size={17}
-                      className="text-foreground"
-                    />
+                    <MoreHorizontal size={17} className="text-foreground" />
                   </div>
 
                   <div className="flex justify-center">

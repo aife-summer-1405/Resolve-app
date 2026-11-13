@@ -50,7 +50,6 @@ const BookingPage = ({
 
     const [level, setLevel] = useState<Level>(() => {
         if (status === "success") return "done";
-        // پرداخت ناموفق: اگر مسافران ثبت شده‌اند به صفحه تایید برگرد
         if (status === "failed" && reservationDetail.traveler_details?.length) {
             return "confirm";
         }
@@ -65,10 +64,8 @@ const BookingPage = ({
     useEffect(() => {
         if (status === "success") onPaymentSuccess();
         if (status === "failed") toast.error("پرداخت ناموفق بود. دوباره تلاش کنید.");
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
 
-    // مرحله ۱ -> ۲: فقط ذخیره‌ی اطلاعات، بدون API
     const handleTravelerContinue = (data: {
         traveler_details: IBookingData["traveler_details"];
         sharedEmail: string;
@@ -78,7 +75,6 @@ const BookingPage = ({
         setLevel("confirm");
     };
 
-    // مرحله ۲ -> پرداخت: ساخت رزرو و پرداخت
     const handlePay = () => {
         const bookingPayload: IBookingData = {
             houseId: reservationDetail.houseId,
