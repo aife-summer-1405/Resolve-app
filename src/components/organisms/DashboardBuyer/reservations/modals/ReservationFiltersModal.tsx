@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { CalendarDays, ChevronDown, X } from "lucide-react";
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import gregorian from "react-date-object/calendars/gregorian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 export type ReservationFilters = {
   startDate: string;
@@ -34,6 +38,12 @@ const ReservationFiltersModal = ({
   const [filters, setFilters] =
     useState<ReservationFilters>(initialFilters);
 
+  const [startDateValue, setStartDateValue] =
+    useState<DateObject | null>(null);
+
+  const [endDateValue, setEndDateValue] =
+    useState<DateObject | null>(null);
+
   if (!isOpen) return null;
 
   const updateFilter = (
@@ -46,6 +56,35 @@ const ReservationFiltersModal = ({
     }));
   };
 
+  const handleStartDateChange = (date: DateObject | null) => {
+    setStartDateValue(date);
+
+    const formattedDate = date
+      ? date.convert(gregorian).format("YYYY-MM-DD")
+      : "";
+
+    updateFilter("startDate", formattedDate);
+
+    if (
+      date &&
+      endDateValue &&
+      date.toDate().getTime() >= endDateValue.toDate().getTime()
+    ) {
+      setEndDateValue(null);
+      updateFilter("endDate", "");
+    }
+  };
+
+  const handleEndDateChange = (date: DateObject | null) => {
+    setEndDateValue(date);
+
+    const formattedDate = date
+      ? date.convert(gregorian).format("YYYY-MM-DD")
+      : "";
+
+    updateFilter("endDate", formattedDate);
+  };
+
   const handleApply = () => {
     onApply(filters);
     onClose();
@@ -54,6 +93,9 @@ const ReservationFiltersModal = ({
   const handleClose = () => {
     onClose();
   };
+
+  const dateInputClass =
+    "h-11 w-full rounded-xl border border-border bg-transparent px-3 pl-9 text-xs text-foreground outline-none focus:border-primary";
 
   return (
     <div
@@ -88,13 +130,17 @@ const ReservationFiltersModal = ({
             </label>
 
             <div className="relative">
-              <input
-                type="date"
-                value={filters.startDate}
-                onChange={(event) =>
-                  updateFilter("startDate", event.target.value)
-                }
-                className="h-11 w-full rounded-xl border border-border bg-transparent px-3 text-xs text-foreground outline-none focus:border-primary"
+              <DatePicker
+                value={startDateValue}
+                onChange={handleStartDateChange}
+                calendar={persian}
+                locale={persian_fa}
+                calendarPosition="bottom-right"
+                placeholder="انتخاب تاریخ"
+                inputClass={dateInputClass}
+                containerClassName="w-full"
+                editable={false}
+                className="bg-surface"
               />
 
               <CalendarDays
@@ -110,13 +156,23 @@ const ReservationFiltersModal = ({
             </label>
 
             <div className="relative">
-              <input
-                type="date"
-                value={filters.endDate}
-                onChange={(event) =>
-                  updateFilter("endDate", event.target.value)
+              <DatePicker
+                value={endDateValue}
+                onChange={handleEndDateChange}
+                calendar={persian}
+                locale={persian_fa}
+                calendarPosition="bottom-right"
+                minDate={
+                  startDateValue
+                    ? new DateObject(startDateValue).add(1, "day")
+                    : undefined
                 }
-                className="h-11 w-full rounded-xl border border-border bg-transparent px-3 text-xs text-foreground outline-none focus:border-primary"
+                placeholder="انتخاب تاریخ"
+                inputClass={dateInputClass}
+                containerClassName="w-full"
+                editable={false}
+                disabled={!startDateValue}
+                className="bg-surface"
               />
 
               <CalendarDays
