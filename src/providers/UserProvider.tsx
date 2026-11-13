@@ -13,7 +13,7 @@ interface IUserProviderProps {
 export default function UserProvider({
     children,
 }: IUserProviderProps) {
-    const [queryClient] = useState(
+        const [queryClient] = useState(
         () =>
             new QueryClient({
                 defaultOptions: {
