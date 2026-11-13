@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
@@ -7,7 +6,6 @@ import {
   Bell,
   Moon,
   Sun,
-  Play,
   PlusCircle,
   X,
   ArrowRightCircle,
@@ -63,12 +61,10 @@ const DashboardHeader = () => {
   const pageTitles: Record<string, string> = {
     "/dashboard": t("dashboard"),
     "/dashboard/profile": t("profile"),
-    "/dashboard/properties": t("properties"),
     "/dashboard/reservations": t("reservations"),
-    "/dashboard/finance": t("finance"),
-    "/dashboard/ads": t("ads"),
+    "/dashboard/favorites": t("favorites"),
+    "/dashboard/payments": t("payments"),
     "/dashboard/notifications": t("notifications"),
-    "/dashboard/comments": t("comments"),
   };
 
   const title = pageTitles[pathname ?? ""] || t("dashboard");
@@ -99,11 +95,13 @@ const DashboardHeader = () => {
             >
               <div className="flex flex-col items-start gap-0.5">
                 <span className="whitespace-nowrap text-[11px] font-medium">
-                  {user?.user.firstName}   {user?.user.lastName} 
+                  {user?.user.firstName} {user?.user.lastName}
                 </span>
                 <span className="text-[9px] text-muted">{user?.user.role}</span>
               </div>
+
               <div className="h-[30px] w-[30px] shrink-0 rounded-md bg-[#D9D9D9]" />
+
               <ChevronDown
                 size={12}
                 className={`transition ${isProfileOpen ? "rotate-180" : ""}`}
@@ -115,9 +113,10 @@ const DashboardHeader = () => {
                 dir="rtl"
                 className="absolute left-0 top-full z-50 mt-3 w-[270px] overflow-hidden rounded-xl bg-surface text-foreground shadow-xl"
               >
-                <div className="flex items-center  gap-2 border-b border-border px-4 py-3">
+                <div className="flex items-center gap-2 border-b border-border px-4 py-3">
                   <div className="flex h-[30px] w-[30px] shrink-0 rounded-md bg-[#D9D9D9]" />
-                  <div className="flex flex-col ">
+
+                  <div className="flex flex-col">
                     <span className="text-[11px] font-medium">
                       {t("userName")}
                     </span>
@@ -224,6 +223,7 @@ const DashboardHeader = () => {
           </div>
 
           <span className="h-7 w-px shrink-0 bg-border" />
+
           <div className="flex h-[27px] shrink-0 items-center gap-1 rounded-full bg-background p-1">
             <button
               type="button"
