@@ -33,11 +33,14 @@ const DashboardLayout: FC<IDashboardLayoutProps> = async ({ children }) => {
   });
 
   return (
-    <div className="flex min-h-screen w-full bg-background" dir="rtl">
+    <div
+      className="flex min-h-screen w-full flex-col bg-background lg:flex-row"
+      dir="rtl"
+    >
       <DashboardSidebar />
 
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <main className="min-w-0 flex-1 p-6">
+        <main className="w-full min-w-0 flex-1 p-3 sm:p-4 lg:p-6">
           <DashboardHeader />
           {children}
         </main>

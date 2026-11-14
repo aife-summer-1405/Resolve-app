@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
@@ -80,9 +81,9 @@ const DashboardHeader = () => {
     <>
       <header
         dir="ltr"
-        className="relative z-30 flex h-[53px] w-full items-center justify-between rounded-xl bg-surface px-3 text-foreground"
+        className="relative z-30 flex h-auto w-full flex-col-reverse items-stretch gap-3 rounded-xl bg-surface px-3 py-3 text-foreground sm:h-[53px] sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:py-0"
       >
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:justify-start sm:gap-3">
           <div className="relative">
             <button
               type="button"
@@ -91,10 +92,10 @@ const DashboardHeader = () => {
                 setIsProfileOpen(!isProfileOpen);
                 setIsNotificationsOpen(false);
               }}
-              className="flex items-center gap-2 rounded-lg"
+              className="flex items-center gap-1.5 rounded-lg sm:gap-2"
             >
-              <div className="flex flex-col items-start gap-0.5">
-                <span className="whitespace-nowrap text-[11px] font-medium">
+              <div className="flex max-w-[95px] flex-col items-start gap-0.5 sm:max-w-none">
+                <span className="w-full truncate whitespace-nowrap text-[10px] font-medium sm:text-[11px]">
                   {user?.user.firstName} {user?.user.lastName}
                 </span>
                 <span className="text-[9px] text-muted">{user?.user.role}</span>
@@ -104,19 +105,21 @@ const DashboardHeader = () => {
 
               <ChevronDown
                 size={12}
-                className={`transition ${isProfileOpen ? "rotate-180" : ""}`}
+                className={`shrink-0 transition ${
+                  isProfileOpen ? "rotate-180" : ""
+                }`}
               />
             </button>
 
             {isProfileOpen && (
               <div
                 dir="rtl"
-                className="absolute left-0 top-full z-50 mt-3 w-[270px] overflow-hidden rounded-xl bg-surface text-foreground shadow-xl"
+                className="absolute left-0 top-full z-50 mt-3 w-[270px] max-w-[calc(100vw-24px)] overflow-hidden rounded-xl bg-surface text-foreground shadow-xl"
               >
                 <div className="flex items-center gap-2 border-b border-border px-4 py-3">
                   <div className="flex h-[30px] w-[30px] shrink-0 rounded-md bg-[#D9D9D9]" />
 
-                  <div className="flex flex-col">
+                  <div className="flex min-w-0 flex-col">
                     <span className="text-[11px] font-medium">
                       {t("userName")}
                     </span>
@@ -176,7 +179,7 @@ const DashboardHeader = () => {
             {isNotificationsOpen && (
               <div
                 dir="rtl"
-                className="absolute left-0 top-full z-50 mt-3 w-[370px] max-w-[calc(100vw-24px)] rounded-xl bg-surface p-4 text-foreground shadow-xl"
+                className="fixed left-3 right-3 top-20 z-50 rounded-xl bg-surface p-4 text-foreground shadow-xl sm:absolute sm:left-0 sm:right-auto sm:top-full sm:mt-3 sm:w-[370px] sm:max-w-[calc(100vw-24px)]"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-sm font-bold">
@@ -196,7 +199,7 @@ const DashboardHeader = () => {
                   {notificationItems.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between"
+                      className="flex items-center justify-between gap-3"
                     >
                       <span className="text-[11px]">{item}</span>
 
@@ -260,7 +263,10 @@ const DashboardHeader = () => {
           </button>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3" dir="rtl">
+        <div
+          className="flex w-full shrink-0 items-center justify-start sm:w-auto sm:justify-start"
+          dir="rtl"
+        >
           <h1 className="whitespace-nowrap text-sm font-bold">{title}</h1>
         </div>
       </header>
@@ -272,16 +278,16 @@ const DashboardHeader = () => {
           onClick={() => setIsLogoutOpen(false)}
         >
           <div
-            className="flex w-full max-w-[390px] flex-col items-center rounded-[22px] bg-surface px-6 py-7 text-foreground shadow-2xl"
+            className="flex w-full max-w-[390px] flex-col items-center rounded-[22px] bg-surface px-5 py-6 text-foreground shadow-2xl sm:px-6 sm:py-7"
             onClick={(e) => e.stopPropagation()}
           >
             <AlertTriangle
               size={62}
               strokeWidth={1.8}
-              className="mb-9 fill-[#FFB800] text-black"
+              className="mb-7 fill-[#FFB800] text-black sm:mb-9"
             />
 
-            <h3 className="mb-8 text-base font-bold">
+            <h3 className="mb-7 text-center text-sm font-bold sm:mb-8 sm:text-base">
               {t("logoutConfirmation")}
             </h3>
 
