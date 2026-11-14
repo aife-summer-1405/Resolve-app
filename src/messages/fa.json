@@ -322,8 +322,25 @@
     "minPrice": "حداقل قیمت",
     "maxPrice": "حداکثر قیمت",
     "toman": "تومان",
-    "applyFilter": "اعمال فیلتر",
-    "searchPlaceholder": "نام هتل مورد نظر ...."
+    "applyFilter": "اعمال فیلتر"
+  },
+  "PaymentManagementSection": {
+    "listTitle": "لیست تراکنش‌های شما",
+    "paymentStatus": "وضعیت پرداخت",
+    "transactionType": "نوع تراکنش",
+    "date": "تاریخ",
+    "trackingNumber": "شماره پیگیری",
+    "amount": "مبلغ",
+    "actions": "عملیات",
+    "viewReceipt": "مشاهده رسید",
+    "successful": "موفق",
+    "failed": "ناموفق",
+    "pending": "در انتظار",
+    "reservationPayment": "پرداخت رزرو",
+    "walletCharge": "شارژ کیف پول",
+    "empty": "تراکنشی برای نمایش وجود ندارد",
+    "page": "صفحه",
+    "toman": "تومان"
   },
   "NotificationsSection": {
     "listTitle": "لیست اعلان‌های شما",
