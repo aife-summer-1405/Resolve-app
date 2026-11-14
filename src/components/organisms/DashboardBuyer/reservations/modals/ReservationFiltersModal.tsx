@@ -6,10 +6,7 @@ import { useTranslations } from "next-intl";
 import { ChevronDown, X } from "lucide-react";
 import { IGetBookingsParams } from "@/src/types/dashboard/booking";
 
-export type ReservationFilters = Pick<
-  IGetBookingsParams,
-  "sort" | "order" | "status" | "house_id"
->;
+export type ReservationFilters = Pick<IGetBookingsParams, "status">;
 
 type ReservationFiltersModalProps = {
   isOpen: boolean;
@@ -18,10 +15,7 @@ type ReservationFiltersModalProps = {
 };
 
 const initialFilters: ReservationFilters = {
-  sort: "updated_at",
-  order: "DESC",
   status: "",
-  house_id: undefined,
 };
 
 const ReservationFiltersModal = ({
@@ -36,21 +30,8 @@ const ReservationFiltersModal = ({
 
   if (!isOpen) return null;
 
-  const updateFilter = <K extends keyof ReservationFilters>(
-    key: K,
-    value: ReservationFilters[K],
-  ) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
   const handleApply = () => {
-    onApply({
-      ...filters,
-      house_id: filters.house_id || undefined,
-    });
+    onApply(filters);
     onClose();
   };
 
@@ -69,9 +50,7 @@ const ReservationFiltersModal = ({
       dir="rtl"
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose();
-        }
+        if (event.target === event.currentTarget) onClose();
       }}
     >
       <div className="w-full max-w-[416px] rounded-xl border border-border bg-surface p-3 shadow-xl sm:p-4">
@@ -90,7 +69,7 @@ const ReservationFiltersModal = ({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 py-5 sm:grid-cols-2">
+        <div className="py-5">
           <div className="relative">
             <label className={labelClass}>
               {t("reservationStatus")}
@@ -100,93 +79,14 @@ const ReservationFiltersModal = ({
               <select
                 value={filters.status ?? ""}
                 onChange={(event) =>
-                  updateFilter("status", event.target.value)
+                  setFilters({ status: event.target.value })
                 }
                 className={selectClass}
               >
                 <option value="">{t("allStatuses")}</option>
-                <option value="confirmed">{t("confirmed")}</option>
                 <option value="pending">{t("pending")}</option>
+                <option value="confirmed">{t("confirmed")}</option>
                 <option value="canceled">{t("cancelled")}</option>
-              </select>
-
-              <ChevronDown
-                size={14}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-              />
-            </div>
-          </div>
-
-          <div className="relative">
-            <label className={labelClass}>
-              {t("houseId")}
-            </label>
-
-            <input
-              type="number"
-              min="1"
-              value={filters.house_id ?? ""}
-              onChange={(event) =>
-                updateFilter(
-                  "house_id",
-                  event.target.value
-                    ? Number(event.target.value)
-                    : undefined,
-                )
-              }
-              placeholder={t("enterHouseId")}
-              className={selectClass}
-            />
-          </div>
-
-          <div className="relative">
-            <label className={labelClass}>
-              {t("sortBy")}
-            </label>
-
-            <div className="relative">
-              <select
-                value={filters.sort ?? "updated_at"}
-                onChange={(event) =>
-                  updateFilter("sort", event.target.value)
-                }
-                className={selectClass}
-              >
-                <option value="updated_at">
-                  {t("lastUpdated")}
-                </option>
-                <option value="created_at">
-                  {t("creationDate")}
-                </option>
-                <option value="check_in_date">
-                  {t("checkInDate")}
-                </option>
-                <option value="check_out_date">
-                  {t("checkOutDate")}
-                </option>
-              </select>
-
-              <ChevronDown
-                size={14}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-              />
-            </div>
-          </div>
-
-          <div className="relative">
-            <label className={labelClass}>
-              {t("sortOrder")}
-            </label>
-
-            <div className="relative">
-              <select
-                value={filters.order ?? "DESC"}
-                onChange={(event) =>
-                  updateFilter("order", event.target.value as "ASC" | "DESC")}
-                className={selectClass}
-              >
-                <option value="DESC">{t("descending")}</option>
-                <option value="ASC">{t("ascending")}</option>
               </select>
 
               <ChevronDown

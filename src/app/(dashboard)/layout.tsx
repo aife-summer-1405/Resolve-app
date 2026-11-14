@@ -14,6 +14,7 @@ interface IDashboardLayoutProps {
 }
 
 export const defultFilter: IHouseFilters = {
+  page: 1,
   sort: "updated_at",
   order: "DESC",
 };
