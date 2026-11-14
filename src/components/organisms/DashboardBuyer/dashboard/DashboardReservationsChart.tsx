@@ -9,10 +9,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
+import { IBookingResponse, IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
 
 interface IDashboardReservationsChartProps {
-  reservations: IBookingsApiResponse;
+  reservations: IBookingResponse[];
 }
 
 const DashboardReservationsChart = ({
@@ -37,7 +37,7 @@ const DashboardReservationsChart = ({
   });
 
   const chartData = months.map((item) => {
-    const count = reservations.data.filter((reservation) => {
+    const count = reservations.filter((reservation) => {
       const date = new Date(reservation.createdAt);
 
       return (
