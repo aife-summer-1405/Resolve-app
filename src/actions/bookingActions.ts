@@ -40,3 +40,8 @@ export async function getBookingsAction(
     throw error;
   }
 }
+
+export const deleteBookingAction = async (id: string | number) => {
+  const { data } = await apiServer.delete(`/api/bookings/${id}`);
+  return data;
+};
