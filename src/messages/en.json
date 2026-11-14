@@ -361,5 +361,19 @@
       "welcome": "Welcome to the Delta website",
       "reservation": "Amir Mohammad Maleki has registered a reservation for his villa"
     }
+  },
+  "SellerDashboardIncomeSection": {
+    "incomeStats": "Income Statistics",
+    "currentMonthIncome": "Current Month Income",
+    "totalIncome": "Total Income",
+    "currency": "Toman",
+    "profileStatus": "Your Profile Status",
+    "edit": "Edit"
+  },
+  "SellerDashboardOverviewSection": {
+    "totalProperties": "Total Properties",
+    "activeReservations": "Active Reservations",
+    "pendingReservations": "Pending Reservations",
+    "todayViews": "Today's Views"
   }
 }
