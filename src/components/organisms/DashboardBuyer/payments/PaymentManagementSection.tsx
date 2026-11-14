@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ChevronDown, CheckCircle2, XCircle } from "lucide-react";
 
 import Pagination from "@/src/components/common/Pagination";
@@ -17,6 +17,7 @@ type Transaction = {
 
 const PaymentManagementSection = () => {
   const t = useTranslations("PaymentManagementSection");
+  const locale = useLocale();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -90,14 +91,13 @@ const PaymentManagementSection = () => {
   const getStatus = (status: Transaction["status"]) => {
     if (status === "successful") {
       return {
-        label: t("successful"),
+        label: locale === "fa" ? "تأیید شده" : "Approved",
         className: "bg-[#91FF45] text-[#202020]",
         icon: <CheckCircle2 size={12} strokeWidth={3} />,
       };
     }
-
     return {
-      label: t("failed"),
+      label: locale === "fa" ? "تأیید نشده" : "Not approved",
       className: "bg-[#FF858C] text-[#202020]",
       icon: <XCircle size={12} strokeWidth={3} />,
     };
