@@ -2,7 +2,7 @@ import PaymentManagementSection from "@/src/components/organisms/DashboardBuyer/
 
 const PaymentsPage = () => {
   return (
-    <div className="w-full">
+    <div className="w-full mt-5">
       <PaymentManagementSection />
     </div>
   );
