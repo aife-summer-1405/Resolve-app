@@ -220,7 +220,6 @@
     "error": "Failed to load reservations",
     "empty": "No reservations have been made yet"
   },
-
   "UserInformation": {
     "profileImage": "Your Profile Picture",
     "profileImageDescription": "You can change your profile picture",
@@ -268,6 +267,7 @@
     "paymentAction": "Payment",
     "detailsAction": "Details",
     "deleteAction": "Delete",
+    "deleteActionpending": "Deleting...",
     "empty": "No reservations found",
     "close": "Close",
     "startDate": "Reservation date from",
@@ -280,6 +280,7 @@
     "cottage": "Cottage",
     "allStatuses": "All statuses",
     "applyFilters": "Apply Filters",
+    "resetFilters": "Reset Filters",
     "detailsTitle": "Accommodation Details",
     "accommodationImage": "Accommodation Image",
     "detailsDescription": "The accommodation description will be displayed here.",
@@ -299,7 +300,6 @@
     "passengerInformation": "Passenger Information",
     "to": "to"
   },
-
   "FavoritesSection": {
     "savedList": "Saved Reservations",
     "search": "Search",

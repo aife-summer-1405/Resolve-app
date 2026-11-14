@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -30,6 +31,8 @@ import {
   IBookingResponse,
   IBookingsApiResponse,
 } from "@/src/types/HousereservesType/BookingType";
+import { useDeleteBooking } from "@/src/hooks/dashboard/useDeleteBooking";
+import { toast } from "sonner";
 
 const LIMIT = 10;
 
@@ -46,32 +49,18 @@ const BookingManagementSection = () => {
 
   const [search, setSearch] = useState("");
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [queryParams, setQueryParams] = useState<IGetBookingsParams>({
+    page: 1,
+    limit: LIMIT,
+  });
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] =
-    useState<Partial<ReservationFilters>>({});
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
   const [isReservationsOpen, setIsReservationsOpen] = useState(false);
-  const [selectedAccommodation, setSelectedAccommodation] = useState("");
-
-const queryParams = useMemo<IGetBookingsParams>(
-  () => ({
-    page: currentPage,
-    limit: LIMIT,
-    sort: appliedFilters.sort ?? "updated_at",
-    order: appliedFilters.order ?? "DESC",
-    ...(appliedFilters.status && {
-      status: appliedFilters.status,
-    }),
-    ...(appliedFilters.house_id !== undefined && {
-      house_id: appliedFilters.house_id,
-    }),
-  }),
-  [currentPage, appliedFilters],
-);
+  const [selectedAccommodation, setSelectedAccommodation] = useState<number>(0);
   const {
     data: reservation,
     isLoading,
@@ -85,17 +74,20 @@ const queryParams = useMemo<IGetBookingsParams>(
 
   const reservations = useMemo(() => {
     const data = reservation?.data ?? [];
+    const searchValue = search.trim().toLowerCase();
 
-    if (!search.trim()) return data;
+    if (!searchValue) return data;
 
     return data.filter((item) =>
-      item.house.title.toLowerCase().includes(search.toLowerCase()),
+      item.house.title.toLowerCase().includes(searchValue),
     );
-  }, [reservation, search]);
+  }, [reservation?.data, search]);
 
   const totalPages = Math.ceil((reservation?.totalCount ?? 0) / LIMIT);
 
   const visiblePages = useMemo(() => {
+    const currentPage = queryParams.page ?? 1;
+
     const start = Math.max(
       1,
       Math.min(currentPage - 2, totalPages - 4),
@@ -105,15 +97,18 @@ const queryParams = useMemo<IGetBookingsParams>(
       { length: Math.min(5, totalPages) },
       (_, index) => start + index,
     );
-  }, [currentPage, totalPages]);
+  }, [queryParams.page, totalPages]);
 
   useEffect(() => {
     if (activeMenu === null) return;
 
     const handleClickOutside = (event: PointerEvent) => {
-      const target = event.target as HTMLElement;
+      const target = event.target;
 
-      if (!target.closest(`[data-reservation-menu="${activeMenu}"]`)) {
+      if (
+        target instanceof Element &&
+        !target.closest(`[data-reservation-menu="${activeMenu}"]`)
+      ) {
         setActiveMenu(null);
       }
     };
@@ -151,7 +146,7 @@ const queryParams = useMemo<IGetBookingsParams>(
   };
 
   const handleOpenDetails = (item: IBookingResponse) => {
-    setSelectedAccommodation(item.house.title);
+    setSelectedAccommodation(item.id);
     setIsDetailsOpen(true);
     setActiveMenu(null);
   };
@@ -165,16 +160,48 @@ const queryParams = useMemo<IGetBookingsParams>(
   const handleOpenReservations = () => {
     setIsDetailsOpen(false);
     setIsReservationsOpen(true);
+    setActiveMenu(null);
   };
 
+
+  const {
+    mutate: deleteBooking,
+    isPending: isDeleting,
+  } = useDeleteBooking();
+
+
+  const handleDelete = (id: number) => {
+    deleteBooking(id, {
+      onSuccess: () => {
+        toast.success("حذف رزرو با موفقیت انجام شد");
+        setActiveMenu(null);
+      },
+      onError: () => {
+        toast.error("حذف رزرو با خطا مواجه شد");
+      },
+    });
+  };
+
+
   const handleApplyFilters = (filters: ReservationFilters) => {
-    setAppliedFilters(filters);
-    setCurrentPage(1);
+    setQueryParams((prev) => {
+      const { status, ...params } = prev;
+
+      return {
+        ...params,
+        page: 1,
+        ...(filters.status ? { status: filters.status } : {}),
+      };
+    });
+
     setIsFiltersOpen(false);
   };
 
-  const handleSearch = (value: string) => {
-    setSearch(value);
+  const handlePageChange = (page: number) => {
+    setQueryParams((prev) => ({
+      ...prev,
+      page,
+    }));
   };
 
   return (
@@ -201,7 +228,7 @@ const queryParams = useMemo<IGetBookingsParams>(
             <input
               type="text"
               value={search}
-              onChange={(event) => handleSearch(event.target.value)}
+              onChange={(event) => setSearch(event.target.value)}
               placeholder={t("searchPlaceholder")}
               className="h-10 w-full rounded-xl border border-border bg-transparent py-2 pr-9 pl-3 text-xs text-foreground outline-none placeholder:text-muted focus:border-primary"
             />
@@ -324,6 +351,7 @@ const queryParams = useMemo<IGetBookingsParams>(
                           )
                         }
                         aria-label={t("actions")}
+                        aria-expanded={activeMenu === item.id}
                         className="rounded-md p-1 text-foreground transition-colors hover:bg-background"
                       >
                         <MoreHorizontal size={19} />
@@ -351,10 +379,11 @@ const queryParams = useMemo<IGetBookingsParams>(
 
                           <button
                             type="button"
-                            onClick={() => setActiveMenu(null)}
-                            className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-red-500 hover:bg-background"
+                            onClick={() => handleDelete(item.id)}
+                            disabled={isDeleting}
+                            className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-red-500 hover:bg-background disabled:cursor-not-allowed disabled:opacity-50"
                           >
-                            {t("deleteAction")}
+                            {isDeleting ? "در حال حذف..." : t("deleteAction")}
                             <Trash2 size={14} />
                           </button>
                         </div>
@@ -379,15 +408,15 @@ const queryParams = useMemo<IGetBookingsParams>(
 
       <div className="mt-4 flex items-center justify-between">
         <span className="text-xs text-muted">
-          {t("page")} {currentPage} / {totalPages || 1}
+          {t("page")} {queryParams.page} / {totalPages || 1}
         </span>
 
         <div className="flex items-center gap-1.5">
           <button
             type="button"
-            disabled={currentPage === 1 || isLoading}
+            disabled={queryParams.page === 1 || isLoading}
             onClick={() =>
-              setCurrentPage((page) => Math.max(1, page - 1))
+              handlePageChange(Math.max(1, (queryParams.page ?? 1) - 1))
             }
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background disabled:opacity-40"
           >
@@ -398,12 +427,11 @@ const queryParams = useMemo<IGetBookingsParams>(
             <button
               key={page}
               type="button"
-              onClick={() => setCurrentPage(page)}
-              className={`flex h-7 min-w-7 items-center justify-center rounded-lg px-2 text-xs transition-colors ${
-                currentPage === page
-                  ? "bg-primary text-black"
-                  : "text-foreground hover:bg-background"
-              }`}
+              onClick={() => handlePageChange(page)}
+              className={`flex h-7 min-w-7 items-center justify-center rounded-lg px-2 text-xs transition-colors ${queryParams.page === page
+                ? "bg-primary text-black"
+                : "text-foreground hover:bg-background"
+                }`}
             >
               {page}
             </button>
@@ -412,10 +440,14 @@ const queryParams = useMemo<IGetBookingsParams>(
           <button
             type="button"
             disabled={
-              currentPage >= totalPages || isLoading || totalPages === 0
+              (queryParams.page ?? 1) >= totalPages ||
+              isLoading ||
+              totalPages === 0
             }
             onClick={() =>
-              setCurrentPage((page) => Math.min(totalPages, page + 1))
+              handlePageChange(
+                Math.min(totalPages, (queryParams.page ?? 1) + 1),
+              )
             }
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-background disabled:opacity-40"
           >
@@ -433,7 +465,7 @@ const queryParams = useMemo<IGetBookingsParams>(
       <ReservationDetailsModal
         isOpen={isDetailsOpen}
         onClose={() => setIsDetailsOpen(false)}
-        accommodationName={selectedAccommodation}
+        accommodationId={selectedAccommodation}
         onPayments={handleOpenPayments}
         onReservations={handleOpenReservations}
       />
