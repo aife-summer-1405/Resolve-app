@@ -4,6 +4,7 @@ interface IFormInputProps {
   type?: string;
   value?: string;
   defaultValue?: string;
+  placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -13,6 +14,7 @@ const FormInput = ({
   type = "text",
   value,
   defaultValue = "",
+  placeholder,
   onChange,
 }: IFormInputProps) => {
   return (
@@ -26,6 +28,7 @@ const FormInput = ({
         name={name}
         value={value}
         defaultValue={value === undefined ? defaultValue : undefined}
+        placeholder={placeholder}
         onChange={onChange}
         className="h-[46px] w-full rounded-[14px] border border-[#BDBDBD] bg-transparent px-3 text-right text-[11px] text-foreground outline-none transition focus:border-[#91FF45]"
       />

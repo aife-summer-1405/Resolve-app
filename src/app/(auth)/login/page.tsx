@@ -14,6 +14,7 @@ import { loginSchema, ILoginForm } from "@/src/schemas/auth/loginSchema";
 import { actionLogin, getUserAction } from "@/src/actions/authActions";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/userStore";
+import { useUserData } from "@/src/providers/UserDataContextProvider";
 export default function LoginPage() {
   const [serverError, setServerError] = useState("");
   const router = useRouter();
@@ -25,30 +26,33 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
   });
-
-  const onSubmit = async (data: ILoginForm) => {
+const { setUserLogin } = useUserData();
+const onSubmit = async (data: ILoginForm) => {
     setServerError("");
 
     try {
-      const result = await actionLogin(data);
+        const result = await actionLogin(data);
 
-      if (!result.success) {
-        setServerError(result.message || "ورود انجام نشد.");
-        return;
-      }
+        if (!result.success) {
+            setServerError(result.message || "ورود انجام نشد.");
+            return;
+        }
 
-      if (!result.userId) {
-        setServerError("شناسه کاربر از سرور دریافت نشد.");
-        return;
-      }
+        const user = await getUserAction();
 
-  
+        if (!user) {
+            setServerError("اطلاعات کاربر دریافت نشد.");
+            return;
+        }
 
-      router.push("/");
+        setUserLogin(true);
+
+        router.push("/");
+        router.refresh();
     } catch {
-      setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+        setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
     }
-  };
+};
   return (
     <AuthLayout>
       <div className="text-right">

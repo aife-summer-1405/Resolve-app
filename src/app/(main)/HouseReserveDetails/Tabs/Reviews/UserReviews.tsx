@@ -3,9 +3,11 @@ import UserReviewList from "./UserReviewList";
 
 interface IPageProps {
     houseId: string;
+    userlogin: boolean;
 }
 
-const UserReviews = ({ houseId }: IPageProps) => {
+const UserReviews =  ({ houseId }: IPageProps) => {
+
     return (
         <div dir="rtl" className="flex flex-col gap-10">
             <AddReview houseId={houseId} />

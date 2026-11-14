@@ -10,6 +10,7 @@ export async function getBookings({
   order,
   house_id,
   status,
+  created_at,
 }: IGetBookingsParams = {}): Promise<IBookingsApiResponse> {
   const response = await apiServer.get<IBookingsApiResponse>(
     "/api/bookings",
@@ -18,6 +19,7 @@ export async function getBookings({
         page,
         limit,
         ...(sort && { sort }),
+        ...(created_at && { created_at }),
         ...(order && { order }),
         ...(house_id !== undefined && { house_id }),
         ...(status && { status }),

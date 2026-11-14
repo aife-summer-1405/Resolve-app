@@ -10,6 +10,7 @@ import UserReviews from "./Tabs/Reviews/UserReviews";
 import { IHouseDetails } from "@/src/types/HousereservesType/HouseDetailType";
 import BookingPage from "./BookingPage";
 import type { IBookingData } from "@/src/types/HousereservesType/BookingType";
+import { useUserData } from "@/src/providers/UserDataContextProvider";
 
 interface IPageProps {
     result: IHouseDetails;
@@ -29,11 +30,12 @@ const clearStorage = () => {
     sessionStorage.removeItem("bookingId");
 };
 
-export const HouseReserveFlow = ({ result }: IPageProps) => {
+export const HouseReserveFlow = ({ result    }: IPageProps) => {
     const [showBooking, setShowBooking] = useState(false);
     const [reservation, setReservation] = useState<IReservation | null>(null);
     const [isRestored, setIsRestored] = useState(false);
     const [paid, setPaid] = useState(false);
+    const { userlogin } = useUserData();
 
     useEffect(() => {
         const savedReservation = sessionStorage.getItem("reservation");
@@ -59,8 +61,7 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
     }, [reservation, result.id, isRestored, paid]);
 
     if (!isRestored) return null;
-
-    if (showBooking && reservation) {
+    if (showBooking && reservation && userlogin) {
         return (
             <BookingPage
                 result={result}
@@ -89,7 +90,7 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
                 <TabInfoBox
                     about={<AboutHouse result={result} />}
                     facilities={<HouseFacilities result={result} />}
-                    reviews={<UserReviews houseId={result.id} />}
+                    reviews={<UserReviews houseId={result.id} userlogin={userlogin} />}
                 />
                   <div className="md:w-1/5">
                     <ReservationBox

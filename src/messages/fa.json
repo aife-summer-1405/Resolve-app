@@ -160,27 +160,24 @@
     "linkedin": "لینکدین"
   },
   "DashboardHeader": {
-    "userName": "نام کاربر",
-    "role": "فروشنده",
     "dashboard": "داشبورد",
     "profile": "اطلاعات کاربری",
-    "properties": "مدیریت املاک",
     "reservations": "مدیریت رزروها",
-    "finance": "مدیریت مالی",
-    "ads": "مدیریت نظرات",
+    "favorites": "علاقه‌مندی‌ها",
+    "payments": "پرداخت‌ها",
     "notifications": "اعلان‌ها",
-    "comments": "نظرات جدید",
+    "userName": "نام کاربر",
+    "wallet": "کیف پول",
+    "notificationSettings": "تنظیمات اعلان‌ها",
+    "logout": "خروج",
     "notificationLabel": "اعلان‌ها",
+    "reservationNotifications": "اعلان‌های رزرو",
+    "paymentNotifications": "اعلان‌های پرداخت",
+    "discountNotifications": "اعلان‌های تخفیف",
+    "systemNotifications": "اعلان‌های سیستمی",
     "lightMode": "حالت روشن",
     "darkMode": "حالت تاریک",
-    "wallet": "شارژ کردن کیف پول",
-    "notificationSettings": "تنظیمات نوتیفیکیشن",
-    "logout": "خروج",
-    "reservationNotifications": "نوتیفیکیشن رزرو",
-    "paymentNotifications": "نوتیفیکیشن پرداخت",
-    "discountNotifications": "نوتیفیکیشن تخفیف",
-    "systemNotifications": "نوتیفیکیشن سیستم",
-    "logoutConfirmation": "آیا از خروج خود مطمئن هستید؟",
+    "logoutConfirmation": "آیا از خروج از حساب کاربری اطمینان دارید؟",
     "cancel": "انصراف"
   },
   "DashboardSidebar": {
@@ -345,4 +342,28 @@
     "page": "صفحه",
     "toman": "تومان"
   }  
+    "applyFilter": "اعمال فیلتر",
+    "searchPlaceholder": "نام هتل مورد نظر ...."
+  },
+  "NotificationsSection": {
+    "listTitle": "لیست اعلان‌های شما",
+    "markAllAsRead": "علامت‌گذاری به عنوان خوانده‌شده",
+    "status": "وضعیت",
+    "all": "همه",
+    "unread": "خوانده‌نشده",
+    "read": "خوانده‌شده",
+    "notification": "اعلان",
+    "date": "تاریخ",
+    "markAsRead": "علامت‌گذاری به عنوان خوانده‌شده",
+    "emptyUnread": "اعلان خوانده‌نشده‌ای وجود ندارد",
+    "emptyRead": "اعلان خوانده‌شده‌ای وجود ندارد",
+    "page": "صفحه",
+    "confirmTitle": "آیا مطمئن هستید که می‌خواهید همه مطالب سایت را به عنوان خوانده‌شده علامت بزنید؟",
+    "confirm": "موافقت",
+    "cancel": "انصراف",
+    "messages": {
+      "welcome": "به سایت دلتا خوش آمدید",
+      "reservation": "فروشنده امیر محمد ملی برای خانه ویلایی خود رزرو ثبت کرده است"
+    }
+  }
 }

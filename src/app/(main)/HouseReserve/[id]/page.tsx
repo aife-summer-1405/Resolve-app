@@ -9,7 +9,10 @@ const HouseReserveDetails = async ({ params }: IPageProps) => {
     const { id } = await params;
     const result = await getHouseById(id);
 
-    return <HouseReserveFlow result={result} />;
+    if (!result) {
+        return <div>خانه مورد نظر یافت نشد.</div>;
+    }
+    return <HouseReserveFlow result={result}  />;
 };
 
-export default HouseReserveDetails;
+export default HouseReserveDetails; 

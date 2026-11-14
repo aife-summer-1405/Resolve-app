@@ -7,26 +7,18 @@ import {
   dehydrate,
   HydrationBoundary,
 } from "@tanstack/react-query";
-export const defultFilter: IHouseFilters = {
-  sort: "updated_at",
-  order: "DESC",
-}
-const Page = async () => {      
-  const queryClient = new QueryClient();
 
-  const bookings = await queryClient.fetchQuery({
-    queryKey: ["bookings", "all", defultFilter],
-    queryFn: () => getBookings(defultFilter),
-  });
-  console.log("bookings", bookings);
+const Page =  () => {      
+
+
+
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+
       <div className="mt-5 flex flex-col gap-5">
-        <DashboardOverviewSection reservation={bookings} />
-        <DashboardRecentReservationsSection reservation={bookings} />
+        <DashboardOverviewSection/>
+        <DashboardRecentReservationsSection />
       </div>
-    </HydrationBoundary>
   );
 };
 

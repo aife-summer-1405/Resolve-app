@@ -1,16 +1,15 @@
 import { create } from "zustand";
-import { IUser } from "../types/AuthType/Authtype";
 
 interface IUserStore {
-    user: IUser | null;
-    setUser: (user: IUser) => void;
+    userId: string | null;
+    setUserId: (id: string | null) => void;
     clearUser: () => void;
 }
 
 export const useUserStore = create<IUserStore>((set) => ({
-    user: null,
+    userId: null,
 
-    setUser: (user) => set({ user }),
+    setUserId: (id) => set({ userId: id }),
 
-    clearUser: () => set({ user: null }),
+    clearUser: () => set({ userId: null }),
 }));

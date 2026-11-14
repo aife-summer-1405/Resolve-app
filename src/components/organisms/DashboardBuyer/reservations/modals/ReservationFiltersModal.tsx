@@ -1,19 +1,15 @@
+
 "use client";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { CalendarDays, ChevronDown, X } from "lucide-react";
-import DatePicker, { DateObject } from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import gregorian from "react-date-object/calendars/gregorian";
-import persian_fa from "react-date-object/locales/persian_fa";
+import { ChevronDown, X } from "lucide-react";
+import { IGetBookingsParams } from "@/src/types/dashboard/booking";
 
-export type ReservationFilters = {
-  startDate: string;
-  endDate: string;
-  propertyType: string;
-  reservationStatus: string;
-};
+export type ReservationFilters = Pick<
+  IGetBookingsParams,
+  "sort" | "order" | "status" | "house_id"
+>;
 
 type ReservationFiltersModalProps = {
   isOpen: boolean;
@@ -22,10 +18,10 @@ type ReservationFiltersModalProps = {
 };
 
 const initialFilters: ReservationFilters = {
-  startDate: "",
-  endDate: "",
-  propertyType: "",
-  reservationStatus: "",
+  sort: "updated_at",
+  order: "DESC",
+  status: "",
+  house_id: undefined,
 };
 
 const ReservationFiltersModal = ({
@@ -38,17 +34,11 @@ const ReservationFiltersModal = ({
   const [filters, setFilters] =
     useState<ReservationFilters>(initialFilters);
 
-  const [startDateValue, setStartDateValue] =
-    useState<DateObject | null>(null);
-
-  const [endDateValue, setEndDateValue] =
-    useState<DateObject | null>(null);
-
   if (!isOpen) return null;
 
-  const updateFilter = (
-    key: keyof ReservationFilters,
-    value: string,
+  const updateFilter = <K extends keyof ReservationFilters>(
+    key: K,
+    value: ReservationFilters[K],
   ) => {
     setFilters((prev) => ({
       ...prev,
@@ -56,46 +46,23 @@ const ReservationFiltersModal = ({
     }));
   };
 
-  const handleStartDateChange = (date: DateObject | null) => {
-    setStartDateValue(date);
-
-    const formattedDate = date
-      ? date.convert(gregorian).format("YYYY-MM-DD")
-      : "";
-
-    updateFilter("startDate", formattedDate);
-
-    if (
-      date &&
-      endDateValue &&
-      date.toDate().getTime() >= endDateValue.toDate().getTime()
-    ) {
-      setEndDateValue(null);
-      updateFilter("endDate", "");
-    }
-  };
-
-  const handleEndDateChange = (date: DateObject | null) => {
-    setEndDateValue(date);
-
-    const formattedDate = date
-      ? date.convert(gregorian).format("YYYY-MM-DD")
-      : "";
-
-    updateFilter("endDate", formattedDate);
-  };
-
   const handleApply = () => {
-    onApply(filters);
+    onApply({
+      ...filters,
+      house_id: filters.house_id || undefined,
+    });
     onClose();
   };
 
-  const handleClose = () => {
-    onClose();
+  const handleReset = () => {
+    setFilters(initialFilters);
   };
 
-  const dateInputClass =
-    "h-11 w-full rounded-xl border border-border bg-transparent px-3 pl-9 text-xs text-foreground outline-none focus:border-primary";
+  const selectClass =
+    "h-11 w-full appearance-none rounded-xl border border-border bg-transparent px-3 text-xs text-foreground outline-none focus:border-primary";
+
+  const labelClass =
+    "absolute -top-2 right-3 z-10 bg-surface px-1 text-[10px] text-muted";
 
   return (
     <div
@@ -103,7 +70,7 @@ const ReservationFiltersModal = ({
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
-          handleClose();
+          onClose();
         }
       }}
     >
@@ -115,7 +82,7 @@ const ReservationFiltersModal = ({
 
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             className="flex h-8 items-center gap-1 rounded-full border border-red-400 px-3 text-xs text-red-500 transition-colors hover:bg-red-500/10"
           >
             {t("close")}
@@ -125,81 +92,22 @@ const ReservationFiltersModal = ({
 
         <div className="grid grid-cols-1 gap-4 py-5 sm:grid-cols-2">
           <div className="relative">
-            <label className="absolute -top-2 right-3 z-10 bg-surface px-1 text-[10px] text-muted">
-              {t("startDate")}
-            </label>
-
-            <div className="relative">
-              <DatePicker
-                value={startDateValue}
-                onChange={handleStartDateChange}
-                calendar={persian}
-                locale={persian_fa}
-                calendarPosition="bottom-right"
-                placeholder="انتخاب تاریخ"
-                inputClass={dateInputClass}
-                containerClassName="w-full"
-                editable={false}
-                className="bg-surface"
-              />
-
-              <CalendarDays
-                size={14}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-              />
-            </div>
-          </div>
-
-          <div className="relative">
-            <label className="absolute -top-2 right-3 z-10 bg-surface px-1 text-[10px] text-muted">
-              {t("endDate")}
-            </label>
-
-            <div className="relative">
-              <DatePicker
-                value={endDateValue}
-                onChange={handleEndDateChange}
-                calendar={persian}
-                locale={persian_fa}
-                calendarPosition="bottom-right"
-                minDate={
-                  startDateValue
-                    ? new DateObject(startDateValue).add(1, "day")
-                    : undefined
-                }
-                placeholder="انتخاب تاریخ"
-                inputClass={dateInputClass}
-                containerClassName="w-full"
-                editable={false}
-                disabled={!startDateValue}
-                className="bg-surface"
-              />
-
-              <CalendarDays
-                size={14}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-              />
-            </div>
-          </div>
-
-          <div className="relative">
-            <label className="absolute -top-2 right-3 z-10 bg-surface px-1 text-[10px] text-muted">
-              {t("propertyType")}
+            <label className={labelClass}>
+              {t("reservationStatus")}
             </label>
 
             <div className="relative">
               <select
-                value={filters.propertyType}
+                value={filters.status ?? ""}
                 onChange={(event) =>
-                  updateFilter("propertyType", event.target.value)
+                  updateFilter("status", event.target.value)
                 }
-                className="h-11 w-full appearance-none rounded-xl border border-border bg-transparent px-3 text-xs text-foreground outline-none focus:border-primary"
+                className={selectClass}
               >
-                <option value="">{t("allPropertyTypes")}</option>
-                <option value="apartment">{t("apartment")}</option>
-                <option value="villa">{t("villa")}</option>
-                <option value="hotel">{t("hotel")}</option>
-                <option value="cottage">{t("cottage")}</option>
+                <option value="">{t("allStatuses")}</option>
+                <option value="confirmed">{t("confirmed")}</option>
+                <option value="pending">{t("pending")}</option>
+                <option value="canceled">{t("cancelled")}</option>
               </select>
 
               <ChevronDown
@@ -210,25 +118,75 @@ const ReservationFiltersModal = ({
           </div>
 
           <div className="relative">
-            <label className="absolute -top-2 right-3 z-10 bg-surface px-1 text-[10px] text-muted">
-              {t("reservationStatus")}
+            <label className={labelClass}>
+              {t("houseId")}
+            </label>
+
+            <input
+              type="number"
+              min="1"
+              value={filters.house_id ?? ""}
+              onChange={(event) =>
+                updateFilter(
+                  "house_id",
+                  event.target.value
+                    ? Number(event.target.value)
+                    : undefined,
+                )
+              }
+              placeholder={t("enterHouseId")}
+              className={selectClass}
+            />
+          </div>
+
+          <div className="relative">
+            <label className={labelClass}>
+              {t("sortBy")}
             </label>
 
             <div className="relative">
               <select
-                value={filters.reservationStatus}
+                value={filters.sort ?? "updated_at"}
                 onChange={(event) =>
-                  updateFilter(
-                    "reservationStatus",
-                    event.target.value,
-                  )
+                  updateFilter("sort", event.target.value)
                 }
-                className="h-11 w-full appearance-none rounded-xl border border-border bg-transparent px-3 text-xs text-foreground outline-none focus:border-primary"
+                className={selectClass}
               >
-                <option value="">{t("allStatuses")}</option>
-                <option value="confirmed">{t("confirmed")}</option>
-                <option value="pending">{t("pending")}</option>
-                <option value="cancelled">{t("cancelled")}</option>
+                <option value="updated_at">
+                  {t("lastUpdated")}
+                </option>
+                <option value="created_at">
+                  {t("creationDate")}
+                </option>
+                <option value="check_in_date">
+                  {t("checkInDate")}
+                </option>
+                <option value="check_out_date">
+                  {t("checkOutDate")}
+                </option>
+              </select>
+
+              <ChevronDown
+                size={14}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+              />
+            </div>
+          </div>
+
+          <div className="relative">
+            <label className={labelClass}>
+              {t("sortOrder")}
+            </label>
+
+            <div className="relative">
+              <select
+                value={filters.order ?? "DESC"}
+                onChange={(event) =>
+                  updateFilter("order", event.target.value as "ASC" | "DESC")}
+                className={selectClass}
+              >
+                <option value="DESC">{t("descending")}</option>
+                <option value="ASC">{t("ascending")}</option>
               </select>
 
               <ChevronDown
@@ -239,7 +197,15 @@ const ReservationFiltersModal = ({
           </div>
         </div>
 
-        <div className="flex justify-center pb-1">
+        <div className="flex items-center justify-center gap-3 pb-1">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="h-9 rounded-xl border border-border px-5 text-xs font-medium text-foreground transition-colors hover:bg-card"
+          >
+            {t("resetFilters")}
+          </button>
+
           <button
             type="button"
             onClick={handleApply}

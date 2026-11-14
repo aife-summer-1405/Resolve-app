@@ -160,26 +160,23 @@
     "linkedin": "LinkedIn"
   },
   "DashboardHeader": {
-    "userName": "User Name",
-    "role": "Seller",
     "dashboard": "Dashboard",
-    "profile": "User Profile",
-    "properties": "Properties Management",
-    "reservations": "Reservations Management",
-    "finance": "Finance Management",
-    "ads": "Comments Management",
+    "profile": "Profile Information",
+    "reservations": "Reservation Management",
+    "favorites": "Favorites",
+    "payments": "Payments",
     "notifications": "Notifications",
-    "comments": "New Comments",
-    "notificationLabel": "Notifications",
-    "lightMode": "Light Mode",
-    "darkMode": "Dark Mode",
-    "wallet": "Charge Wallet",
+    "userName": "User Name",
+    "wallet": "Wallet",
     "notificationSettings": "Notification Settings",
     "logout": "Logout",
+    "notificationLabel": "Notifications",
     "reservationNotifications": "Reservation Notifications",
     "paymentNotifications": "Payment Notifications",
     "discountNotifications": "Discount Notifications",
     "systemNotifications": "System Notifications",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
     "logoutConfirmation": "Are you sure you want to log out?",
     "cancel": "Cancel"
   },
@@ -344,4 +341,28 @@
     "page": "Page",
     "toman": "Toman"
   }  
+    "applyFilter": "Apply Filters",
+    "searchPlaceholder": "Enter hotel name ...."
+  },
+  "NotificationsSection": {
+    "listTitle": "Your Notifications",
+    "markAllAsRead": "Mark All as Read",
+    "status": "Status",
+    "all": "All",
+    "unread": "Unread",
+    "read": "Read",
+    "notification": "Notification",
+    "date": "Date",
+    "markAsRead": "Mark as Read",
+    "emptyUnread": "There are no unread notifications",
+    "emptyRead": "There are no read notifications",
+    "page": "Page",
+    "confirmTitle": "Are you sure you want to mark all site notifications as read?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "messages": {
+      "welcome": "Welcome to the Delta website",
+      "reservation": "Amir Mohammad Maleki has registered a reservation for his villa"
+    }
+  }
 }
