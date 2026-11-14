@@ -321,6 +321,26 @@
     "minPrice": "Minimum Price",
     "maxPrice": "Maximum Price",
     "toman": "Toman",
+    "applyFilter": "Apply Filters"
+  },
+  "PaymentManagementSection": {
+    "listTitle": "Your Transactions",
+    "paymentStatus": "Payment Status",
+    "transactionType": "Transaction Type",
+    "date": "Date",
+    "trackingNumber": "Tracking Number",
+    "amount": "Amount",
+    "actions": "Actions",
+    "viewReceipt": "View Receipt",
+    "successful": "Successful",
+    "failed": "Failed",
+    "pending": "Pending",
+    "reservationPayment": "Reservation Payment",
+    "walletCharge": "Wallet Charge",
+    "empty": "No transactions to display",
+    "page": "Page",
+    "toman": "Toman"
+  }  
     "applyFilter": "Apply Filters",
     "searchPlaceholder": "Enter hotel name ...."
   },
