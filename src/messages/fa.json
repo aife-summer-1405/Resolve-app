@@ -322,7 +322,8 @@
     "minPrice": "حداقل قیمت",
     "maxPrice": "حداکثر قیمت",
     "toman": "تومان",
-    "applyFilter": "اعمال فیلتر"
+    "applyFilter": "اعمال فیلتر",
+    "searchPlaceholder": "جستجوی ملک..."
   },
   "PaymentManagementSection": {
     "listTitle": "لیست تراکنش‌های شما",
