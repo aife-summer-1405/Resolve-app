@@ -5,7 +5,6 @@ import ProfilePercentagePage from "./profilePercentagepage";
 import DashboardReservationsChart from "./DashboardReservationsChart";
 import { useQuery } from "@tanstack/react-query";
 import { getBookingsAction } from "@/src/actions/bookingActions";
-import { IBookingResponse, IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
 import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
 
 interface IDashboardOverviewSectionClientProps {
@@ -20,11 +19,15 @@ const DashboardOverviewSectionClient = ({
   profileStatusTitle,
   editTitle,
 }: IDashboardOverviewSectionClientProps) => {
-   const defultFilter: IHouseFilters = {
-  sort: "updated_at",
-  order: "DESC",
-};
-  const { data: reservation, isLoading, isError } = useQuery({
+  const defultFilter: IHouseFilters = {
+    sort: "updated_at",
+    order: "DESC",
+  };
+  const {
+    data: reservation,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["bookings", "all", defultFilter],
     queryFn: () => getBookingsAction(defultFilter),
   });
@@ -51,7 +54,9 @@ const DashboardOverviewSectionClient = ({
           ) : isError ? (
             <p className="text-sm text-muted">خطا در دریافت اطلاعات رزروها</p>
           ) : (
-            <DashboardReservationsChart reservations={reservation?.data || []} />
+            <DashboardReservationsChart
+              reservations={reservation?.data || []}
+            />
           )}
         </div>
       </div>

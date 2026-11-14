@@ -22,6 +22,8 @@ const DashboardHeader = () => {
   const router = useRouter();
   const { data: user } = useUser();
 
+  const role = user?.user.role;
+
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -127,26 +129,41 @@ const DashboardHeader = () => {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsProfileOpen(false)}
-                  className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
-                >
-                  <PlusCircle size={16} />
-                  <span>{t("wallet")}</span>
-                </button>
+                {role === "buyer" && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
+                    >
+                      <PlusCircle size={16} />
+                      <span>{t("wallet")}</span>
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    setIsNotificationsOpen(true);
-                  }}
-                  className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
-                >
-                  <ArrowRightCircle size={16} />
-                  <span>{t("notificationSettings")}</span>
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        setIsNotificationsOpen(true);
+                      }}
+                      className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
+                    >
+                      <ArrowRightCircle size={16} />
+                      <span>{t("notificationSettings")}</span>
+                    </button>
+                  </>
+                )}
+
+                {role === "seller" && (
+                  <button
+                    type="button"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
+                  >
+                    <PlusCircle size={16} />
+                    <span>موجودی قابل برداشت</span>
+                  </button>
+                )}
 
                 <button
                   type="button"

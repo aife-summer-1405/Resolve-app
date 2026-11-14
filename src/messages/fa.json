@@ -365,5 +365,19 @@
       "welcome": "به سایت دلتا خوش آمدید",
       "reservation": "فروشنده امیر محمد ملی برای خانه ویلایی خود رزرو ثبت کرده است"
     }
+  },
+  "SellerDashboardIncomeSection": {
+    "incomeStats": "آمار درآمدها",
+    "currentMonthIncome": "درآمد ماه جاری",
+    "totalIncome": "کل درآمد",
+    "currency": "تومان",
+    "profileStatus": "وضعیت پروفایل شما",
+    "edit": "ویرایش"
+  },
+  "SellerDashboardOverviewSection": {
+    "totalProperties": "کل املاک‌ها",
+    "activeReservations": "رزروهای فعال",
+    "pendingReservations": "رزروهای در انتظار",
+    "todayViews": "بازدیدهای امروز"
   }
 }
