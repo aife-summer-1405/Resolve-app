@@ -340,9 +340,6 @@
     "empty": "No transactions to display",
     "page": "Page",
     "toman": "Toman"
-  }  
-    "applyFilter": "Apply Filters",
-    "searchPlaceholder": "Enter hotel name ...."
   },
   "NotificationsSection": {
     "listTitle": "Your Notifications",
