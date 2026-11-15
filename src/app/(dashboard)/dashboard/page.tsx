@@ -5,22 +5,47 @@ import DashboardRecentReservationsSection from "@/src/components/organisms/Dashb
 import SellerDashboardOverviewSection from "@/src/components/organisms/DashboardSeller/dashboard/SellerDashboardOverviewSection";
 import Loading from "@/src/Loading";
 
-const DashboardContent = async () => {
+interface IPageProps {
+  searchParams: Promise<{ view?: string }>;
+}
+
+const DashboardContent = async ({ searchParams }: IPageProps) => {
+  const { view } = await searchParams;
+
   const profile = await getUserAction();
   const role = profile?.user.role;
+
+  const isBuyerView =
+    view === "buyer" && (role === "seller" || role === "admin");
+
+  const isSellerView =
+    view === "seller" && (role === "seller" || role === "admin");
 
   return (
     <div className="mt-5 flex flex-col gap-5">
       {role === "seller" ? (
-        <div>
-          {" "}
+        isBuyerView ? (
+          <>
+            <DashboardOverviewSection />
+            <DashboardRecentReservationsSection />
+          </>
+        ) : (
           <SellerDashboardOverviewSection />
-        </div>
+        )
       ) : role === "buyer" ? (
         <>
           <DashboardOverviewSection />
           <DashboardRecentReservationsSection />
         </>
+      ) : role === "admin" ? (
+        isSellerView ? (
+          <SellerDashboardOverviewSection />
+        ) : (
+          <>
+            <DashboardOverviewSection />
+            <DashboardRecentReservationsSection />
+          </>
+        )
       ) : (
         <p>نقش کاربر مشخص نیست.</p>
       )}
@@ -28,10 +53,10 @@ const DashboardContent = async () => {
   );
 };
 
-const Page = () => {
+const Page = ({ searchParams }: IPageProps) => {
   return (
     <Suspense fallback={<Loading />}>
-      <DashboardContent />
+      <DashboardContent searchParams={searchParams} />
     </Suspense>
   );
 };

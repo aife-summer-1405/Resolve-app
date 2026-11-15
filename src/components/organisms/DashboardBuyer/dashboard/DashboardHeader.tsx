@@ -55,6 +55,11 @@ const DashboardHeader = () => {
     });
   };
 
+  const handleDashboardChange = (view: "buyer" | "seller") => {
+    setIsProfileOpen(false);
+    router.push(`/dashboard?view=${view}`);
+  };
+
   const handleNotificationChange = (index: number) => {
     setNotifications((prev) =>
       prev.map((item, i) => (i === index ? !item : item)),
@@ -65,9 +70,13 @@ const DashboardHeader = () => {
     "/dashboard": t("dashboard"),
     "/dashboard/profile": t("profile"),
     "/dashboard/reservations": t("reservations"),
+    "/dashboard/seller-reservations": t("reservations"),
     "/dashboard/favorites": t("favorites"),
     "/dashboard/payments": t("payments"),
     "/dashboard/notifications": t("notifications"),
+    "/dashboard/properties": t("properties"),
+    "/dashboard/financial-management": t("financialManagement"),
+    "/dashboard/reviews": t("reviewsManagement"),
   };
 
   const title = pageTitles[pathname ?? ""] || t("dashboard");
@@ -161,8 +170,34 @@ const DashboardHeader = () => {
                     className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
                   >
                     <PlusCircle size={16} />
-                    <span>موجودی قابل برداشت</span>
+                    <span>{t("withdrawableBalance")}</span>
                   </button>
+                )}
+
+                {(role === "seller" || role === "admin") && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleDashboardChange("buyer")}
+                      className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
+                    >
+                      <ArrowRightCircle size={16} />
+                      <span className="text-[#91FF45]">
+                        {t("buyerDashboard")}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDashboardChange("seller")}
+                      className="flex w-full items-center justify-between border-b border-border px-4 py-2.5 text-[11px] transition hover:bg-background"
+                    >
+                      <ArrowRightCircle size={16} />
+                      <span className="text-[#91FF45]">
+                        {t("sellerDashboard")}
+                      </span>
+                    </button>
+                  </>
                 )}
 
                 <button

@@ -161,15 +161,21 @@
   },
   "DashboardHeader": {
     "dashboard": "Dashboard",
-    "profile": "Profile Information",
-    "reservations": "Reservation Management",
+    "profile": "Profile",
+    "reservations": "My Reservations",
     "favorites": "Favorites",
     "payments": "Payments",
     "notifications": "Notifications",
+    "properties": "Property Management",
+    "financialManagement": "Financial Management",
+    "reviewsManagement": "Reviews Management",
     "userName": "User Name",
     "wallet": "Wallet",
     "notificationSettings": "Notification Settings",
-    "logout": "Logout",
+    "withdrawableBalance": "Withdrawable Balance",
+    "buyerDashboard": "Buyer Dashboard",
+    "sellerDashboard": "Seller Dashboard",
+    "logout": "Log Out",
     "notificationLabel": "Notifications",
     "reservationNotifications": "Reservation Notifications",
     "paymentNotifications": "Payment Notifications",
@@ -190,7 +196,12 @@
     "notifications": "Notifications",
     "wallet": "Wallet",
     "noBalance": "No balance",
-    "homeLabel": "Back to Home"
+    "homeLabel": "Back to Home",
+    "properties": "Property Management",
+    "financialManagement": "Financial Management",
+    "reviewsManagement": "Reviews Management",
+    "newReviews": "New Reviews",
+    "viewNewReviews": "View Reviews"
   },
   "DashboardStatCard": {
     "view": "View"
