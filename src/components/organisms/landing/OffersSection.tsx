@@ -20,7 +20,16 @@ const OffersSection = () => {
     const fetchOffers = async () => {
       try {
         const response = await getHouses();
-        setOffers(response.houses);
+
+        const discountedOffers = response.houses.filter((offer) => {
+          const hasDiscount = offer.discounted_price !== null;
+          const isDiscounted =
+            Number(offer.discounted_price) < Number(offer.price);
+
+          return hasDiscount && isDiscounted;
+        });
+
+        setOffers(discountedOffers);
       } catch (error) {
         console.error("خطا در دریافت پیشنهادهای ویژه:", error);
       } finally {
@@ -32,7 +41,7 @@ const OffersSection = () => {
   }, []);
 
   useEffect(() => {
-    if (offers.length === 0) return;
+    if (!offers.length) return;
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % offers.length);
@@ -42,12 +51,14 @@ const OffersSection = () => {
   }, [offers.length]);
 
   useEffect(() => {
+    if (timeLeft === 0) return;
+
     const interval = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [timeLeft]);
 
   const formatTime = (value: number) =>
     String(value)
@@ -119,7 +130,6 @@ const OffersSection = () => {
             type="button"
             className="flex shrink-0 items-center gap-2 rounded-[14px] border border-white/60 px-4 py-2 text-sm transition hover:border-[#8CFF45] hover:text-[#8CFF45]"
           >
-            {" "}
             {t("viewAll")}
             {locale === "fa" ? (
               <ChevronLeft size={14} />

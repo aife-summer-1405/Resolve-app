@@ -2,7 +2,6 @@
 
 import Image, { ImageProps } from "next/image";
 import { FC, useState } from "react";
-import fallBack from "/public/images/slider.webp";
 
 interface IProps extends Omit<ImageProps, "src"> {
   src?: ImageProps["src"] | null;
@@ -11,8 +10,9 @@ interface IProps extends Omit<ImageProps, "src"> {
 
 const ImageFallback: FC<IProps> = ({
   src,
-  fallbackSrc = fallBack,
+  fallbackSrc = "/images/slider.webp",
   alt,
+  onError,
   ...props
 }) => {
   const [failedSrc, setFailedSrc] = useState<ImageProps["src"] | null>(null);
@@ -24,7 +24,13 @@ const ImageFallback: FC<IProps> = ({
       {...props}
       alt={alt}
       src={hasError ? fallbackSrc : src}
-      onError={() => setFailedSrc(src ?? null)}
+      onError={(event) => {
+        if (!hasError) {
+          setFailedSrc(src ?? null);
+        }
+
+        onError?.(event);
+      }}
     />
   );
 };

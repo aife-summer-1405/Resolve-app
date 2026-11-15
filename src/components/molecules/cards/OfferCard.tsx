@@ -46,7 +46,7 @@ const OfferCard: FC<IOfferCardProps> = ({
       ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : 0;
 
-  const images = offer.photos?.length ? offer.photos : ["/images/offer.jpg"];
+  const images = offer.photos?.length ? offer.photos : ["/images/home.webp"];
 
   const image = images[activeImageIndex] || images[0];
 
