@@ -26,16 +26,17 @@ const UserRevireCard = ({ review, replies }: IUserReviewCardProps) => {
                 tagHeight="48px"
                 direction="rtl"
                 classNames={{
-                   base: "transition-colors duration-200",
-          wrapperLabel: "transition-colors duration-200",
-          coverHollow: "transition-shadow duration-200",
-          innerLabel: "h-full p-0!",
-        
+                    base: "transition-colors duration-200",
+                    wrapperLabel: "transition-colors duration-200",
+                    coverHollow: "transition-shadow duration-200",
+                    innerLabel: "h-full p-0!",
+
                 }}
                 label={
-                    <div className="flex items-center justify-center gap-1 text-sm font-bold">
+                    <div className=" absolute top-4 right-5 flex items-center justify-center gap-1 text-sm font-bold bg-white text-black w-1/2 rounded-2xl">
                         <Star size={14} fill="currentColor" />
-                        <span>{review.rating}</span>
+                        <div className="flex items-end justify-center">  <span className="text-lg pt-1">{review.rating}</span></div>
+
                     </div>
                 }
                 tag={
@@ -56,7 +57,7 @@ const UserRevireCard = ({ review, replies }: IUserReviewCardProps) => {
                     </div>
 
                     {replies && replies.length > 0 && (
-                        
+
                         <div className="flex flex-col gap-3">
                             {replies.map((reply) => (
                                 <div key={reply.id} className="flex flex-col">
@@ -104,7 +105,7 @@ const UserRevireCard = ({ review, replies }: IUserReviewCardProps) => {
                             type="button"
                             className="flex items-center justify-between gap-2 rounded-xl border px-4 py-2 text-white"
                         >
-                            
+
                             <p className="text-[16px]">ثبت پاسخ</p>
                             <ChevronLeft size={13} />
                         </button>

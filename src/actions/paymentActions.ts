@@ -3,6 +3,7 @@
 import axios from "axios";
 import { ICreatePaymentData } from "../types/HousereservesType/paymentType";
 import apiServer from "@/lib/server";
+import { IGetPaymentsParams, IGetPaymentsResponse } from "../types/dashboard/payment";
 
 export async function createPaymentAction(data: ICreatePaymentData) {
     try {
@@ -28,3 +29,14 @@ export async function createPaymentAction(data: ICreatePaymentData) {
         };
     }
 }
+
+
+export const getPaymentsAction = async (
+    params: IGetPaymentsParams
+): Promise<IGetPaymentsResponse> => {
+    const { data } = await apiServer.get("/api/payments", {
+        params,
+    });
+
+    return data;
+};
