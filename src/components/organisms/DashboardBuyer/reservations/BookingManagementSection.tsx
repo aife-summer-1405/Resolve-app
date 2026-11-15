@@ -60,7 +60,8 @@ const BookingManagementSection = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
   const [isReservationsOpen, setIsReservationsOpen] = useState(false);
-  const [selectedAccommodation, setSelectedAccommodation] = useState<number>(0);
+  const [selectedAccommodation, setSelectedAccommodation] = useState<IBookingResponse | null>(null);
+
   const {
     data: reservation,
     isLoading,
@@ -71,6 +72,7 @@ const BookingManagementSection = () => {
     placeholderData: keepPreviousData,
     staleTime: 60 * 1000,
   });
+  console.log("reservation", reservation);
 
   const reservations = useMemo(() => {
     const data = reservation?.data ?? [];
@@ -146,7 +148,7 @@ const BookingManagementSection = () => {
   };
 
   const handleOpenDetails = (item: IBookingResponse) => {
-    setSelectedAccommodation(item.id);
+    setSelectedAccommodation(item);
     setIsDetailsOpen(true);
     setActiveMenu(null);
   };
@@ -306,8 +308,6 @@ const BookingManagementSection = () => {
                   >
                     <td className="px-2 py-1">
                       <div className="flex items-center gap-3">
-                        <div className="h-[60px] w-[88px] shrink-0 rounded-xl bg-card" />
-
                         <span className="whitespace-nowrap font-medium">
                           {item.house.title}
                         </span>
@@ -461,24 +461,29 @@ const BookingManagementSection = () => {
         onClose={() => setIsFiltersOpen(false)}
         onApply={handleApplyFilters}
       />
-
-      <ReservationDetailsModal
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
-        accommodationId={selectedAccommodation}
-        onPayments={handleOpenPayments}
-        onReservations={handleOpenReservations}
-      />
+      {selectedAccommodation && (
+        <ReservationDetailsModal
+          isOpen={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+          accommodationId={selectedAccommodation.id}
+          onPayments={handleOpenPayments}
+          onReservations={handleOpenReservations}
+        />
+      )}
 
       <ReservationPaymentsModal
         isOpen={isPaymentsOpen}
         onClose={() => setIsPaymentsOpen(false)}
       />
+      {selectedAccommodation && (
+        <ReservationListModal
+          isOpen={isReservationsOpen}
+          onClose={() => setIsReservationsOpen(false)}
+          selectedAccommodation={selectedAccommodation}
+        />
+      )}
 
-      <ReservationListModal
-        isOpen={isReservationsOpen}
-        onClose={() => setIsReservationsOpen(false)}
-      />
+
     </section>
   );
 };
