@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
@@ -12,11 +12,47 @@ import {
   Bell,
   LogOut,
   Wallet,
+  Building2,
+  Landmark,
+  MessageSquare,
 } from "lucide-react";
+import { useUser } from "@/src/hooks/useUser";
 
 const DashboardSidebar = () => {
   const pathname = usePathname() ?? "";
+  const searchParams = useSearchParams();
   const t = useTranslations("DashboardSidebar");
+
+  const { data: user } = useUser();
+  const role = user?.user.role;
+
+  const requestedView = searchParams?.get("view");
+
+  const dashboardView =
+    role === "buyer"
+      ? "buyer"
+      : role === "seller"
+        ? requestedView === "buyer"
+          ? "buyer"
+          : "seller"
+        : role === "admin"
+          ? requestedView === "seller"
+            ? "seller"
+            : "buyer"
+          : null;
+
+  const getDashboardHref = (href: string) => {
+    if (role === "seller" || role === "admin") {
+      return `${href}?view=${dashboardView}`;
+    }
+
+    return href;
+  };
+
+  const reservationsHref =
+    dashboardView === "seller"
+      ? "/dashboard/seller-reservations"
+      : "/dashboard/reservations";
 
   const menuItems = [
     {
@@ -29,21 +65,48 @@ const DashboardSidebar = () => {
       href: "/dashboard/profile",
       icon: UserRound,
     },
+    ...(dashboardView === "seller"
+      ? [
+          {
+            title: t("properties"),
+            href: "/dashboard/properties",
+            icon: Building2,
+          },
+        ]
+      : []),
     {
       title: t("reservations"),
-      href: "/dashboard/reservations",
+      href: reservationsHref,
       icon: CirclePlus,
     },
-    {
-      title: t("favorites"),
-      href: "/dashboard/favorites",
-      icon: Heart,
-    },
-    {
-      title: t("payments"),
-      href: "/dashboard/payments",
-      icon: CreditCard,
-    },
+    ...(dashboardView === "buyer"
+      ? [
+          {
+            title: t("favorites"),
+            href: "/dashboard/favorites",
+            icon: Heart,
+          },
+          {
+            title: t("payments"),
+            href: "/dashboard/payments",
+            icon: CreditCard,
+          },
+        ]
+      : []),
+    ...(dashboardView === "seller"
+      ? [
+          {
+            title: t("financialManagement"),
+            href: "/dashboard/financial-management",
+            icon: Landmark,
+          },
+          {
+            title: t("reviewsManagement"),
+            href: "/dashboard/reviews",
+            icon: MessageSquare,
+          },
+        ]
+      : []),
     {
       title: t("notifications"),
       href: "/dashboard/notifications",
@@ -80,7 +143,7 @@ const DashboardSidebar = () => {
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={getDashboardHref(item.href)}
               className={`flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors sm:gap-3 sm:text-sm lg:px-3 ${
                 isActive
                   ? "bg-background font-semibold text-foreground"
@@ -99,24 +162,35 @@ const DashboardSidebar = () => {
         })}
       </nav>
 
-      <div className="mt-3 border-t border-border pt-3 lg:mt-auto lg:border-0 lg:pt-8">
-        <Link
-          href="/dashboard/wallet"
-          className="flex w-full items-center justify-between rounded-xl border border-dashed border-border px-3 py-2 transition-colors hover:bg-background sm:px-4 sm:py-3"
-        >
-          <div className="flex items-center gap-3">
-            <Wallet size={19} className="shrink-0 text-foreground" />
+      {dashboardView === "seller" && (
+        <div className="mt-3 pt-3 lg:mt-auto lg:pt-8">
+          <div className="flex w-full items-center gap-3 rounded-xl border border-dashed border-border px-3 py-2 sm:px-4 sm:py-3">
+            <MessageSquare size={19} className="shrink-0 text-foreground" />
+            {t("newReviews")}
+            <span className="text-xs font-medium text-foreground sm:text-sm">
+              5
+            </span>
+          </div>
+        </div>
+      )}
 
-            <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium text-foreground sm:text-sm">
-                {t("wallet")}
-              </span>
+      {dashboardView === "buyer" && (
+        <div className="mt-3 border-t border-border pt-3 lg:mt-auto lg:border-0 lg:pt-8">
+          <div className="flex w-full items-center justify-between rounded-xl border border-dashed border-border px-3 py-2 sm:px-4 sm:py-3">
+            <div className="flex items-center gap-3">
+              <Wallet size={19} className="shrink-0 text-foreground" />
 
-              <span className="text-[10px] text-muted">{t("noBalance")}</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-medium text-foreground sm:text-sm">
+                  {t("wallet")}
+                </span>
+
+                <span className="text-[10px] text-muted">{t("noBalance")}</span>
+              </div>
             </div>
           </div>
-        </Link>
-      </div>
+        </div>
+      )}
     </aside>
   );
 };

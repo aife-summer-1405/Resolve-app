@@ -161,24 +161,30 @@
   },
   "DashboardHeader": {
     "dashboard": "داشبورد",
-    "profile": "اطلاعات کاربری",
-    "reservations": "مدیریت رزروها",
+    "profile": "پروفایل",
+    "reservations": "رزروهای من",
     "favorites": "علاقه‌مندی‌ها",
     "payments": "پرداخت‌ها",
     "notifications": "اعلان‌ها",
+    "properties": "مدیریت املاک",
+    "financialManagement": "مدیریت مالی",
+    "reviewsManagement": "مدیریت نظرات",
     "userName": "نام کاربر",
     "wallet": "کیف پول",
     "notificationSettings": "تنظیمات اعلان‌ها",
+    "withdrawableBalance": "موجودی قابل برداشت",
+    "buyerDashboard": "داشبورد خریدار",
+    "sellerDashboard": "داشبورد فروشنده",
     "logout": "خروج",
     "notificationLabel": "اعلان‌ها",
-    "reservationNotifications": "اعلان‌های رزرو",
-    "paymentNotifications": "اعلان‌های پرداخت",
-    "discountNotifications": "اعلان‌های تخفیف",
+    "reservationNotifications": "اعلان‌های مربوط به رزرو",
+    "paymentNotifications": "اعلان‌های مربوط به پرداخت",
+    "discountNotifications": "اعلان‌های مربوط به تخفیف‌ها",
     "systemNotifications": "اعلان‌های سیستمی",
     "lightMode": "حالت روشن",
     "darkMode": "حالت تاریک",
     "logoutConfirmation": "آیا از خروج از حساب کاربری اطمینان دارید؟",
-    "cancel": "انصراف"
+    "cancel": "لغو"
   },
   "DashboardSidebar": {
     "brandName": "دلتا",
@@ -190,7 +196,12 @@
     "notifications": "اعلان‌ها",
     "wallet": "کیف پول",
     "noBalance": "عدم موجودی",
-    "homeLabel": "بازگشت به صفحه اصلی"
+    "homeLabel": "بازگشت به صفحه اصلی",
+    "properties": "مدیریت املاک",
+    "financialManagement": "مدیریت مالی",
+    "reviewsManagement": "مدیریت نظرات",
+    "newReviews": "نظرات جدید",
+    "viewNewReviews": "مشاهده نظرات"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
