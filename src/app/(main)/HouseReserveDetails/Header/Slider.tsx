@@ -29,14 +29,14 @@ const HeaderSlider = ({ result }: ISliderProps) => {
     };
 
     return (
-        <div className="flex h-[400px]  gap-3">
-            
+        <div className="flex h-[400px]  gap-3 justify-between">
+
 
             <Swiper
                 onSwiper={setThumbsSwiper}
                 modules={[Pagination]}
                 pagination={{ clickable: true }}
-                className="house-swiper h-full md:w-350 w-75 flex-1 overflow-hidden rounded-2xl"
+                className="house-swiper h-full w-full flex-1 overflow-hidden rounded-2xl"
             >
                 {photos.map((image, index) => (
                     <SwiperSlide key={`${image}-${index}`}>
@@ -49,23 +49,25 @@ const HeaderSlider = ({ result }: ISliderProps) => {
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <div className="md:grid w-48 grid-cols-2 gap-2 hidden ">
-                {photos.map((image, index) => (
-                    <button
-                        key={`${image}-${index}`}
-                        type="button"
-                        onClick={() => thumbsSwiper?.slideTo(index)}
-                        className="overflow-hidden rounded-lg"
-                    >
-                        <img
-                            src={image || DEFAULT_IMAGE}
-                            onError={handleImageError}
-                            alt={`تصویر کوچک ${index + 1}`}
-                            className="h-full w-full object-cover"
-                        />
-                    </button>
-                ))}
-            </div>
+           {photos.length > 1 && (
+  <div className="hidden w-48 grid-cols-2 gap-2 md:grid">
+    {photos.map((image, index) => (
+      <button
+        key={`${image}-${index}`}
+        type="button"
+        onClick={() => thumbsSwiper?.slideTo(index)}
+        className="overflow-hidden rounded-lg"
+      >
+        <img
+          src={image || DEFAULT_IMAGE}
+          onError={handleImageError}
+          alt={`تصویر کوچک ${index + 1}`}
+          className="h-full w-full object-cover"
+        />
+      </button>
+    ))}
+  </div>
+)}
         </div>
     );
 };
