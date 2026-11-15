@@ -6,10 +6,15 @@ import {
     useState,
     type ReactNode,
 } from "react";
+import { IUserProfile } from "../types/AuthType/Authtype";
+
+
 
 interface IUserDataContext {
     userlogin: boolean;
     setUserLogin: (value: boolean) => void;
+    userData: IUserProfile | null;
+    setUserData: (value: IUserProfile | null) => void;
 }
 
 const UserDataContext = createContext<IUserDataContext | null>(null);
@@ -24,9 +29,16 @@ const UserDataContextProvider = ({
     initialUserLogin,
 }: IUserDataContextProviderProps) => {
     const [userlogin, setUserLogin] = useState(initialUserLogin);
-
+const [userData, setUserData] = useState<IUserProfile | null>(null);
     return (
-        <UserDataContext.Provider value={{ userlogin, setUserLogin }}>
+        <UserDataContext.Provider
+            value={{
+                userlogin,
+                setUserLogin,
+                userData,
+                setUserData,
+            }}
+        >
             {children}
         </UserDataContext.Provider>
     );
@@ -36,7 +48,9 @@ export const useUserData = () => {
     const context = useContext(UserDataContext);
 
     if (!context) {
-        throw new Error("useUserData must be used within UserDataContextProvider");
+        throw new Error(
+            "useUserData must be used within UserDataContextProvider"
+        );
     }
 
     return context;

@@ -20,16 +20,18 @@ const UserDataProvider = async ({
 
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery({
-        queryKey: ["user"],
-        queryFn: getUserAction,
-    });
+    // await queryClient.prefetchQuery({
+    //     queryKey: ["user"],
+    //     queryFn: getUserAction,
+    // });
 
-    return (
+    return  (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <UserDataContextProvider initialUserLogin={userlogin}>
-                {children}
-            </UserDataContextProvider>
+           <UserDataContextProvider
+    initialUserLogin={userlogin}
+>
+    {children}
+</UserDataContextProvider>
         </HydrationBoundary>
     );
 };
