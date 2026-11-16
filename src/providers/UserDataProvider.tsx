@@ -4,25 +4,25 @@ import UserDataContextProvider from "./UserDataContextProvider";
 import { getUserAction } from "../actions/authActions";
 
 const UserDataProvider = async ({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) => {
-    await connection();
+  await connection();
 
-    const cookieStore = await cookies();
-    const userlogin = !!cookieStore.get("accessToken")?.value;
+  const cookieStore = await cookies();
+  const userlogin = !!cookieStore.get("accessToken")?.value;
 
-    const response = userlogin ? await getUserAction() : null;
+  const response = userlogin ? await getUserAction() : null;
 
-    return (
-        <UserDataContextProvider
-            initialUserLogin={userlogin}
-            initialUserData={response?.user ?? null}
-        >
-            {children}
-        </UserDataContextProvider>
-    );
+  return (
+    <UserDataContextProvider
+      initialUserLogin={userlogin}
+      initialUserData={response}
+    >
+      {children}
+    </UserDataContextProvider>
+  );
 };
 
 export default UserDataProvider;

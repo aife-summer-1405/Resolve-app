@@ -20,14 +20,14 @@ const HeaderButtons = ({
 }: IHeaderButtonsProps) => {
   const router = useRouter();
   const { userData } = useUserData();
-
+ 
   const { mutate: addFavorite, isPending: isAdding } = useAddFavorite();
   const { mutate: deleteFavorite, isPending: isDeleting } = useDeleteFavorite();
 
   const isPending = isAdding || isDeleting;
 
   const handleFavorite = () => {
-    if (!userData?.id || isPending) return;
+    if (!userData?.user.id || isPending) return;
 
     if (isFavo) {
       if (!favoriteId) return;
@@ -45,7 +45,7 @@ const HeaderButtons = ({
       addFavorite(
         {
           house_id: houseId,
-          user_id: userData.id,
+          user_id: userData.user.id,
         },
         {
           onSuccess: () => {

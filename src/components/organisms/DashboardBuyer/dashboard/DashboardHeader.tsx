@@ -13,15 +13,16 @@ import {
   AlertTriangle,
   ChevronDown,
 } from "lucide-react";
-import { useUser } from "@/src/hooks/useUser";
 import { useUserData } from "@/src/providers/UserDataContextProvider";
+import { logoutAction } from "@/src/actions/authActions";
 
 const DashboardHeader = () => {
   const locale = useLocale();
   const t = useTranslations("DashboardHeader");
   const pathname = usePathname();
   const router = useRouter();
- const { userData:user } = useUserData();
+  const { userData,setUserLogin } = useUserData();
+  const user=userData?.user;
   const role = user?.role;
 
   const [isDark, setIsDark] = useState(false);
@@ -65,6 +66,19 @@ const DashboardHeader = () => {
       prev.map((item, i) => (i === index ? !item : item)),
     );
   };
+  const handleLogout = async () => {
+    try {
+
+      await logoutAction();
+
+
+      setUserLogin(false);
+      router.replace("/login");
+      router.refresh();
+    } finally {
+      setIsLogoutOpen(false)
+    }
+  };
 
   const pageTitles: Record<string, string> = {
     "/dashboard": t("dashboard"),
@@ -87,7 +101,7 @@ const DashboardHeader = () => {
     t("discountNotifications"),
     t("systemNotifications"),
   ];
- 
+
 
   return (
     <>
@@ -117,9 +131,8 @@ const DashboardHeader = () => {
 
               <ChevronDown
                 size={12}
-                className={`shrink-0 transition ${
-                  isProfileOpen ? "rotate-180" : ""
-                }`}
+                className={`shrink-0 transition ${isProfileOpen ? "rotate-180" : ""
+                  }`}
               />
             </button>
 
@@ -133,7 +146,7 @@ const DashboardHeader = () => {
 
                   <div className="flex min-w-0 flex-col">
                     <span className="text-[11px] font-medium">
-                     {user?.firstName}  {user?.lastName}
+                      {user?.firstName}  {user?.lastName}
                     </span>
                     <span className="text-[9px] text-muted">{user?.phoneNumber}</span>
                   </div>
@@ -264,11 +277,10 @@ const DashboardHeader = () => {
                         className="relative h-[29px] w-[58px] shrink-0 rounded-full bg-[#D9D9D9] transition"
                       >
                         <span
-                          className={`absolute top-[3px] h-[23px] w-[23px] rounded-full transition-all ${
-                            notifications[index]
-                              ? "left-[3px] bg-[#91FF45]"
-                              : "left-[32px] bg-white"
-                          }`}
+                          className={`absolute top-[3px] h-[23px] w-[23px] rounded-full transition-all ${notifications[index]
+                            ? "left-[3px] bg-[#91FF45]"
+                            : "left-[32px] bg-white"
+                            }`}
                         />
                       </button>
                     </div>
@@ -286,9 +298,8 @@ const DashboardHeader = () => {
               onClick={() => handleThemeChange(false)}
               disabled={!mounted}
               aria-label={t("lightMode")}
-              className={`flex h-[21px] w-[21px] items-center justify-center rounded-full transition ${
-                !isDark ? "bg-[#91FF45] text-black" : "text-foreground"
-              }`}
+              className={`flex h-[21px] w-[21px] items-center justify-center rounded-full transition ${!isDark ? "bg-[#91FF45] text-black" : "text-foreground"
+                }`}
             >
               <Sun size={15} />
             </button>
@@ -298,9 +309,8 @@ const DashboardHeader = () => {
               onClick={() => handleThemeChange(true)}
               disabled={!mounted}
               aria-label={t("darkMode")}
-              className={`flex h-[21px] w-[21px] items-center justify-center rounded-full transition ${
-                isDark ? "bg-[#91FF45] text-black" : "text-foreground"
-              }`}
+              className={`flex h-[21px] w-[21px] items-center justify-center rounded-full transition ${isDark ? "bg-[#91FF45] text-black" : "text-foreground"
+                }`}
             >
               <Moon size={14} fill="currentColor" />
             </button>
@@ -347,7 +357,7 @@ const DashboardHeader = () => {
             <div className="flex items-center gap-4">
               <button
                 type="button"
-                onClick={() => setIsLogoutOpen(false)}
+                onClick={handleLogout}
                 className="rounded-lg bg-[#FF9500] px-5 py-2 text-[11px] text-black transition hover:bg-[#E98500]"
               >
                 {t("logout")}
