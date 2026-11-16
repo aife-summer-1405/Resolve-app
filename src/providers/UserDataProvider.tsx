@@ -1,12 +1,7 @@
 import { connection } from "next/server";
 import { cookies } from "next/headers";
-import {
-    dehydrate,
-    HydrationBoundary,
-    QueryClient,
-} from "@tanstack/react-query";
-import { getUserAction } from "../actions/authActions";
 import UserDataContextProvider from "./UserDataContextProvider";
+import { getUserAction } from "../actions/authActions";
 
 const UserDataProvider = async ({
     children,
@@ -18,21 +13,15 @@ const UserDataProvider = async ({
     const cookieStore = await cookies();
     const userlogin = !!cookieStore.get("accessToken")?.value;
 
-    const queryClient = new QueryClient();
+    const response = userlogin ? await getUserAction() : null;
 
-    // await queryClient.prefetchQuery({
-    //     queryKey: ["user"],
-    //     queryFn: getUserAction,
-    // });
-
-    return  (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-           <UserDataContextProvider
-    initialUserLogin={userlogin}
->
-    {children}
-</UserDataContextProvider>
-        </HydrationBoundary>
+    return (
+        <UserDataContextProvider
+            initialUserLogin={userlogin}
+            initialUserData={response?.user ?? null}
+        >
+            {children}
+        </UserDataContextProvider>
     );
 };
 

@@ -5,16 +5,17 @@ import {
     useContext,
     useState,
     type ReactNode,
+    type Dispatch,
+    type SetStateAction,
 } from "react";
+
 import { IUserProfile } from "../types/AuthType/Authtype";
-
-
 
 interface IUserDataContext {
     userlogin: boolean;
-    setUserLogin: (value: boolean) => void;
+    setUserLogin: Dispatch<SetStateAction<boolean>>;
     userData: IUserProfile | null;
-    setUserData: (value: IUserProfile | null) => void;
+    setUserData: Dispatch<SetStateAction<IUserProfile | null>>;
 }
 
 const UserDataContext = createContext<IUserDataContext | null>(null);
@@ -22,14 +23,17 @@ const UserDataContext = createContext<IUserDataContext | null>(null);
 interface IUserDataContextProviderProps {
     children: ReactNode;
     initialUserLogin: boolean;
+    initialUserData: IUserProfile | null;
 }
 
 const UserDataContextProvider = ({
     children,
     initialUserLogin,
+    initialUserData,
 }: IUserDataContextProviderProps) => {
     const [userlogin, setUserLogin] = useState(initialUserLogin);
-const [userData, setUserData] = useState<IUserProfile | null>(null);
+    const [userData, setUserData] = useState<IUserProfile | null>(initialUserData);
+
     return (
         <UserDataContext.Provider
             value={{

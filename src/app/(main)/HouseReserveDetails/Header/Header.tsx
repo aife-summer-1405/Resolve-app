@@ -7,6 +7,8 @@ interface IHeader {
 }
 
 const Header = ({ result }: IHeader) => {
+  console.log(1111111111,result);
+  
   return (
     <div className=" mt-25  px-4 text-right  space-y-5 ">
       <h1 className="font-bold text-xl md:text-4xl">{result.title}</h1>
@@ -24,7 +26,7 @@ const Header = ({ result }: IHeader) => {
             </div>
 
           </div>
-      <HeaderButtons  isFavo={result.isFavorite} />
+      <HeaderButtons  isFavo={result.isFavorite} houseId={result.id} favoriteId={result.favoriteId}/>
         </div>
 
       </div>
