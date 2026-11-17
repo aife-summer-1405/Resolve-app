@@ -1,15 +1,17 @@
-"use client";
 
-import { useTranslations } from "next-intl";
 import { Bookmark, Play } from "lucide-react";
 import ProfilePercentagePage from "../../DashboardBuyer/dashboard/profilePercentagepage";
+import { getSelletDashboardfinance } from "@/src/services/getSelletDashboardfinance";
+import { getTranslations } from "next-intl/server";
 
-const SellerDashboardIncomeSection = () => {
-  const t = useTranslations("SellerDashboardIncomeSection");
+const SellerDashboardIncomeSection = async () => {
+  const t = await getTranslations("SellerDashboardIncomeSection");
+
+  const result = await getSelletDashboardfinance();
 
   return (
     <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-      <div className="flex aspect-[2.14/1] w-full min-h-0 flex-col overflow-hidden rounded-xl bg-surface">
+      <div className="flex aspect-[2.14/1] min-h-0 w-full flex-col overflow-hidden rounded-xl bg-surface">
         <div className="flex h-1/5 shrink-0 items-center justify-between border-b border-dashed border-border px-5">
           <div className="flex items-center gap-3">
             <Bookmark
@@ -54,7 +56,9 @@ const SellerDashboardIncomeSection = () => {
             </div>
 
             <div className="flex items-center gap-2 rounded-lg bg-[#8CFF45] px-4 py-2 text-xs text-black">
-              <span>115,000,000</span>
+              <span>
+                {result.totalCurrentMonthAmount.toLocaleString("fa-IR")}
+              </span>
               <span>{t("currency")}</span>
             </div>
           </div>
@@ -68,7 +72,7 @@ const SellerDashboardIncomeSection = () => {
             </div>
 
             <div className="flex items-center gap-2 rounded-lg bg-card px-4 py-2 text-xs text-foreground">
-              <span>195,000,000</span>
+              <span>{result.totalAmount.toLocaleString("fa-IR")}</span>
               <span>{t("currency")}</span>
             </div>
           </div>

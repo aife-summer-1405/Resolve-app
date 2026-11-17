@@ -1,12 +1,12 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import DashboardRecentReservationsSection from "../../DashboardBuyer/dashboard/DashboardRecentReservationsSection";
 import DashboardStatCard from "../../DashboardBuyer/dashboard/DashboardStatCard";
 import SellerDashboardIncomeSection from "./SellerDashboardIncomeSection";
+import { getSelletDashboardfinance } from "@/src/services/getSelletDashboardfinance";
 
-const SellerDashboardOverviewSection = () => {
-  const t = useTranslations("SellerDashboardOverviewSection");
+const SellerDashboardOverviewSection = async () => {
+  const t = await getTranslations("SellerDashboardOverviewSection");
+
 
   const cards = [
     {
