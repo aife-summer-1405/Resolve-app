@@ -113,7 +113,7 @@ const OfferCard: FC<IOfferCardProps> = ({
             <ImageFallback
               key={image}
               src={image}
-              fallbackSrc="/images/offer.jpg"
+              fallbackSrc="/images/slider.webp"
               alt={offer.title || t("propertyImage")}
               fill
               sizes="274px"
