@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -9,45 +10,63 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { IBookingResponse, IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
+import { IBookingResponse } from "@/src/types/HousereservesType/BookingType";
 
 interface IDashboardReservationsChartProps {
   reservations: IBookingResponse[];
 }
 
+const months = [
+  "فروردین",
+  "اردیبهشت",
+  "خرداد",
+  "تیر",
+  "مرداد",
+  "شهریور",
+  "مهر",
+  "آبان",
+  "آذر",
+  "دی",
+  "بهمن",
+  "اسفند",
+];
+
+const persianDateFormatter = new Intl.DateTimeFormat(
+  "en-US-u-ca-persian",
+  {
+    year: "numeric",
+    month: "numeric",
+  }
+);
+
 const DashboardReservationsChart = ({
   reservations,
 }: IDashboardReservationsChartProps) => {
-  const now = new Date();
+  const currentPersianYear = persianDateFormatter.formatToParts(new Date())
+    .find((part) => part.type === "year")?.value;
 
-  const months = Array.from({ length: 6 }, (_, index) => {
-    const date = new Date(
-      now.getFullYear(),
-      now.getMonth() - (5 - index),
-      1
-    );
-
-    return {
-      month: date.toLocaleDateString("fa-IR", {
-        month: "long",
-      }),
-      year: date.getFullYear(),
-      monthIndex: date.getMonth(),
-    };
-  });
-
-  const chartData = months.map((item) => {
+  const chartData = months.map((month, index) => {
     const count = reservations.filter((reservation) => {
       const date = new Date(reservation.createdAt);
 
+      const dateParts = persianDateFormatter.formatToParts(date);
+
+      const reservationYear = dateParts.find(
+        (part) => part.type === "year"
+      )?.value;
+
+      const reservationMonth = Number(
+        dateParts.find((part) => part.type === "month")?.value
+      );
+
       return (
-        date.getMonth() === item.monthIndex &&
-        date.getFullYear() === item.year
+        reservationYear === currentPersianYear &&
+        reservationMonth === index + 1
       );
     }).length;
 
     return {
-      month: item.month,
+      month,
       count,
     };
   });
@@ -69,6 +88,7 @@ const DashboardReservationsChart = ({
             tick={{ fill: "#ffffff80", fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            interval={0}
           />
 
           <YAxis

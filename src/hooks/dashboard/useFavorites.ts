@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  addFavoriteAction,
   deleteFavoriteAction,
   getFavoritesAction,
 } from "@/src/actions/favoriteActions";
@@ -34,4 +35,18 @@ export const useDeleteFavorite = () => {
       });
     },
   });
+};
+
+
+export const useAddFavorite = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: addFavoriteAction,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["favorites"],
+            });
+        },
+    });
 };

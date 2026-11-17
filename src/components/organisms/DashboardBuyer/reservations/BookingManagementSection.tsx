@@ -465,7 +465,7 @@ const BookingManagementSection = () => {
         <ReservationDetailsModal
           isOpen={isDetailsOpen}
           onClose={() => setIsDetailsOpen(false)}
-          accommodationId={selectedAccommodation.id}
+          accommodationId={Number(selectedAccommodation.houseId)}
           onPayments={handleOpenPayments}
           onReservations={handleOpenReservations}
         />

@@ -37,7 +37,7 @@ const ReservationDetailsModal = ({
     isLoading,
     isError,
     refetch,
-  } = useGetHouseById(String(accommodationId), isOpen);
+  } = useGetHouseById(accommodationId, isOpen);
 
   const formatPrice = (price: string | null) => {
     if (!price) return "—";
@@ -85,7 +85,7 @@ const ReservationDetailsModal = ({
               </div>
             </div>
 
-            <div className="h-[190px] rounded-xl bg-card sm:h-[233px]" />
+            <div className="h-47.5 rounded-xl bg-card sm:h-58.25" />
           </div>
 
           <div className="mt-5 flex justify-between gap-3">
@@ -136,40 +136,40 @@ const ReservationDetailsModal = ({
   const price = house.discounted_price ?? house.price;
   const yardLabel = getYardLabel(house.yard_type);
 
-const amenities = [
-  {
-    icon: <BedDouble size={15} />,
-    label: isPersian
-      ? `${house.rooms} اتاق خواب`
-      : `${house.rooms} Bedrooms`,
-  },
-  {
-    icon: <CarFront size={15} />,
-    label: isPersian
-      ? `${house.parking} پارکینگ`
-      : `${house.parking} Parking`,
-  },
-  {
-    icon: <Bath size={15} />,
-    label: isPersian
-      ? `${house.bathrooms} حمام`
-      : `${house.bathrooms} Bathrooms`,
-  },
-  {
-    icon: <Users size={15} />,
-    label: isPersian
-      ? `ظرفیت: ${house.capacity} نفر`
-      : `Capacity: ${house.capacity}`,
-  },
-  ...(yardLabel
-    ? [
+  const amenities = [
+    {
+      icon: <BedDouble size={15} />,
+      label: isPersian
+        ? `${house.rooms} اتاق خواب`
+        : `${house.rooms} Bedrooms`,
+    },
+    {
+      icon: <CarFront size={15} />,
+      label: isPersian
+        ? `${house.parking} پارکینگ`
+        : `${house.parking} Parking`,
+    },
+    {
+      icon: <Bath size={15} />,
+      label: isPersian
+        ? `${house.bathrooms} حمام`
+        : `${house.bathrooms} Bathrooms`,
+    },
+    {
+      icon: <Users size={15} />,
+      label: isPersian
+        ? `ظرفیت: ${house.capacity} نفر`
+        : `Capacity: ${house.capacity}`,
+    },
+    ...(yardLabel
+      ? [
         {
           icon: <MapPin size={15} />,
           label: yardLabel,
         },
       ]
-    : []),
-];
+      : []),
+  ];
 
   return (
     <div

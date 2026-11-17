@@ -25,7 +25,7 @@ export interface IHouseDetails {
     sellerId: string;
     sellerName: string;
     caption: string;
-    favoriteId: string | null;
+    favoriteId?: number ;
     bookings: number;
     isFavorite: boolean;
 }

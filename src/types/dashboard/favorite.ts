@@ -27,3 +27,8 @@ export interface IGetFavoritesResponse {
   data: IFavorite[];
   totalCount: number;
 }
+
+export interface IAddFavoritePayload {
+    house_id: string;
+    user_id: string;
+}

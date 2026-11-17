@@ -4,7 +4,8 @@ import apiServer from "@/lib/server";
 import type { IBookingData, IBookingResult, IBookingsApiResponse } from "@/src/types/HousereservesType/BookingType";
 import type { AxiosError } from "axios";
 import { IGetBookingsParams } from "../types/dashboard/booking";
-import { getBookings } from "../hooks/dashboard/getBookings";
+import { getBookings } from "../services/getBookings";
+import { ICustomerBookingsApiResponse, IGetCustomerBookingsParams } from "../types/Seller_Dashboard/customer-booking";
 
 
 
@@ -43,5 +44,26 @@ export async function getBookingsAction(
 
 export const deleteBookingAction = async (id: string | number) => {
   const { data } = await apiServer.delete(`/api/bookings/${id}`);
+  return data;
+};
+
+
+export const getCustomerBookingsAction = async (
+  userId: number,
+  params: IGetCustomerBookingsParams = {}
+): Promise<ICustomerBookingsApiResponse> => {
+  const { data } = await apiServer.get(
+    `/api/bookings/${userId}/customers`,
+    {
+      params: {
+        page: 1,
+        limit: 1000,
+        sort: "created_at",
+        order: "DESC",
+        ...params,
+      },
+    }
+  );
+
   return data;
 };

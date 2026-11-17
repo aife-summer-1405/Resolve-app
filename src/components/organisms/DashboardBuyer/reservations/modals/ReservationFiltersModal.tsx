@@ -40,7 +40,7 @@ const ReservationFiltersModal = ({
   };
 
   const selectClass =
-    "h-11 w-full appearance-none rounded-xl border border-border bg-transparent px-3 text-xs text-foreground outline-none focus:border-primary";
+    "h-11 w-full appearance-none rounded-xl border border-border bg-card px-3 text-xs text-foreground outline-none focus:border-primary";
 
   const labelClass =
     "absolute -top-2 right-3 z-10 bg-surface px-1 text-[10px] text-muted";
