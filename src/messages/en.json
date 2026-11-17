@@ -184,7 +184,8 @@
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode",
     "logoutConfirmation": "Are you sure you want to log out?",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "sellerReservations": "Reservation Management"
   },
   "DashboardSidebar": {
     "brandName": "Delta",
@@ -387,7 +388,7 @@
     "pendingReservations": "Pending Reservations",
     "todayViews": "Today's Views"
   },
-    "sellerProperties": {
+  "sellerProperties": {
     "title": "My Properties",
     "search": "Search:",
     "searchPlaceholder": "Property name...",
@@ -459,6 +460,30 @@
     "selectedLocation": "Selected location",
     "locationNotSelected": "No location selected yet",
     "selectLocationEnd": " on the map."
+  },
+  "Reservations": {
+    "title": "Customer Reservations",
+    "search": "Search",
+    "searchPlaceholder": "Search for a passenger...",
+    "filters": "Filters",
+    "propertyName": "Property Name",
+    "passengerInfo": "Passenger Information",
+    "reservationDate": "Reservation Date",
+    "amount": "Amount",
+    "reservationStatus": "Reservation Status",
+    "paymentStatus": "Payment Status",
+    "operations": "Actions",
+    "approveReservation": "Approve Reservation",
+    "cancelReservation": "Cancel Reservation",
+    "details": "Details",
+    "delete": "Delete",
+    "noReservations": "No reservations found.",
+    "page": "Page",
+    "all": "All",
+    "approved": "Approved",
+    "pending": "Pending",
+    "cancelled": "Cancelled",
+    "successful": "Successful",
+    "currency": "Toman"
   }
-
 }
