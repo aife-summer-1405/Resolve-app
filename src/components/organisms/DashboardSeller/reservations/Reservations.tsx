@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Search,
   SlidersHorizontal,
@@ -15,7 +16,6 @@ import Pagination from "@/src/components/common/Pagination";
 import FormInput from "@/src/components/molecules/FormInput/FormInput";
 import ReservationModals from "./ReservationModals";
 
-// تایپ اطلاعات رزرو در این کامپوننت
 interface Reservation {
   id: number;
   houseName: string;
@@ -69,8 +69,19 @@ const initialReservations: Reservation[] = [
 ];
 
 const StatusBadge = ({ status }: { status: string }) => {
+  const t = useTranslations("Reservations");
+
   const isSuccess = status === "تایید شده" || status === "موفق شده";
   const isWaiting = status === "در انتظار";
+
+  const statusText =
+    status === "تایید شده"
+      ? t("approved")
+      : status === "در انتظار"
+        ? t("pending")
+        : status === "موفق شده"
+          ? t("successful")
+          : t("cancelled");
 
   return (
     <span
@@ -82,7 +93,7 @@ const StatusBadge = ({ status }: { status: string }) => {
             : "bg-[#FF999D] text-black"
       }`}
     >
-      {status}
+      {statusText}
       {isSuccess ? (
         <Check size={12} />
       ) : isWaiting ? (
@@ -95,6 +106,10 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 const Reservations = () => {
+  const t = useTranslations("Reservations");
+  const locale = useLocale();
+  const direction = locale === "fa" ? "rtl" : "ltr";
+
   const [reservations, setReservations] = useState(initialReservations);
   const [search, setSearch] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -136,6 +151,7 @@ const Reservations = () => {
       window.removeEventListener("keydown", handleEscape);
     };
   }, [isModalOpen]);
+
   const filteredReservations = reservations.filter((reservation) => {
     const matchesSearch =
       reservation.travelerName.includes(search) ||
@@ -176,60 +192,71 @@ const Reservations = () => {
   };
 
   return (
-    <div className="w-full space-y-4" dir="rtl">
+    <div className="w-full space-y-4" dir={direction}>
       <div className="rounded-xl bg-surface p-3 text-foreground">
         <div className="flex flex-col gap-3 border-b border-dashed border-border pb-3 md:flex-row md:items-center md:justify-between">
-          <h2 className="text-sm font-semibold">لیست رزروهای مشتریان</h2>
+          <h2 className="text-sm font-semibold">{t("title")}</h2>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <div className="relative w-full sm:w-64">
               <FormInput
                 name="search"
-                label="جستجو"
+                label={t("search")}
                 value={search}
-                placeholder="نام مسافر مورد نظر..."
+                placeholder={t("searchPlaceholder")}
                 onChange={(e) => {
                   setSearch(e.target.value);
                   setCurrentPage(1);
                 }}
               />
+
               <Search
                 size={15}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+                className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted ${
+                  direction === "rtl" ? "left-3" : "left-3"
+                }`}
               />
             </div>
+
             <button
               type="button"
               onClick={() => setIsFilterOpen(true)}
               className="flex items-center justify-center gap-2 rounded-lg bg-[#91FF45] px-4 py-2.5 text-xs text-black transition hover:bg-[#7eea32]"
             >
               <SlidersHorizontal size={14} />
-              فیلترها
+              {t("filters")}
             </button>
           </div>
         </div>
-        <div className="mt-3 overflow-x-auto">
+
+        <div className="mt-3 overflow-x-auto overflow-y-hidden">
           <table className="w-full min-w-[800px] border-separate border-spacing-y-1.5 text-xs">
             <thead>
               <tr className="bg-background text-foreground">
-                <th className="rounded-r-lg px-3 py-2.5 text-right font-medium">
-                  نام ملک
+                <th
+                  className={`px-3 py-2.5 font-medium ${direction === "rtl" ? "rounded-r-lg text-right" : "rounded-l-lg text-left"}`}
+                >
+                  {t("propertyName")}
                 </th>
                 <th className="px-3 py-2.5 text-center font-medium">
-                  اطلاعات مسافر
+                  {t("passengerInfo")}
                 </th>
                 <th className="px-3 py-2.5 text-center font-medium">
-                  تاریخ رزرو
-                </th>
-                <th className="px-3 py-2.5 text-center font-medium">مبلغ</th>
-                <th className="px-3 py-2.5 text-center font-medium">
-                  وضعیت رزرو
+                  {t("reservationDate")}
                 </th>
                 <th className="px-3 py-2.5 text-center font-medium">
-                  وضعیت پرداخت
+                  {t("amount")}
                 </th>
-                <th className="rounded-l-lg px-3 py-2.5 text-center font-medium">
-                  عملیات
+                <th className="px-3 py-2.5 text-center font-medium">
+                  {t("reservationStatus")}
+                </th>
+                <th className="px-3 py-2.5 text-center font-medium">
+                  {t("paymentStatus")}
+                </th>
+                <th
+                  className={`px-3 py-2.5 text-center font-medium ${direction === "rtl" ? "rounded-l-lg" : "rounded-r-lg"}`}
+                >
+                  {t("operations")}
                 </th>
               </tr>
             </thead>
@@ -240,25 +267,35 @@ const Reservations = () => {
                   key={reservation.id}
                   className="transition hover:bg-background"
                 >
-                  <td className="rounded-r-lg px-3 py-2.5 text-right">
+                  <td
+                    className={`px-3 py-2.5 ${direction === "rtl" ? "rounded-r-lg text-right" : "rounded-l-lg text-left"}`}
+                  >
                     {reservation.houseName}
                   </td>
+
                   <td className="px-3 py-2.5 text-center">
                     {reservation.travelerName}
                   </td>
+
                   <td className="whitespace-nowrap px-3 py-2.5 text-center">
                     {reservation.date}
                   </td>
+
                   <td className="whitespace-nowrap px-3 py-2.5 text-center">
-                    {reservation.amount} تومان
+                    {reservation.amount} {t("currency")}
                   </td>
+
                   <td className="px-3 py-2.5 text-center">
                     <StatusBadge status={reservation.reservationStatus} />
                   </td>
+
                   <td className="px-3 py-2.5 text-center">
                     <StatusBadge status={reservation.paymentStatus} />
                   </td>
-                  <td className="relative rounded-l-lg px-3 py-2.5 text-center">
+
+                  <td
+                    className={`relative px-3 py-2.5 text-center ${direction === "rtl" ? "rounded-l-lg" : "rounded-r-lg"}`}
+                  >
                     <button
                       type="button"
                       onClick={() =>
@@ -272,7 +309,9 @@ const Reservations = () => {
                     </button>
 
                     {activeMenu === reservation.id && (
-                      <div className="absolute left-7 top-9 z-20 w-32 rounded-lg border border-border bg-surface p-1.5 text-right text-foreground shadow-xl">
+                      <div
+                        className={`absolute top-9 z-20 w-32 rounded-lg border border-border bg-surface p-1.5 text-foreground shadow-xl ${direction === "rtl" ? "left-7 text-right" : "right-7 text-left"}`}
+                      >
                         <button
                           type="button"
                           onClick={() => {
@@ -282,7 +321,7 @@ const Reservations = () => {
                           }}
                           className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[11px] hover:bg-background"
                         >
-                          تایید رزرو
+                          {t("approveReservation")}
                           <Check size={13} />
                         </button>
 
@@ -295,7 +334,7 @@ const Reservations = () => {
                           }}
                           className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[11px] hover:bg-background"
                         >
-                          لغو رزرو
+                          {t("cancelReservation")}
                           <X size={13} />
                         </button>
 
@@ -308,7 +347,7 @@ const Reservations = () => {
                           }}
                           className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[11px] hover:bg-background"
                         >
-                          جزئیات
+                          {t("details")}
                           <Eye size={13} />
                         </button>
 
@@ -321,7 +360,7 @@ const Reservations = () => {
                           }}
                           className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[11px] text-red-500 hover:bg-background"
                         >
-                          حذف
+                          {t("delete")}
                           <X size={13} />
                         </button>
                       </div>
@@ -333,15 +372,19 @@ const Reservations = () => {
               {filteredReservations.length === 0 && (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-muted">
-                    رزروی پیدا نشد.
+                    {t("noReservations")}
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
         <div className="mt-5 flex items-center justify-between">
-          <span className="text-xs text-muted">صفحه {currentPage}</span>
+          <span className="text-xs text-muted">
+            {t("page")} {currentPage}
+          </span>
+
           <Pagination
             currentPage={currentPage}
             totalPages={5}
@@ -349,6 +392,7 @@ const Reservations = () => {
           />
         </div>
       </div>
+
       <ReservationModals
         isFilterOpen={isFilterOpen}
         setIsFilterOpen={setIsFilterOpen}
