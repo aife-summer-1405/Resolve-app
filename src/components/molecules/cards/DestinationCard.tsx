@@ -88,7 +88,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
           <div className="relative h-[150px] w-full overflow-hidden rounded-[22px] bg-[#444444]">
             <ImageFallback
               src={image}
-              fallbackSrc="/images/defaulte.webp"
+              fallbackSrc="/images/slider.webp"
               alt={destination.title || "تصویر مقصد"}
               fill
               sizes="(max-width: 768px) 260px, 274px"
