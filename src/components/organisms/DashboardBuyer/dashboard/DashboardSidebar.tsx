@@ -29,20 +29,26 @@ const DashboardSidebar = () => {
   const requestedView = searchParams?.get("view");
 
   const dashboardView =
-    role === "buyer"
-      ? "buyer"
-      : role === "seller"
-        ? requestedView === "buyer"
-          ? "buyer"
-          : "seller"
-        : role === "admin"
-          ? requestedView === "seller"
-            ? "seller"
-            : "buyer"
+    role === "admin"
+      ? requestedView === "buyer"
+        ? "buyer"
+        : requestedView === "seller"
+          ? "seller"
+          : "admin"
+      : role === "buyer"
+        ? "buyer"
+        : role === "seller"
+          ? requestedView === "buyer"
+            ? "buyer"
+            : "seller"
           : null;
 
   const getDashboardHref = (href: string) => {
-    if (role === "seller" || role === "admin") {
+    if (role === "admin") {
+      return dashboardView === "admin" ? href : `${href}?view=${dashboardView}`;
+    }
+
+    if (role === "seller") {
       return `${href}?view=${dashboardView}`;
     }
 
@@ -54,65 +60,74 @@ const DashboardSidebar = () => {
       ? "/dashboard/sellerReservations"
       : "/dashboard/reservations";
 
-  const menuItems = [
-    {
-      title: t("dashboard"),
-      href: "/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      title: t("profile"),
-      href: "/dashboard/profile",
-      icon: UserRound,
-    },
-    ...(dashboardView === "seller"
+  const menuItems =
+    dashboardView === "admin"
       ? [
           {
-            title: t("properties"),
-            href: "/dashboard/properties",
-            icon: Building2,
+            title: t("dashboard"),
+            href: "/dashboard",
+            icon: LayoutDashboard,
           },
         ]
-      : []),
-    {
-      title: t("reservations"),
-      href: reservationsHref,
-      icon: CirclePlus,
-    },
-    ...(dashboardView === "buyer"
-      ? [
+      : [
           {
-            title: t("favorites"),
-            href: "/dashboard/favorites",
-            icon: Heart,
+            title: t("dashboard"),
+            href: "/dashboard",
+            icon: LayoutDashboard,
           },
           {
-            title: t("payments"),
-            href: "/dashboard/payments",
-            icon: CreditCard,
+            title: t("profile"),
+            href: "/dashboard/profile",
+            icon: UserRound,
           },
-        ]
-      : []),
-    ...(dashboardView === "seller"
-      ? [
+          ...(dashboardView === "seller"
+            ? [
+                {
+                  title: t("properties"),
+                  href: "/dashboard/properties",
+                  icon: Building2,
+                },
+              ]
+            : []),
           {
-            title: t("financialManagement"),
-            href: "/dashboard/financial-management",
-            icon: Landmark,
+            title: t("reservations"),
+            href: reservationsHref,
+            icon: CirclePlus,
           },
+          ...(dashboardView === "buyer"
+            ? [
+                {
+                  title: t("favorites"),
+                  href: "/dashboard/favorites",
+                  icon: Heart,
+                },
+                {
+                  title: t("payments"),
+                  href: "/dashboard/payments",
+                  icon: CreditCard,
+                },
+              ]
+            : []),
+          ...(dashboardView === "seller"
+            ? [
+                {
+                  title: t("financialManagement"),
+                  href: "/dashboard/financial-management",
+                  icon: Landmark,
+                },
+                {
+                  title: t("reviewsManagement"),
+                  href: "/dashboard/reviews",
+                  icon: MessageSquare,
+                },
+              ]
+            : []),
           {
-            title: t("reviewsManagement"),
-            href: "/dashboard/reviews",
-            icon: MessageSquare,
+            title: t("notifications"),
+            href: "/dashboard/notifications",
+            icon: Bell,
           },
-        ]
-      : []),
-    {
-      title: t("notifications"),
-      href: "/dashboard/notifications",
-      icon: Bell,
-    },
-  ];
+        ];
 
   return (
     <aside className="m-2 flex w-auto shrink-0 flex-col rounded-[12px] bg-surface px-3 py-3 sm:m-4 sm:px-3 sm:py-4 lg:m-5 lg:h-[775px] lg:w-2/10 lg:px-4 lg:py-5">
@@ -131,6 +146,16 @@ const DashboardSidebar = () => {
       </div>
 
       <nav className="flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
+        {role === "admin" && dashboardView !== "admin" && (
+          <Link
+            href="/dashboard"
+            className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-xs text-foreground transition-colors hover:bg-background sm:gap-3 sm:text-sm lg:px-3"
+          >
+            <LayoutDashboard size={19} className="shrink-0" />
+            <span className="whitespace-nowrap">{t("backToAdmin")}</span>
+          </Link>
+        )}
+
         {menuItems.map((item) => {
           const Icon = item.icon;
 

@@ -3,6 +3,7 @@ import { getUserAction } from "@/src/actions/authActions";
 import DashboardOverviewSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardOverviewSection";
 import DashboardRecentReservationsSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardRecentReservationsSection";
 import SellerDashboardOverviewSection from "@/src/components/organisms/DashboardSeller/dashboard/SellerDashboardOverviewSection";
+import AdminDashboardOverviewSection from "@/src/components/organisms/DashboardAdmin/dashboard/AdminDashboardOverviewSection";
 import Loading from "@/src/Loading";
 
 interface IPageProps {
@@ -40,11 +41,13 @@ const DashboardContent = async ({ searchParams }: IPageProps) => {
       ) : role === "admin" ? (
         isSellerView ? (
           <SellerDashboardOverviewSection />
-        ) : (
+        ) : isBuyerView ? (
           <>
             <DashboardOverviewSection />
             <DashboardRecentReservationsSection />
           </>
+        ) : (
+          <AdminDashboardOverviewSection />
         )
       ) : (
         <p>نقش کاربر مشخص نیست.</p>

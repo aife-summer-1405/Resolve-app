@@ -202,7 +202,8 @@
     "financialManagement": "مدیریت مالی",
     "reviewsManagement": "مدیریت نظرات",
     "newReviews": "نظرات جدید",
-    "viewNewReviews": "مشاهده نظرات"
+    "viewNewReviews": "مشاهده نظرات",
+    "backToAdmin": "بازگشت به پنل ادمین"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
