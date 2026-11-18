@@ -184,7 +184,8 @@
     "lightMode": "حالت روشن",
     "darkMode": "حالت تاریک",
     "logoutConfirmation": "آیا از خروج از حساب کاربری اطمینان دارید؟",
-    "cancel": "لغو"
+    "cancel": "لغو",
+    "sellerReservations": "مدیریت رزروها"
   },
   "DashboardSidebar": {
     "brandName": "دلتا",
@@ -391,7 +392,7 @@
     "pendingReservations": "رزروهای در انتظار",
     "todayViews": "بازدیدهای امروز"
   },
-    "sellerProperties": {
+  "sellerProperties": {
     "title": "لیست املاک من",
     "search": "جستجو:",
     "searchPlaceholder": "نام ملک مورد نظر...",
@@ -462,6 +463,7 @@
     "mapInstruction": "برای انتخاب موقعیت، روی نقشه کلیک کنید",
     "selectedLocation": "موقعیت انتخاب‌شده",
     "locationNotSelected": "هنوز موقعیتی انتخاب نشده است",
+
     "selectLocationEnd": "را تعیین کنید.",
     "roomsCount": "تعداد اتاق:",
     "roomsPlaceholder": "اتاق",
@@ -506,5 +508,34 @@
     "submitPreviewMessage": "پیش‌نمایش آگهی آماده است؛ اتصال ثبت نهایی در مرحله بعد انجام می‌شود."
   }
 
+
+
+    "selectLocationEnd": "را تعیین کنید."
+  },
+  "Reservations": {
+    "title": "لیست رزروهای مشتریان",
+    "search": "جستجو",
+    "searchPlaceholder": "نام مسافر مورد نظر...",
+    "filters": "فیلترها",
+    "propertyName": "نام ملک",
+    "passengerInfo": "اطلاعات مسافر",
+    "reservationDate": "تاریخ رزرو",
+    "amount": "مبلغ",
+    "reservationStatus": "وضعیت رزرو",
+    "paymentStatus": "وضعیت پرداخت",
+    "operations": "عملیات",
+    "approveReservation": "تایید رزرو",
+    "cancelReservation": "لغو رزرو",
+    "details": "جزئیات",
+    "delete": "حذف",
+    "noReservations": "رزروی پیدا نشد.",
+    "page": "صفحه",
+    "all": "همه",
+    "approved": "تایید شده",
+    "pending": "در انتظار",
+    "cancelled": "لغو شده",
+    "successful": "موفق شده",
+    "currency": "تومان"
+  }
 
 }

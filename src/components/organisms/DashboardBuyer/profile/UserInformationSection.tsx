@@ -9,6 +9,7 @@ import { useUpdateUser } from "@/src/hooks/dashboard/useUpdateUser";
 import useChangePassword from "@/src/hooks/dashboard/useChangePassword";
 import ProfilePictureSection from "./ProfilePictureSection";
 import { useUserData } from "@/src/providers/UserDataContextProvider";
+import { getUserAction } from "@/src/actions/authActions";
 
 interface IUserForm {
   firstName: string;
@@ -50,7 +51,7 @@ const UserInformationSection: FC = () => {
   const changePassword = useChangePassword();
   const { setUserData, userData } = useUserData();
 
-  const user = userData;
+  const user = userData?.user;
 
   useEffect(() => {
     if (!user) return;
@@ -83,31 +84,27 @@ const UserInformationSection: FC = () => {
     setPasswordError("");
     changePassword.reset();
   };
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    if (!user?.id) return;
+  if (!user?.id) return;
 
-    updateUser.mutate(
-      {
-        id: user.id,
-        payload: {
-          ...form,
-          fullName: `${form.firstName} ${form.lastName}`.trim(),
-        },
+  updateUser.mutate(
+    {
+      id: user.id,
+      payload: {
+        ...form,
+        fullName: `${form.firstName} ${form.lastName}`.trim(),
       },
-      {
-        onSuccess: (response) => {
-          setUserData({
-            ...userData!,
-            firstName: response.firstName,
-            lastName: response.lastName,
-            email: response.email,
-          });
-        },
-      }
-    );
-  };
+    },
+    {
+      onSuccess: async () => {
+        const updatedUserData = await getUserAction();
+        setUserData(updatedUserData);
+      },
+    },
+  );
+};
 
   const handlePasswordSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

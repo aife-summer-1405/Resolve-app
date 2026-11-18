@@ -28,7 +28,7 @@ const DashboardOverviewSectionClient = ({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["bookings", "all", defultFilter],
+    queryKey: ["bookings", defultFilter],
     queryFn: () => getBookingsAction(defultFilter),
   });
 

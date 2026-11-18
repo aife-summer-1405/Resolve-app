@@ -51,7 +51,7 @@ const DashboardSidebar = () => {
 
   const reservationsHref =
     dashboardView === "seller"
-      ? "/dashboard/seller-reservations"
+      ? "/dashboard/sellerReservations"
       : "/dashboard/reservations";
 
   const menuItems = [
