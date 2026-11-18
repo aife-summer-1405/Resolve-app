@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import {
   Search,
@@ -99,6 +100,7 @@ const SellerPropertiesSection = () => {
   const t = useTranslations("sellerProperties");
   const locale = useLocale();
   const isFa = locale === "fa";
+  const router = useRouter();
 
   const [search, setSearch] = useState("");
 
@@ -169,9 +171,9 @@ const SellerPropertiesSection = () => {
     setDeleteTarget(null);
   };
 
-  const handleEdit = () => {
-
+  const handleEdit = (id: number) => {
     setOpenMenu(null);
+    router.push(`/dashboard/properties/add?edit=${id}`);
   };
 
   return (
@@ -317,7 +319,7 @@ const SellerPropertiesSection = () => {
 
                         <button
                           type="button"
-                          onClick={handleEdit}
+                          onClick={() => handleEdit(property.id)}
                           className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[11px] hover:bg-background"
                         >
                           <Pencil size={14} />

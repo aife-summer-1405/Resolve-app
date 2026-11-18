@@ -459,6 +459,50 @@
     "mapInstruction": "Click on the map to select a location",
     "selectedLocation": "Selected location",
     "locationNotSelected": "No location selected yet",
+
+    "selectLocationEnd": " on the map.",
+    "roomsCount": "Number of rooms:",
+    "roomsPlaceholder": "Rooms",
+    "bathroomsCount": "Number of bathrooms:",
+    "bathroomsPlaceholder": "Bathrooms",
+    "parkingCount": "Number of parking spaces:",
+    "parkingPlaceholder": "Parking",
+    "wallType": "Wall type:",
+    "blockWall": "Block wall",
+    "brickWall": "Brick wall",
+    "concreteWall": "Concrete wall",
+    "otherWall": "Other",
+    "features": "Features:",
+    "selectFeatures": "Select a feature",
+    "removeFeature": "Remove",
+    "modern": "Modern",
+    "apartmentFeature": "Apartment",
+    "elevator": "With elevator",
+    "storage": "Storage",
+    "balcony": "Balcony",
+    "yard": "Yard",
+    "imagesSectionLabel": "Property address",
+    "imagesDescriptionHighlight": "A picture is worth a thousand words.",
+    "imagesDescription": "Add photos to increase the chances of your property being seen.",
+    "addImage": "Add image",
+    "propertyImageAlt": "Property image",
+    "removeImage": "Remove image",
+    "previewPropertyName": "Luxury Apartment in Zafaraniyeh",
+    "previewDescription": "A cozy and peaceful apartment in the heart of the city, designed to make everyday living easier and more comfortable. Featuring a modern design, welcoming rooms, and a pleasant atmosphere, this apartment offers a suitable space for relaxation and everyday life.",
+    "previewAddress": "Valiasr Street, Tehran, Central District",
+    "previewRoomInfo": "2 bedrooms, 2 bathrooms, 1 parking space, capacity for 6 guests",
+    "previewFacilities": "Yard with balcony",
+    "previewTransaction": "Rent and lease",
+    "previewTags": "Tags",
+    "previewTagApartment": "Apartment",
+    "previewTagResidential": "Residential",
+    "previewTagBalcony": "Balcony",
+    "previewResidential": "Residential",
+    "previewApartment": "Apartment",
+    "previewPrice": "750,000,000",
+    "submitListing": "Submit Listing",
+    "submitPreviewMessage": "Your listing preview is ready. Final submission will be connected later."
+
     "selectLocationEnd": " on the map."
   },
   "Reservations": {
@@ -485,5 +529,6 @@
     "cancelled": "Cancelled",
     "successful": "Successful",
     "currency": "Toman"
+
   }
 }

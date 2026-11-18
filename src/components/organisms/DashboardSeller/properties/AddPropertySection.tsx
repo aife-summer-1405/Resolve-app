@@ -46,8 +46,8 @@ const AddPropertySection = () => {
           href="/dashboard/properties"
           className="flex items-center gap-2 text-[11px] text-blue-500 transition hover:opacity-70"
         >
+          {t("backToProperties")}          
           <ChevronLeft size={14} />
-          {t("backToProperties")}
         </Link>
       </div>
 
