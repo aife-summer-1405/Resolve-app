@@ -202,7 +202,8 @@
     "financialManagement": "Financial Management",
     "reviewsManagement": "Reviews Management",
     "newReviews": "New Reviews",
-    "viewNewReviews": "View Reviews"
+    "viewNewReviews": "View Reviews",
+    "backToAdmin": "Back to Admin Panel"
   },
   "DashboardStatCard": {
     "view": "View"
