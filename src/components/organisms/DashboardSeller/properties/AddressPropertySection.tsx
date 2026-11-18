@@ -64,8 +64,8 @@ const AddressPropertySection = () => {
           href="/dashboard/properties"
           className="flex items-center gap-2 text-[11px] text-blue-500 transition hover:opacity-70"
         >
-          <ChevronLeft size={14} />
           {t("backToProperties")}
+          <ChevronLeft size={14} />
         </Link>
       </div>
 
