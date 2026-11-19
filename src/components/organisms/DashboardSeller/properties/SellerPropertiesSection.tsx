@@ -369,7 +369,7 @@ const SellerPropertiesSection = () => {
         />
 
         <Link
-          href="/dashboard/properties/add"
+          href="/dashboard/properties/add/info/first-info?view=seller"
           className="flex h-9 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-xs font-medium text-[#202020] transition hover:opacity-90"
         >
           <PlusCircle size={16} />

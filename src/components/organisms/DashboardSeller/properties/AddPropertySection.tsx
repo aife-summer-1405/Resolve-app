@@ -1,9 +1,11 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
 
 import {
   CheckCircle2,
@@ -14,9 +16,37 @@ import {
   ChevronLeft,
   ChevronDown,
 } from "lucide-react";
+
+import { getCategoriesAction } from "@/src/actions/categoryActions";
+import type { ICategoriesResponse } from "@/src/types/HousereservesType/CategoriesType";
+import type { IProperty } from "@/src/schemas/properties/propertySchema";
+
 const AddPropertySection = () => {
   const t = useTranslations("addProperty");
-  const [message, setMessage] = useState("");
+  const router = useRouter();
+
+  const [categories, setCategories] = useState<
+    ICategoriesResponse["data"]
+  >([]);
+
+  const {
+    register,
+    trigger,
+    formState: { errors },
+  } = useFormContext<IProperty>();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategoriesAction();
+        setCategories(response.data);
+      } catch (error) {
+        console.error("دریافت دسته‌بندی‌ها ناموفق بود", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const steps = [
     { title: t("initialInfo"), icon: <Info size={17} /> },
@@ -27,186 +57,189 @@ const AddPropertySection = () => {
   ];
 
   const fieldClass =
-    "h-[39px] w-full rounded-2xl border border-border bg-background px-3 text-xs text-foreground outline-none transition focus:border-primary";
+    "h-[39px] w-full rounded-2xl border border-border bg-background px-3 text-xs text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500";
 
   const labelClass =
     "absolute -top-[7px] right-3 z-10 bg-surface px-1 text-[9px] text-muted";
 
+  const onNext = async () => {
+    const isValid = await trigger([
+      "title",
+      "capacity",
+      "transaction_type",
+      "price",
+      "categories.name",
+      "caption",
+    ]);
+
+    if (isValid) {
+      router.push("/dashboard/properties/add/info/address?view=seller");
+    }
+  };
+
   return (
     <section
       dir="rtl"
-      className="w-full rounded-2xl bg-surface p-3 text-foreground sm:p-5"
+     
     >
-      <div className="flex flex-col gap-3 border-b border-dashed border-border pb-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-sm font-semibold">
-          {t("title")}
-        </h2>
-
-        <Link
-          href="/dashboard/properties"
-          className="flex items-center gap-2 text-[11px] text-blue-500 transition hover:opacity-70"
-        >
-          {t("backToProperties")}          
-          <ChevronLeft size={14} />
-        </Link>
-      </div>
-
-      <div className="my-5 flex items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-background px-4 py-4">
-        {steps.map((step, index) => (
-          <div
-            key={step.title}
-            className="flex min-w-max flex-1 items-center gap-2"
-          >
-            <div
-              className={`flex shrink-0 items-center gap-2 text-[10px] ${
-                index === 0
-                  ? "font-semibold text-foreground"
-                  : "text-muted"
-              }`}
-            >
-                <span
-                className={`flex h-7 w-7 items-center justify-center rounded-full border ${
-                  index === 0
-                    ? "border-foreground text-foreground"
-                    : "border-muted text-muted"
-                }`}
-              >
-                {step.icon}
-              </span>
-              {step.title}
-            </div>
-
-            {index !== steps.length - 1 && (
-              <div className="h-px min-w-4 flex-1 border-t border-dashed border-muted" />
-            )}
-          </div>
-        ))}
-      </div>
-
       <div className="grid grid-cols-1 gap-x-10 gap-y-6 px-1 sm:grid-cols-2 sm:px-2">
         <div className="relative">
-          <label className={labelClass}>
+          <label htmlFor="title" className={labelClass}>
             {t("propertyName")}
           </label>
+
           <input
+            id="title"
             type="text"
-            defaultValue={t("samplePropertyName")}
+            aria-invalid={!!errors.title}
             className={fieldClass}
+            {...register("title")}
           />
+
+          {errors.title && (
+            <p className="mt-1 text-[10px] text-red-500">
+              {errors.title.message}
+            </p>
+          )}
         </div>
 
         <div className="relative">
-          <label className={labelClass}>
+          <label htmlFor="capacity" className={labelClass}>
             {t("capacity")}
           </label>
+
           <input
+            id="capacity"
             type="number"
             min="1"
+            aria-invalid={!!errors.capacity}
             className={fieldClass}
+            {...register("capacity", { valueAsNumber: true })}
           />
+
+          {errors.capacity && (
+            <p className="mt-1 text-[10px] text-red-500">
+              {errors.capacity.message}
+            </p>
+          )}
         </div>
 
         <div className="relative">
-          <label className={labelClass}>
+          <label htmlFor="transaction_type" className={labelClass}>
             {t("transactionType")}
           </label>
+
           <select
-            defaultValue="sale"
+            id="transaction_type"
+            aria-invalid={!!errors.transaction_type}
             className={`${fieldClass} appearance-none`}
+            {...register("transaction_type")}
           >
-            <option value="sale">{t("sale")}</option>
-            <option value="rent">{t("rent")}</option>
-            <option value="daily">{t("daily")}</option>
+            <option value="direct_purchase">{t("sale")}</option>
+            <option value="rental">{t("rent")}</option>
+            <option value="reservation">{t("daily")}</option>
+            <option value="mortgage">Mortgage</option>
           </select>
+
           <ChevronDown
             size={15}
             className="pointer-events-none absolute left-3 top-3 text-muted"
           />
+
+          {errors.transaction_type && (
+            <p className="mt-1 text-[10px] text-red-500">
+              {errors.transaction_type.message}
+            </p>
+          )}
         </div>
 
         <div className="relative">
-          <label className={labelClass}>
+          <label htmlFor="price" className={labelClass}>
             {t("price")}
           </label>
+
           <input
-            type="text"
+            id="price"
+            type="number"
+            min="0"
             placeholder={t("currency")}
+            aria-invalid={!!errors.price}
             className={fieldClass}
+            {...register("price", { valueAsNumber: true })}
           />
+
+          {errors.price && (
+            <p className="mt-1 text-[10px] text-red-500">
+              {errors.price.message}
+            </p>
+          )}
         </div>
 
         <div className="relative">
-          <label className={labelClass}>
+          <label htmlFor="category" className={labelClass}>
             {t("propertyType")}
           </label>
-          <select
-            defaultValue="residential"
-            className={`${fieldClass} appearance-none`}
-          >
-            <option value="residential">
-              {t("residential")}
-            </option>
-            <option value="commercial">
-              {t("commercial")}
-            </option>
-          </select>
-          <ChevronDown
-            size={15}
-            className="pointer-events-none absolute left-3 top-3 text-muted"
-          />
-        </div>
 
-        <div className="relative">
-          <label className={labelClass}>
-            {t("propertySubtype")}
-          </label>
           <select
-            defaultValue="apartment"
+            id="category"
+            aria-invalid={!!errors.categories?.name}
             className={`${fieldClass} appearance-none`}
+            {...register("categories.name")}
           >
-            <option value="apartment">
-              {t("apartment")}
+            <option value="" disabled>
+              {t("propertyType")}
             </option>
-            <option value="villa">
-              {t("villa")}
-            </option>
-            <option value="office">
-              {t("office")}
-            </option>
+
+            {categories.map((category) => (
+              <option key={category.id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
           </select>
+
           <ChevronDown
             size={15}
             className="pointer-events-none absolute left-3 top-3 text-muted"
           />
+
+          {errors.categories?.name && (
+            <p className="mt-1 text-[10px] text-red-500">
+              {errors.categories.name.message}
+            </p>
+          )}
         </div>
 
         <div className="relative sm:col-span-2">
-          <label className={labelClass}>
+          <label htmlFor="caption" className={labelClass}>
             {t("description")}
           </label>
+
           <textarea
+            id="caption"
             rows={6}
-            defaultValue={t("sampleDescription")}
-            className="min-h-[155px] w-full resize-none rounded-2xl border border-border bg-background px-3 py-4 text-xs leading-7 text-foreground outline-none transition focus:border-primary"
+            aria-invalid={!!errors.caption}
+            className="min-h-[155px] w-full resize-none rounded-2xl border border-border bg-background px-3 py-4 text-xs leading-7 text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500"
+            {...register("caption")}
           />
+
+          {errors.caption && (
+            <p className="mt-1 text-[10px] text-red-500">
+              {errors.caption.message}
+            </p>
+          )}
         </div>
       </div>
 
-      {message && (
-        <p className="mt-3 text-xs text-muted">
-          {message}
-        </p>
-      )}
-
-      <div className="mt-3 flex justify-start">
-        <Link
-            href="/dashboard/properties/add/address"
-            className="flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-xs font-medium text-[#202020] transition hover:opacity-90"
+      <div className="mt-5 flex justify-start">
+        <button
+          type="button"
+          onClick={onNext}
+          className="flex h-9 items-center gap-2 rounded-xl bg-primary px-4 text-xs font-medium text-[#202020] transition hover:opacity-90"
         >
-            {t("nextStep")}
-            <ChevronLeft size={15} />
-        </Link>
-        </div>
+          {t("nextStep")}
+          <ChevronLeft size={15} />
+        </button>
+      </div>
     </section>
   );
 };

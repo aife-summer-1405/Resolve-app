@@ -460,7 +460,8 @@
     "mapInstruction": "Click on the map to select a location",
     "selectedLocation": "Selected location",
     "locationNotSelected": "No location selected yet",
-
+    "loadingMap": "Loading map...",
+    "yardType": "Yard type:",
     "selectLocationEnd": " on the map.",
     "roomsCount": "Number of rooms:",
     "roomsPlaceholder": "Rooms",
@@ -502,7 +503,11 @@
     "previewApartment": "Apartment",
     "previewPrice": "750,000,000",
     "submitListing": "Submit Listing",
-    "submitPreviewMessage": "Your listing preview is ready. Final submission will be connected later."
+    "submitPreviewMessage": "Your listing preview is ready. Final submission will be connected later.",
+"formInvalid": "Please complete the required fields correctly.",
+"submitFailed": "Failed to submit the property. Please try again.",
+"imagesUploadFailed": "The property was created, but uploading images failed. Please try again.",
+    "imagesRequired": "Please select at least one image for the property."
 
   },
   "Reservations": {
