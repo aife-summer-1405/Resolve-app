@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -96,7 +95,6 @@ const ModalCloseButton = ({ onClick }: { onClick: () => void }) => (
 );
 
 const ReservationModals = ({
-  setActiveMenu,
   isFilterOpen,
   setIsFilterOpen,
   reservationFilter,
@@ -112,13 +110,12 @@ const ReservationModals = ({
   setConfirmAction,
   handleConfirmAction,
 }: IReservationModalsProps) => {
-console.log("selectedReservation",selectedReservation);
+  console.log("selectedReservation", selectedReservation);
 
-  
-const houseId=Number(selectedReservation?.booking.houseId);
-const isactiv=activeDetailSection?true:false;
-console.log("houseId",houseId);
-console.log("isactiv",isactiv);
+  const houseId = Number(selectedReservation?.booking.houseId);
+  const isactiv = activeDetailSection ? true : false;
+  console.log("houseId", houseId);
+  console.log("isactiv", isactiv);
   const {
     data: house,
     isLoading,
@@ -126,7 +123,7 @@ console.log("isactiv",isactiv);
     refetch,
   } = useGetHouseById(houseId, isactiv);
 
-console.log("house",house);
+  console.log("house", house);
   const closeDetails = () => {
     setIsDetailsOpen(false);
     setActiveDetailSection(null);
@@ -173,8 +170,7 @@ console.log("house",house);
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="relative flex h-48 items-start justify-end rounded-xl bg-background p-3 sm:h-56">
                   <span className="flex items-center gap-1 rounded-lg bg-[#7964FF] px-3 py-1.5 text-[10px] text-white shadow">
-                    <Star size={12} fill="currentColor" />
-                    ۵ ستاره
+                    <Star size={12} fill="currentColor" />۵ ستاره
                   </span>
                 </div>
 
@@ -213,16 +209,13 @@ console.log("house",house);
 
                 <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted sm:col-span-2">
                   <span className="flex items-center gap-1">
-                    <BedDouble size={13} />
-                    ۴ خوابه
+                    <BedDouble size={13} />۴ خوابه
                   </span>
                   <span className="flex items-center gap-1">
-                    <CarFront size={13} />
-                    ۱ پارکینگ
+                    <CarFront size={13} />۱ پارکینگ
                   </span>
                   <span className="flex items-center gap-1">
-                    <Bath size={13} />
-                    ۲ حمام
+                    <Bath size={13} />۲ حمام
                   </span>
                   <span className="flex items-center gap-1">
                     <Trees size={13} />
@@ -325,10 +318,7 @@ console.log("house",house);
 
                   {passengers.length === 0 && (
                     <tr>
-                      <td
-                        colSpan={4}
-                        className="py-6 text-center text-muted"
-                      >
+                      <td colSpan={4} className="py-6 text-center text-muted">
                         اطلاعاتی برای مسافران ثبت نشده است.
                       </td>
                     </tr>

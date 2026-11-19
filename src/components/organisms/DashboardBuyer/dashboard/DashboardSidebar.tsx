@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   UserRound,
+  Users,
   CirclePlus,
   Heart,
   CreditCard,
@@ -67,6 +68,11 @@ const DashboardSidebar = () => {
             title: t("dashboard"),
             href: "/dashboard",
             icon: LayoutDashboard,
+          },
+          {
+            title: t("users"),
+            href: "/dashboard/users",
+            icon: Users,
           },
         ]
       : [
