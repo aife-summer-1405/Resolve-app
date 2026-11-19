@@ -10,35 +10,41 @@ export interface IGetCustomerBookingsParams {
   status?: string;
 }
 
-export interface ICustomerBookingHouse extends Pick<
-  IHouseDetails,
-  | "title"
-  | "address"
-  | "rate"
-  | "price"
-  | "tags"
-  | "capacity"
-  | "location"
-  | "categories"
-  | "bathrooms"
-  | "parking"
-  | "rooms"
-  | "yard_type"
-  | "caption"
-> {
-  transaction_type:
-    | "rental"
-    | "mortgage"
-    | "reservation"
-    | "direct_purchase";
+export interface ITravelerDetails {
+  firstName: string;
+  lastName: string;
+  nationalId: string;
+  birthDate: string;
+  gender: "female" | "male";
 }
 
-export interface ICustomerBookingResponse
-  extends Omit<IBookingResponse, "house"> {
-  house: ICustomerBookingHouse;
+export interface IBookingHouse {
+  title: string;
+  price: string;
+}
+
+export interface ICustomerBooking {
+  id: number;
+  user_id: number;
+  houseId: string;
+  reservedDates: string[];
+  traveler_details: ITravelerDetails[];
+  status: "pending" | "confirmed" | "canceled";
+  sharedEmail: string;
+  sharedMobile: string;
+  createdAt: string;
+  updatedAt: string;
+  created_at: string;
+  updated_at: string;
+  house: IBookingHouse;
 }
 
 export interface ICustomerBookingsApiResponse {
-  bookings: ICustomerBookingResponse[];
+  bookings: ICustomerBooking[];
   totalCount: number;
+}
+
+export interface ICancelBookingResponse {
+  message: string;
+  booking: unknown;
 }

@@ -9,6 +9,7 @@ import type { AxiosError } from "axios";
 import { IGetBookingsParams } from "../types/dashboard/booking";
 import { getBookings } from "../services/getBookings";
 import {
+  ICancelBookingResponse,
   ICustomerBookingsApiResponse,
   IGetCustomerBookingsParams,
 } from "../types/Seller_Dashboard/customer-booking";
@@ -76,6 +77,18 @@ export const getCustomerBookingsAction = async (
       ...params,
     },
   });
+
+  return data;
+};
+
+
+
+export const cancelBookingAction = async (
+  bookingId: number
+): Promise<ICancelBookingResponse> => {
+  const { data } = await apiServer.post<ICancelBookingResponse>(
+    `/api/bookings/${bookingId}/cancel`
+  );
 
   return data;
 };

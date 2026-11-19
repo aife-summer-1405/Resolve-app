@@ -5,11 +5,12 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { IBookingResponse } from "@/src/types/HousereservesType/BookingType";
+import { ICustomerBooking } from "@/src/types/Seller_Dashboard/customer-booking";
 
 type ReservationListModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  selectedAccommodation: IBookingResponse | null;
+  selectedAccommodation: IBookingResponse| ICustomerBooking | null;
 };
 
 const ReservationListModal = ({
