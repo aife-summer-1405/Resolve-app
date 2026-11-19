@@ -503,7 +503,6 @@
     "previewPrice": "750,000,000",
     "submitListing": "Submit Listing",
     "submitPreviewMessage": "Your listing preview is ready. Final submission will be connected later."
-
   },
   "Reservations": {
     "title": "Customer Reservations",
@@ -529,7 +528,6 @@
     "cancelled": "Cancelled",
     "successful": "Successful",
     "currency": "Toman"
-
   },
   "sellerFinancialManagement": {
     "currentMonthIncome": "Current Month Income",
@@ -553,6 +551,31 @@
     "all": "All",
     "previous": "Previous",
     "next": "Next"
+  },
+  "AdminDashboardOverviewSection": {
+    "totalUsers": "Total Users",
+    "totalHouses": "Total Properties",
+    "totalBookings": "Total Bookings",
+    "averageRating": "Average Rating",
+    "userStatus": "User Status",
+    "userStatusDescription": "Review user information and account verification status",
+    "verifiedEmail": "Verified Emails",
+    "registeredPhone": "Registered Phone Numbers",
+    "profilePicture": "Profile Pictures",
+    "userStatusNote": "Status statistics are calculated based on {count} users received from the API.",
+    "financialReport": "Financial Report & Payments",
+    "financialReportDescription": "Review payment information and transaction details",
+    "totalPayments": "Total Payments",
+    "totalPaymentsDescription": "Total number of registered payments",
+    "receivedPayments": "Payments Received",
+    "receivedPaymentsDescription": "Number of payments available on this page",
+    "recentUsers": "Recent Users",
+    "recentUsersDescription": "Recently registered users",
+    "noName": "No Name",
+    "userId": "ID: {id}",
+    "noUsers": "No users to display.",
+    "recentHouses": "Recent Properties",
+    "recentHousesDescription": "Recently registered properties on Delta",
+    "noHouses": "No properties to display."
   }
-
 }

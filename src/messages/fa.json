@@ -556,7 +556,31 @@
     "all": "همه موارد",
     "previous": "قبلی",
     "next": "بعدی"
-}
-
-
+  },
+  "AdminDashboardOverviewSection": {
+    "totalUsers": "کل کاربران",
+    "totalHouses": "کل املاک",
+    "totalBookings": "کل رزروها",
+    "averageRating": "میانگین امتیاز",
+    "userStatus": "وضعیت کاربران",
+    "userStatusDescription": "بررسی وضعیت اطلاعات و تأیید حساب کاربران",
+    "verifiedEmail": "ایمیل تأییدشده",
+    "registeredPhone": "شماره موبایل ثبت‌شده",
+    "profilePicture": "تصویر پروفایل",
+    "userStatusNote": "آمار وضعیت بر اساس {count} کاربر دریافت‌شده از API محاسبه شده است.",
+    "financialReport": "گزارش مالی و پرداخت‌ها",
+    "financialReportDescription": "بررسی اطلاعات و جزئیات پرداخت‌های ثبت‌شده در سامانه",
+    "totalPayments": "کل پرداخت‌ها",
+    "totalPaymentsDescription": "تعداد کل پرداخت‌های ثبت‌شده",
+    "receivedPayments": "پرداخت‌های دریافت‌شده",
+    "receivedPaymentsDescription": "تعداد پرداخت‌های موجود در این صفحه",
+    "recentUsers": "آخرین کاربران",
+    "recentUsersDescription": "کاربران تازه ثبت‌نام‌شده",
+    "noName": "بدون نام",
+    "userId": "شناسه: {id}",
+    "noUsers": "کاربری برای نمایش وجود ندارد.",
+    "recentHouses": "آخرین املاک",
+    "recentHousesDescription": "املاک تازه ثبت‌شده در دلتا",
+    "noHouses": "ملکی برای نمایش وجود ندارد."
+  }
 }
