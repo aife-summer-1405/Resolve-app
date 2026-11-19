@@ -18,6 +18,7 @@ import {
   ReceiptText,
 } from "lucide-react";
 import HouseImage from "@/src/components/molecules/HouseImage";
+import Image from "next/image";
 
 interface AdminDashboardOverviewSectionClientProps {
   summary: IAdminDashboardSummary;
@@ -75,6 +76,7 @@ const AdminDashboardOverviewSectionClient = ({
     date: user.createdAt
       ? new Date(user.createdAt).toLocaleDateString("fa-IR")
       : "-",
+    profilePicture: user.profilePicture,
   }));
 
   const recentHouses = houses.slice(0, 3);
@@ -232,8 +234,18 @@ const AdminDashboardOverviewSectionClient = ({
                 }`}
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-background">
-                    <UserRound size={17} className="text-muted" />
+                  <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background">
+                    {user.profilePicture ? (
+                      <Image
+                        src={user.profilePicture}
+                        alt={user.name || "User"}
+                        width={36}
+                        height={36}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <UserRound size={17} className="text-muted" />
+                    )}
                   </div>
 
                   <div className="flex min-w-0 flex-col gap-1">

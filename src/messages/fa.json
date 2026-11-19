@@ -203,7 +203,8 @@
     "reviewsManagement": "مدیریت نظرات",
     "newReviews": "نظرات جدید",
     "viewNewReviews": "مشاهده نظرات",
-    "backToAdmin": "بازگشت به پنل ادمین"
+    "backToAdmin": "بازگشت به پنل ادمین",
+    "users": "مدیریت کاربران"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
@@ -582,5 +583,30 @@
     "recentHouses": "آخرین املاک",
     "recentHousesDescription": "املاک تازه ثبت‌شده در دلتا",
     "noHouses": "ملکی برای نمایش وجود ندارد."
+  },
+  "AdminUsers": {
+    "title": "مدیریت کاربران",
+    "description": "مشاهده و مدیریت کاربران ثبت‌نام‌شده در دلتا",
+    "totalUsers": "کل کاربران",
+    "roleFilter": "فیلتر بر اساس نقش",
+    "allRoles": "همه نقش‌ها",
+    "adminRole": "مدیر",
+    "userRole": "کاربر",
+    "sellerRole": "فروشنده",
+    "usersList": "لیست کاربران",
+    "searchPlaceholder": "جست‌وجو بر اساس نام کاربر",
+    "user": "کاربر",
+    "phone": "شماره موبایل",
+    "role": "نقش",
+    "status": "وضعیت",
+    "actions": "عملیات",
+    "noUsers": "هنوز کاربری برای نمایش وجود ندارد",
+    "loading": "در حال دریافت اطلاعات...",
+    "error": "خطا در دریافت اطلاعات کاربران",
+    "verified": "تأیید شده",
+    "notVerified": "تأیید نشده",
+    "page": "صفحه",
+    "statusFilter": "فیلتر بر اساس وضعیت",
+    "allStatuses": "همه وضعیت‌ها"
   }
 }
