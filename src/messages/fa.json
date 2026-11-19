@@ -532,6 +532,31 @@
     "cancelled": "لغو شده",
     "successful": "موفق شده",
     "currency": "تومان"
-  }
+  },
+
+  "sellerFinancialManagement": {
+    "currentMonthIncome": "درآمد ماه جاری",
+    "previousMonthIncome": "درآمد ماه قبل",
+    "totalIncome": "درآمد کل",
+    "withdrawableBalance": "موجودی قابل برداشت",
+    "currency": "تومان",
+    "transactionsTitle": "لیست تراکنش‌های مشتریان",
+    "transactionCount": "۲۵",
+    "transactionType": "نوع تراکنش",
+    "paymentStatus": "وضعیت پرداخت",
+    "date": "تاریخ",
+    "trackingNumber": "شماره پیگیری",
+    "amount": "مبلغ",
+    "approved": "تایید شده",
+    "notApproved": "تایید نشده",
+    "reservation": "رزرو",
+    "walletCharge": "شارژ کیف پول",
+    "receiptView": "مشاهده رسید",
+    "noTransactions": "تراکنشی پیدا نشد.",
+    "all": "همه موارد",
+    "previous": "قبلی",
+    "next": "بعدی"
+}
+
 
 }

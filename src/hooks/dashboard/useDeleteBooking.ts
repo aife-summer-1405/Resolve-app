@@ -10,7 +10,8 @@ export const useDeleteBooking = () => {
     mutationFn: (id: string | number) => deleteBookingAction(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["bookings"],
+        queryKey: ["bookings, customer-bookings"],
+       
       });
     },
   });

@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -13,40 +14,41 @@ import {
   Send,
 } from "lucide-react";
 
-interface Reservation {
+import { ICustomerBooking } from "@/src/types/Seller_Dashboard/customer-booking";
+import { getHouseByIdAction } from "@/src/actions/houseActions";
+import { useGetHouseById } from "@/src/hooks/useGetHouseById";
+
+interface IReservation {
   id: number;
   houseName: string;
   travelerName: string;
   date: string;
   amount: string;
   reservationStatus: "تایید شده" | "در انتظار" | "لغو شده";
-  paymentStatus: "موفق شده" | "لغو شده";
+  paymentStatus: string;
+  booking: ICustomerBooking;
 }
 
-type ConfirmAction = "approve" | "cancel" | "delete" | null;
-type DetailSection = "passengers" | "payments" | "history" | null;
+type TConfirmAction = "approve" | "cancel" | "delete" | null;
+type TDetailSection = "passengers" | "payments" | "history" | null;
+type TReservationFilter = "همه" | "تایید شده" | "در انتظار" | "لغو شده";
 
-interface ReservationModalsProps {
+interface IReservationModalsProps {
   isFilterOpen: boolean;
   setIsFilterOpen: (value: boolean) => void;
-  reservationFilter: string;
-  setReservationFilter: (value: string) => void;
+  reservationFilter: TReservationFilter;
+  setReservationFilter: (value: TReservationFilter) => void;
   setCurrentPage: (value: number) => void;
   isDetailsOpen: boolean;
   setIsDetailsOpen: (value: boolean) => void;
-  selectedReservation: Reservation | null;
-  setSelectedReservation: (value: Reservation | null) => void;
-  activeDetailSection: DetailSection;
-  setActiveDetailSection: (value: DetailSection) => void;
-  confirmAction: ConfirmAction;
-  setConfirmAction: (value: ConfirmAction) => void;
+  selectedReservation: IReservation | null;
+  setSelectedReservation: (value: IReservation | null) => void;
+  activeDetailSection: TDetailSection;
+  setActiveDetailSection: (value: TDetailSection) => void;
+  confirmAction: TConfirmAction;
+  setConfirmAction: (value: TConfirmAction) => void;
   handleConfirmAction: () => void;
 }
-const passengers = [
-  { id: 1, name: "امیر محمد ملیانی", gender: "مرد", phone: "۰۹۳۳۱۲۳۳۹۶۳" },
-  { id: 2, name: "امیر محمد ملیانی", gender: "مرد", phone: "۰۹۳۳۱۲۳۳۹۶۳" },
-  { id: 3, name: "امیر محمد ملیانی", gender: "مرد", phone: "۰۹۳۳۱۲۳۳۹۶۳" },
-];
 
 const payments = [
   {
@@ -94,6 +96,7 @@ const ModalCloseButton = ({ onClick }: { onClick: () => void }) => (
 );
 
 const ReservationModals = ({
+  setActiveMenu,
   isFilterOpen,
   setIsFilterOpen,
   reservationFilter,
@@ -108,14 +111,29 @@ const ReservationModals = ({
   confirmAction,
   setConfirmAction,
   handleConfirmAction,
-}: ReservationModalsProps) => {
+}: IReservationModalsProps) => {
+console.log("selectedReservation",selectedReservation);
+
+  
+const houseId=Number(selectedReservation?.booking.houseId);
+const isactiv=activeDetailSection?true:false;
+console.log("houseId",houseId);
+console.log("isactiv",isactiv);
+  const {
+    data: house,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetHouseById(houseId, isactiv);
+
+console.log("house",house);
   const closeDetails = () => {
     setIsDetailsOpen(false);
     setActiveDetailSection(null);
     setSelectedReservation(null);
   };
 
-  const openDetailSection = (section: DetailSection) => {
+  const openDetailSection = (section: TDetailSection) => {
     setIsDetailsOpen(false);
     setActiveDetailSection(section);
   };
@@ -124,6 +142,13 @@ const ReservationModals = ({
     setConfirmAction(null);
     setSelectedReservation(null);
   };
+
+  const handleFilterChange = (value: TReservationFilter) => {
+    setReservationFilter(value);
+    setCurrentPage(1);
+  };
+
+  const passengers = selectedReservation?.booking.traveler_details ?? [];
 
   return (
     <>
@@ -148,7 +173,8 @@ const ReservationModals = ({
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="relative flex h-48 items-start justify-end rounded-xl bg-background p-3 sm:h-56">
                   <span className="flex items-center gap-1 rounded-lg bg-[#7964FF] px-3 py-1.5 text-[10px] text-white shadow">
-                    <Star size={12} fill="currentColor" />۵ ستاره
+                    <Star size={12} fill="currentColor" />
+                    ۵ ستاره
                   </span>
                 </div>
 
@@ -187,13 +213,16 @@ const ReservationModals = ({
 
                 <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted sm:col-span-2">
                   <span className="flex items-center gap-1">
-                    <BedDouble size={13} />۴ خوابه
+                    <BedDouble size={13} />
+                    ۴ خوابه
                   </span>
                   <span className="flex items-center gap-1">
-                    <CarFront size={13} />۱ پارکینگ
+                    <CarFront size={13} />
+                    ۱ پارکینگ
                   </span>
                   <span className="flex items-center gap-1">
-                    <Bath size={13} />۲ حمام
+                    <Bath size={13} />
+                    ۲ حمام
                   </span>
                   <span className="flex items-center gap-1">
                     <Trees size={13} />
@@ -201,13 +230,14 @@ const ReservationModals = ({
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg bg-background  px-3 py-2 text-xs sm:col-span-2">
+                <div className="flex items-center justify-between rounded-lg bg-background px-3 py-2 text-xs sm:col-span-2">
                   <span className="text-muted">قیمت خرید:</span>
                   <span className="font-semibold">
                     {selectedReservation.amount} تومان
                   </span>
                 </div>
               </div>
+
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
@@ -271,26 +301,38 @@ const ReservationModals = ({
                     </th>
                   </tr>
                 </thead>
+
                 <tbody>
-                  {passengers.map((passenger) => (
+                  {passengers.map((passenger, index) => (
                     <tr
-                      key={passenger.id}
+                      key={`${passenger.nationalId}-${index}`}
                       className="text-foreground even:bg-background"
                     >
                       <td className="rounded-r-lg px-3 py-3 text-right">
-                        {passenger.name}
+                        {passenger.firstName} {passenger.lastName}
                       </td>
                       <td className="px-3 py-3 text-center">
-                        {passenger.gender}
+                        {passenger.gender === "female" ? "زن" : "مرد"}
                       </td>
                       <td className="px-3 py-3 text-center">
-                        {passenger.phone}
+                        {selectedReservation?.booking.sharedMobile || "—"}
                       </td>
                       <td className="rounded-l-lg px-3 py-3 text-center">
                         <Send size={16} className="mx-auto text-[#91FF45]" />
                       </td>
                     </tr>
                   ))}
+
+                  {passengers.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="py-6 text-center text-muted"
+                      >
+                        اطلاعاتی برای مسافران ثبت نشده است.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -331,6 +373,7 @@ const ReservationModals = ({
                     </th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {payments.map((payment) => (
                     <tr
@@ -347,7 +390,10 @@ const ReservationModals = ({
                         {payment.amount}
                       </td>
                       <td className="rounded-l-lg px-3 py-3 text-center">
-                        <button className="whitespace-nowrap text-[10px] text-foreground transition hover:text-[#91FF45]">
+                        <button
+                          type="button"
+                          className="whitespace-nowrap text-[10px] text-foreground transition hover:text-[#91FF45]"
+                        >
                           مشاهده رسید
                         </button>
                       </td>
@@ -475,12 +521,12 @@ const ReservationModals = ({
               <label className="mb-2 block text-xs text-muted">
                 وضعیت رزرو
               </label>
+
               <select
                 value={reservationFilter}
-                onChange={(e) => {
-                  setReservationFilter(e.target.value);
-                  setCurrentPage(1);
-                }}
+                onChange={(e) =>
+                  handleFilterChange(e.target.value as TReservationFilter)
+                }
                 className="h-11 w-full rounded-lg border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#91FF45]"
               >
                 <option value="همه">همه وضعیت‌ها</option>

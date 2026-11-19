@@ -49,7 +49,7 @@ const HotelCard = ({ house }: HotelCardProps) => {
                 </div>
 
                 <div className="text-sm text-gray-400">
-                    {house.categories.name}
+                   {house.categories?.name ?? "—"}
                 </div>
             </div>
 
