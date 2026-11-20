@@ -42,3 +42,9 @@ export const updateAdminUserAction = async (
     throw error;
   }
 };
+
+export const deleteAdminUserAction = async (userId: string | number) => {
+  const { data } = await apiServer.delete(`/api/admin/users/${userId}`);
+
+  return data;
+};

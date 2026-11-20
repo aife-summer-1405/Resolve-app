@@ -93,20 +93,22 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
       onClick={() => {
         if (!updateUser.isPending) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-white/10 bg-[#222222] p-5 shadow-2xl"
+        className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-surface p-5 text-foreground shadow-2xl"
       >
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-base font-bold text-white">{t("editUser")}</h2>
+          <h2 className="text-base font-bold text-foreground">
+            {t("editUser")}
+          </h2>
 
           <button
             type="button"
             onClick={onClose}
             disabled={updateUser.isPending}
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-white/10 hover:text-white disabled:opacity-50"
+            className="rounded-lg p-2 text-muted transition hover:bg-card hover:text-foreground disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -114,7 +116,7 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-2 text-xs text-gray-400">
+            <label className="flex flex-col gap-2 text-xs text-muted">
               {t("firstName")}
 
               <input
@@ -122,11 +124,11 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
                 required
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
-                className="rounded-xl border border-white/10 bg-[#171717] px-4 py-3 text-sm text-white outline-none focus:border-[#91FF45]"
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-[#91FF45]"
               />
             </label>
 
-            <label className="flex flex-col gap-2 text-xs text-gray-400">
+            <label className="flex flex-col gap-2 text-xs text-muted">
               {t("lastName")}
 
               <input
@@ -134,11 +136,11 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
                 required
                 value={formData.lastName}
                 onChange={(e) => handleChange("lastName", e.target.value)}
-                className="rounded-xl border border-white/10 bg-[#171717] px-4 py-3 text-sm text-white outline-none focus:border-[#91FF45]"
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-[#91FF45]"
               />
             </label>
 
-            <label className="flex flex-col gap-2 text-xs text-gray-400 sm:col-span-2">
+            <label className="flex flex-col gap-2 text-xs text-muted sm:col-span-2">
               {t("email")}
 
               <input
@@ -146,22 +148,22 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
                 required
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
-                className="rounded-xl border border-white/10 bg-[#171717] px-4 py-3 text-sm text-white outline-none focus:border-[#91FF45]"
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-[#91FF45]"
               />
             </label>
 
-            <label className="flex flex-col gap-2 text-xs text-gray-400">
+            <label className="flex flex-col gap-2 text-xs text-muted">
               {t("phone")}
 
               <input
                 type="text"
                 value={formData.phoneNumber}
                 onChange={(e) => handleChange("phoneNumber", e.target.value)}
-                className="rounded-xl border border-white/10 bg-[#171717] px-4 py-3 text-sm text-white outline-none focus:border-[#91FF45]"
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-[#91FF45]"
               />
             </label>
 
-            <label className="flex flex-col gap-2 text-xs text-gray-400">
+            <label className="flex flex-col gap-2 text-xs text-muted">
               {t("membershipDate")}
 
               <DatePicker
@@ -177,14 +179,14 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
                 calendarPosition="bottom-right"
                 format="YYYY/MM/DD"
                 editable={false}
-                inputClass="w-full rounded-xl border border-white/10 bg-[#171717] px-4 py-3 text-sm text-white outline-none focus:border-[#91FF45]"
+                inputClass="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus:border-[#91FF45]"
                 containerClassName="w-full"
                 portal
               />
             </label>
           </div>
 
-          <label className="flex flex-col gap-2 text-xs text-gray-400">
+          <label className="flex flex-col gap-2 text-xs text-muted">
             {t("profilePicture")}
 
             <input
@@ -192,11 +194,11 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
               value={formData.profilePicture}
               onChange={(e) => handleChange("profilePicture", e.target.value)}
               placeholder={t("profilePicturePlaceholder")}
-              className="rounded-xl border border-white/10 bg-[#171717] px-4 py-3 text-sm text-white outline-none focus:border-[#91FF45]"
+              className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted focus:border-[#91FF45]"
             />
           </label>
 
-          <label className="flex items-center gap-3 text-sm text-gray-300">
+          <label className="flex items-center gap-3 text-sm text-foreground">
             <input
               type="checkbox"
               checked={formData.emailVerified}
@@ -208,7 +210,7 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
           </label>
 
           {updateUser.isError && (
-            <p className="text-xs text-red-400">{t("updateError")}</p>
+            <p className="text-xs text-red-500">{t("updateError")}</p>
           )}
 
           <div className="mt-2 flex justify-end gap-3">
@@ -216,7 +218,7 @@ const EditAdminUserModal = ({ user, onClose }: IProps) => {
               type="button"
               onClick={onClose}
               disabled={updateUser.isPending}
-              className="rounded-xl border border-white/10 px-5 py-3 text-sm text-gray-300 transition hover:bg-white/5 disabled:opacity-50"
+              className="rounded-xl border border-border px-5 py-3 text-sm text-muted transition hover:bg-card disabled:opacity-50"
             >
               {t("cancel")}
             </button>
