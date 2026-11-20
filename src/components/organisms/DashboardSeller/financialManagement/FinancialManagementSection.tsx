@@ -11,6 +11,7 @@ import {
 
 import Pagination from "@/src/components/common/Pagination";
 import DashboardStatCard from "../../DashboardBuyer/dashboard/DashboardStatCard";
+import { useGetSellerFinanceTransactions } from "@/src/hooks/Seller_dashboard/useGetSellerFinanceTransactions";
 
 const FinancialManagementSection = () => {
   const t = useTranslations("sellerFinancialManagement");
@@ -22,6 +23,17 @@ const FinancialManagementSection = () => {
 
   const isPersian = locale === "fa";
 
+  const limit = 10;
+
+  const {
+    data: financeData,
+    isLoading,
+    isError,
+  } = useGetSellerFinanceTransactions({
+    page: currentPage,
+    limit,
+  });
+
   const formatNumber = (value: number) =>
     new Intl.NumberFormat(isPersian ? "fa-IR" : "en-US").format(value);
 
@@ -32,60 +44,11 @@ const FinancialManagementSection = () => {
     { title: t("withdrawableBalance"), amount: 115000000 },
   ];
 
-  const transactions = [
-    {
-      id: 1,
-      date: isPersian ? "۱۲ مرداد - ۱۴۰۱ / ۱۴:۳۳" : "Aug 3, 2022 / 14:33",
-      trackingNumber: "۱۲۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: 125000,
-      status: "approved",
-      type: "walletCharge",
-    },
-    {
-      id: 2,
-      date: isPersian ? "۱۲ مرداد - ۱۴۰۱ / ۱۴:۳۳" : "Aug 3, 2022 / 14:33",
-      trackingNumber: "۱۲۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: 125000,
-      status: "notApproved",
-      type: "reservation",
-    },
-    {
-      id: 3,
-      date: isPersian ? "۱۲ مرداد - ۱۴۰۱ / ۱۴:۳۳" : "Aug 3, 2022 / 14:33",
-      trackingNumber: "۱۲۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: 125000,
-      status: "approved",
-      type: "walletCharge",
-    },
-    {
-      id: 4,
-      date: isPersian ? "۱۲ مرداد - ۱۴۰۱ / ۱۴:۳۳" : "Aug 3, 2022 / 14:33",
-      trackingNumber: "۱۲۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: 125000,
-      status: "notApproved",
-      type: "reservation",
-    },
-    {
-      id: 5,
-      date: isPersian ? "۱۲ مرداد - ۱۴۰۱ / ۱۴:۳۳" : "Aug 3, 2022 / 14:33",
-      trackingNumber: "۱۲۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: 125000,
-      status: "approved",
-      type: "walletCharge",
-    },
-  ];
+  const transactions = financeData?.data ?? [];
 
-  const filteredTransactions = transactions.filter((transaction) => {
-    const matchesStatus =
-      paymentStatus === "all" || transaction.status === paymentStatus;
-
-    const matchesType =
-      transactionType === "all" || transaction.type === transactionType;
-
-    return matchesStatus && matchesType;
-  });
-
-  const totalPages = 9;
+  const totalPages = Math.ceil(
+    (financeData?.totalCount ?? 0) / limit,
+  );
 
   return (
     <section className="mt-5 flex w-full flex-col gap-3">
@@ -108,7 +71,9 @@ const FinancialManagementSection = () => {
               {t("transactionsTitle")}
             </h2>
 
-            <span className="text-sm text-muted">(25)</span>
+            <span className="text-sm text-muted">
+              ({formatNumber(financeData?.totalCount ?? 0)})
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -187,22 +152,44 @@ const FinancialManagementSection = () => {
             </thead>
 
             <tbody>
-              {filteredTransactions.length > 0 ? (
-                filteredTransactions.map((transaction) => (
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="h-28 text-center text-sm text-muted"
+                  >
+                    در حال دریافت اطلاعات...
+                  </td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="h-28 text-center text-sm text-red-500"
+                  >
+                    خطا در دریافت اطلاعات تراکنش‌ها
+                  </td>
+                </tr>
+              ) : transactions.length > 0 ? (
+                transactions.map((transaction) => (
                   <tr
                     key={transaction.id}
                     className="h-[60px] bg-surface text-foreground transition-colors duration-200 hover:bg-background"
                   >
                     <td className="whitespace-nowrap px-3">
-                      {transaction.date}
+                      {transaction.createdAt
+                        ? new Date(transaction.createdAt).toLocaleString(
+                            isPersian ? "fa-IR" : "en-US",
+                          )
+                        : "-"}
                     </td>
 
                     <td className="whitespace-nowrap px-3">
-                      {transaction.trackingNumber}
+                      {transaction.transactionId ?? "-"}
                     </td>
 
                     <td className="whitespace-nowrap px-3">
-                      {formatNumber(transaction.amount)}
+                      {formatNumber(Number(transaction.amount) || 0)}
                     </td>
 
                     <td className="px-3">
@@ -220,7 +207,7 @@ const FinancialManagementSection = () => {
                     </td>
 
                     <td className="whitespace-nowrap px-3">
-                      {t(transaction.type)}
+                      {transaction.description || "-"}
                     </td>
 
                     <td className="whitespace-nowrap px-3">
@@ -247,13 +234,15 @@ const FinancialManagementSection = () => {
           </table>
         </div>
 
-        <div className="flex justify-end px-4 pb-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+        {totalPages > 1 && (
+          <div className="flex justify-end px-4 pb-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
