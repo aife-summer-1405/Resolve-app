@@ -529,5 +529,29 @@
     "successful": "Successful",
     "currency": "Toman"
 
+  },
+  "sellerFinancialManagement": {
+    "currentMonthIncome": "Current Month Income",
+    "previousMonthIncome": "Previous Month Income",
+    "totalIncome": "Total Income",
+    "withdrawableBalance": "Withdrawable Balance",
+    "currency": "Toman",
+    "transactionsTitle": "Customer Transactions",
+    "transactionCount": "25",
+    "transactionType": "Transaction Type",
+    "paymentStatus": "Payment Status",
+    "date": "Date",
+    "trackingNumber": "Tracking Number",
+    "amount": "Amount",
+    "approved": "Approved",
+    "notApproved": "Not Approved",
+    "reservation": "Reservation",
+    "walletCharge": "Wallet Charge",
+    "receiptView": "View Receipt",
+    "noTransactions": "No transactions found.",
+    "all": "All",
+    "previous": "Previous",
+    "next": "Next"
   }
+
 }
