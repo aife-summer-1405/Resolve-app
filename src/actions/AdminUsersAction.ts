@@ -1,8 +1,11 @@
 "use server";
 
 import apiServer from "@/lib/server";
-import type { IAdminUsersResponse } from "@/src/types/Admin_Dashboard/AdminUsers";
 
+import type {
+  IAdminUsersResponse,
+  IUpdateAdminUserPayload,
+} from "@/src/types/Admin_Dashboard/AdminUsers";
 interface IGetAdminUsersParams {
   page: number;
   limit: number;
@@ -22,6 +25,20 @@ export const getAdminUsersAction = async (
     return data;
   } catch (error) {
     console.error("getAdminUsersAction error:", error);
+    throw error;
+  }
+};
+
+export const updateAdminUserAction = async (
+  userId: string | number,
+  payload: IUpdateAdminUserPayload,
+) => {
+  try {
+    const { data } = await apiServer.put(`/api/admin/users/${userId}`, payload);
+
+    return data;
+  } catch (error) {
+    console.error("updateAdminUserAction error:", error);
     throw error;
   }
 };
