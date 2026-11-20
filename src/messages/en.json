@@ -507,7 +507,8 @@
 "formInvalid": "Please complete the required fields correctly.",
 "submitFailed": "Failed to submit the property. Please try again.",
 "imagesUploadFailed": "The property was created, but uploading images failed. Please try again.",
-    "imagesRequired": "Please select at least one image for the property."
+    "imagesRequired": "Please select at least one image for the property.",
+    "mortgage": "Mortgage"
 
   },
   "Reservations": {

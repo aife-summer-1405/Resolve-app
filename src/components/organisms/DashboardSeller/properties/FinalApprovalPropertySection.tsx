@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   CheckCircle2,
   ChevronRight,
@@ -16,19 +17,21 @@ import {
   CircleDollarSign,
   Building2,
 } from "lucide-react";
-import { useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
 import { useCreateHouse } from "@/src/hooks/Seller_dashboard/DashboardPage/useCreateHouse";
 import { useUploadHousePhotos } from "@/src/hooks/Seller_dashboard/DashboardPage/useUploadHousePhotos";
+import { FieldError } from "./FieldError";
+import { stepHref } from "./steps";
+import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
 
 const FinalApprovalPropertySection = () => {
   const t = useTranslations("addProperty");
   const router = useRouter();
-
-  const { getValues, trigger, reset } = useFormContext<IProperty>();
-
   const queryClient = useQueryClient();
+
+  const { getValues, trigger } = useFormContext<IProperty>();
+  const { getHouseId, setHouseId, clearDraft } = useAddProperty();
 
   const { mutateAsync: createHouse, isPending: isCreating } = useCreateHouse();
   const { mutateAsync: uploadImages, isPending: isUploading } =
@@ -36,13 +39,10 @@ const FinalApprovalPropertySection = () => {
 
   const isPending = isCreating || isUploading;
 
-  const createdHouseId = useRef<number | string | null>(null);
   const values = getValues();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  useEffect(() => {
-    if (!values.title) router.replace("/dashboard/properties/add/info/first-info?view=seller");
-  }, [values.title, router]);
 
+  // پیش‌نمایش تصویر اول
   const [cover, setCover] = useState<string | null>(null);
   const firstImage = values.images?.[0];
 
@@ -58,9 +58,10 @@ const FinalApprovalPropertySection = () => {
 
   const transactionLabel = useMemo(() => {
     const map: Record<string, string> = {
-      sale: t("sale"),
+      direct_purchase: t("sale"),
       rental: t("rent"),
-      daily: t("daily"),
+      reservation: t("daily"),
+      mortgage: t("mortgage"),
     };
     return map[values.transaction_type] ?? values.transaction_type;
   }, [values.transaction_type, t]);
@@ -81,11 +82,9 @@ const FinalApprovalPropertySection = () => {
 
   const onSubmit = async () => {
     if (isPending) return;
-
     setSubmitError(null);
 
     const ok = await trigger();
-
     if (!ok) {
       setSubmitError("formInvalid");
       return;
@@ -93,33 +92,32 @@ const FinalApprovalPropertySection = () => {
 
     const { images = [], ...data } = getValues();
 
-    try {
-      if (!createdHouseId.current) {
+    // ۱) ساخت آگهی (فقط اگر قبلاً ساخته نشده)
+    let houseId = getHouseId();
+
+    if (houseId === null) {
+      try {
         const house = await createHouse(data);
 
-        if (house.id === undefined || house.id === null) {
+        if (house?.id === undefined || house?.id === null) {
           throw new Error("House ID not found");
         }
 
-        createdHouseId.current = house.id;
+        houseId = house.id;
+        setHouseId(houseId); // با refresh هم می‌ماند
+      } catch {
+        setSubmitError("submitFailed");
+        return;
       }
-    } catch {
-      setSubmitError("submitFailed");
-      return;
     }
 
+    // ۲) آپلود تصاویر
     if (images.length > 0) {
       const formData = new FormData();
-
-      images.forEach((image) => {
-        formData.append("photos", image);
-      });
+      images.forEach((image) => formData.append("photos", image));
 
       try {
-        await uploadImages({
-          id: createdHouseId.current,
-          formData,
-        });
+        await uploadImages({ id: houseId, formData });
       } catch {
         setSubmitError("imagesUploadFailed");
         return;
@@ -128,9 +126,8 @@ const FinalApprovalPropertySection = () => {
 
     await queryClient.invalidateQueries({ queryKey: ["houses"] });
 
-    createdHouseId.current = null;
-    reset();
-
+    // فقط بعد از موفقیت کامل، پیش‌نویس پاک می‌شود
+    await clearDraft();
     router.push("/dashboard/properties");
   };
 
@@ -174,7 +171,7 @@ const FinalApprovalPropertySection = () => {
             </p>
           )}
 
-          {values.tags?.length > 0 && (
+          {values.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="text-[10px] text-muted">{t("previewTags")}:</span>
               {values.tags.map((tag) => (
@@ -188,12 +185,12 @@ const FinalApprovalPropertySection = () => {
             </div>
           )}
 
-          <div className="mt-5 flex flex-col items-start gap-3">
-            <div className="flex items-center gap-2 text-xs sm:text-sm">
+          {values.categories?.name && (
+            <div className="mt-5 flex items-center gap-2 text-xs sm:text-sm">
               <Building2 size={19} className="text-muted" />
-              <span>{transactionLabel}</span>
+              <span>{values.categories.name}</span>
             </div>
-          </div>
+          )}
 
           <div className="mt-auto flex items-center gap-3 pt-5">
             <CircleDollarSign size={20} className="shrink-0 text-muted" />
@@ -207,15 +204,11 @@ const FinalApprovalPropertySection = () => {
         </div>
       </div>
 
-      {submitError && (
-        <p className="mt-3 text-xs text-red-500">
-          {t(submitError as Parameters<typeof t>[0])}
-        </p>
-      )}
+      {submitError && <FieldError message={submitError} />}
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
         <Link
-          href="/dashboard/properties/add/info/images?view=seller"
+          href={stepHref(3)}
           className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
         >
           <ChevronRight size={15} />

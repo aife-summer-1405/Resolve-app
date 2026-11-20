@@ -9,6 +9,9 @@ import { useFormContext } from "react-hook-form";
 import { ChevronLeft, ChevronRight, Camera, Plus, X } from "lucide-react";
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
+import { FieldError } from "./FieldError";
+import { stepHref } from "./steps";
+import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
 
 const MAX_IMAGES = 4;
 const MAX_SIZE_MB = 5;
@@ -17,12 +20,12 @@ const ImagesPropertySection = () => {
   const t = useTranslations("addProperty");
   const router = useRouter();
   const inputId = useId();
+  const { completeStep } = useAddProperty();
 
   const {
     watch,
     setValue,
     trigger,
-    getValues,
     formState: { errors },
   } = useFormContext<IProperty>();
 
@@ -47,7 +50,7 @@ const ImagesPropertySection = () => {
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const picked = Array.from(event.target.files ?? []);
-    event.target.value = ""; // اجازه انتخاب دوباره همان فایل
+    event.target.value = "";
 
     let error: string | null = null;
     const valid: File[] = [];
@@ -77,14 +80,16 @@ const ImagesPropertySection = () => {
     updateImages(images.filter((_, i) => i !== index));
   };
 
-
-
   const onNext = async () => {
     const ok = await trigger("images");
+    if (!ok) return;
 
-    if (ok) router.push("/dashboard/properties/add/info/final-approval/?view=seller");
+    completeStep(3);
+    router.push(stepHref(4));
   };
-  const errorKey = fileError ?? errors.images?.message ?? errors.images?.root?.message;
+
+  const errorMessage =
+    fileError ?? errors.images?.message ?? errors.images?.root?.message;
 
   return (
     <>
@@ -154,16 +159,16 @@ const ImagesPropertySection = () => {
           className="hidden"
         />
 
-        {errorKey && (
-          <p className="mt-4 text-center text-[11px] text-red-500">
-            {t(errorKey as Parameters<typeof t>[0])}
-          </p>
+        {errorMessage && (
+          <div className="mt-4 text-center">
+            <FieldError message={errorMessage} />
+          </div>
         )}
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
         <Link
-          href="/dashboard/properties/add/info/facilities/?view=seller"
+          href={stepHref(2)}
           className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
         >
           <ChevronRight size={15} />

@@ -1,39 +1,39 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
-
-import {
-  CheckCircle2,
-  MapPin,
-  Images,
-  SlidersHorizontal,
-  Info,
-  ChevronLeft,
-  ChevronDown,
-} from "lucide-react";
+import { ChevronLeft, ChevronDown } from "lucide-react";
 
 import { getCategoriesAction } from "@/src/actions/categoryActions";
 import type { ICategoriesResponse } from "@/src/types/HousereservesType/CategoriesType";
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
+import { FieldError } from "./FieldError";
+import { stepHref } from "./steps";
+import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
+
+const fieldClass =
+  "h-[39px] w-full rounded-2xl border border-border bg-background px-3 text-xs text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500";
+
+const labelClass =
+  "absolute -top-[7px] right-3 z-10 bg-surface px-1 text-[9px] text-muted";
 
 const AddPropertySection = () => {
   const t = useTranslations("addProperty");
   const router = useRouter();
+  const { completeStep } = useAddProperty();
 
-  const [categories, setCategories] = useState<
-    ICategoriesResponse["data"]
-  >([]);
+  const [categories, setCategories] = useState<ICategoriesResponse["data"]>([]);
 
   const {
     register,
+    watch,
     trigger,
     formState: { errors },
   } = useFormContext<IProperty>();
+
+  const categoryName = watch("categories.name");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -48,20 +48,6 @@ const AddPropertySection = () => {
     fetchCategories();
   }, []);
 
-  const steps = [
-    { title: t("initialInfo"), icon: <Info size={17} /> },
-    { title: t("address"), icon: <MapPin size={17} /> },
-    { title: t("facilities"), icon: <SlidersHorizontal size={17} /> },
-    { title: t("images"), icon: <Images size={17} /> },
-    { title: t("finalApproval"), icon: <CheckCircle2 size={17} /> },
-  ];
-
-  const fieldClass =
-    "h-[39px] w-full rounded-2xl border border-border bg-background px-3 text-xs text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500";
-
-  const labelClass =
-    "absolute -top-[7px] right-3 z-10 bg-surface px-1 text-[9px] text-muted";
-
   const onNext = async () => {
     const isValid = await trigger([
       "title",
@@ -72,22 +58,19 @@ const AddPropertySection = () => {
       "caption",
     ]);
 
-    if (isValid) {
-      router.push("/dashboard/properties/add/info/address?view=seller");
-    }
+    if (!isValid) return;
+
+    completeStep(0);
+    router.push(stepHref(1));
   };
 
   return (
-    <section
-      dir="rtl"
-     
-    >
+    <>
       <div className="grid grid-cols-1 gap-x-10 gap-y-6 px-1 sm:grid-cols-2 sm:px-2">
         <div className="relative">
           <label htmlFor="title" className={labelClass}>
             {t("propertyName")}
           </label>
-
           <input
             id="title"
             type="text"
@@ -95,19 +78,13 @@ const AddPropertySection = () => {
             className={fieldClass}
             {...register("title")}
           />
-
-          {errors.title && (
-            <p className="mt-1 text-[10px] text-red-500">
-              {errors.title.message}
-            </p>
-          )}
+          <FieldError message={errors.title?.message} />
         </div>
 
         <div className="relative">
           <label htmlFor="capacity" className={labelClass}>
             {t("capacity")}
           </label>
-
           <input
             id="capacity"
             type="number"
@@ -116,19 +93,13 @@ const AddPropertySection = () => {
             className={fieldClass}
             {...register("capacity", { valueAsNumber: true })}
           />
-
-          {errors.capacity && (
-            <p className="mt-1 text-[10px] text-red-500">
-              {errors.capacity.message}
-            </p>
-          )}
+          <FieldError message={errors.capacity?.message} />
         </div>
 
         <div className="relative">
           <label htmlFor="transaction_type" className={labelClass}>
             {t("transactionType")}
           </label>
-
           <select
             id="transaction_type"
             aria-invalid={!!errors.transaction_type}
@@ -138,26 +109,19 @@ const AddPropertySection = () => {
             <option value="direct_purchase">{t("sale")}</option>
             <option value="rental">{t("rent")}</option>
             <option value="reservation">{t("daily")}</option>
-            <option value="mortgage">Mortgage</option>
+            <option value="mortgage">{t("mortgage")}</option>
           </select>
-
           <ChevronDown
             size={15}
             className="pointer-events-none absolute left-3 top-3 text-muted"
           />
-
-          {errors.transaction_type && (
-            <p className="mt-1 text-[10px] text-red-500">
-              {errors.transaction_type.message}
-            </p>
-          )}
+          <FieldError message={errors.transaction_type?.message} />
         </div>
 
         <div className="relative">
           <label htmlFor="price" className={labelClass}>
             {t("price")}
           </label>
-
           <input
             id="price"
             type="number"
@@ -167,53 +131,42 @@ const AddPropertySection = () => {
             className={fieldClass}
             {...register("price", { valueAsNumber: true })}
           />
-
-          {errors.price && (
-            <p className="mt-1 text-[10px] text-red-500">
-              {errors.price.message}
-            </p>
-          )}
+          <FieldError message={errors.price?.message} />
         </div>
 
         <div className="relative">
           <label htmlFor="category" className={labelClass}>
             {t("propertyType")}
           </label>
-
+          {/* value کنترل‌شده است تا بعد از refresh و لود شدن async گزینه‌ها،
+              مقدار ذخیره‌شده درست انتخاب شود */}
           <select
             id="category"
             aria-invalid={!!errors.categories?.name}
             className={`${fieldClass} appearance-none`}
             {...register("categories.name")}
+            value={categoryName ?? ""}
           >
             <option value="" disabled>
               {t("propertyType")}
             </option>
-
             {categories.map((category) => (
               <option key={category.id} value={category.name}>
                 {category.name}
               </option>
             ))}
           </select>
-
           <ChevronDown
             size={15}
             className="pointer-events-none absolute left-3 top-3 text-muted"
           />
-
-          {errors.categories?.name && (
-            <p className="mt-1 text-[10px] text-red-500">
-              {errors.categories.name.message}
-            </p>
-          )}
+          <FieldError message={errors.categories?.name?.message} />
         </div>
 
         <div className="relative sm:col-span-2">
           <label htmlFor="caption" className={labelClass}>
             {t("description")}
           </label>
-
           <textarea
             id="caption"
             rows={6}
@@ -221,12 +174,7 @@ const AddPropertySection = () => {
             className="min-h-[155px] w-full resize-none rounded-2xl border border-border bg-background px-3 py-4 text-xs leading-7 text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500"
             {...register("caption")}
           />
-
-          {errors.caption && (
-            <p className="mt-1 text-[10px] text-red-500">
-              {errors.caption.message}
-            </p>
-          )}
+          <FieldError message={errors.caption?.message} />
         </div>
       </div>
 
@@ -240,7 +188,7 @@ const AddPropertySection = () => {
           <ChevronLeft size={15} />
         </button>
       </div>
-    </section>
+    </>
   );
 };
 

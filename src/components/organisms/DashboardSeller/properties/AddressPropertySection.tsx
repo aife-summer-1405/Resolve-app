@@ -6,8 +6,11 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { MapPin, ChevronLeft, ChevronRight } from "lucide-react";
-import type { IProperty } from "@/src/schemas/properties/propertySchema";
 
+import type { IProperty } from "@/src/schemas/properties/propertySchema";
+import { FieldError } from "./FieldError";
+import { stepHref } from "./steps";
+import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
 
 const MapLoading = () => {
   const t = useTranslations("addProperty");
@@ -19,17 +22,15 @@ const MapLoading = () => {
   );
 };
 
-const PropertyLocationMap = dynamic(
-  () => import("./PropertyLocationMap"),
-  {
-    ssr: false,
-    loading: () => <MapLoading />,
-  }
-);
+const PropertyLocationMap = dynamic(() => import("./PropertyLocationMap"), {
+  ssr: false,
+  loading: () => <MapLoading />,
+});
 
 const AddressPropertySection = () => {
   const t = useTranslations("addProperty");
   const router = useRouter();
+  const { completeStep } = useAddProperty();
 
   const {
     register,
@@ -40,7 +41,6 @@ const AddressPropertySection = () => {
   } = useFormContext<IProperty>();
 
   const location = watch("location");
-
   const hasLocation = location.lat !== 0 || location.lng !== 0;
 
   const handleLocationChange = (loc: { lat: number; lng: number }) => {
@@ -53,7 +53,10 @@ const AddressPropertySection = () => {
 
   const onNext = async () => {
     const ok = await trigger(["address", "location"]);
-    if (ok) router.push("/dashboard/properties/add/info/facilities?view=seller");
+    if (!ok) return;
+
+    completeStep(1);
+    router.push(stepHref(2));
   };
 
   return (
@@ -90,11 +93,7 @@ const AddressPropertySection = () => {
               {...register("address")}
             />
 
-            {errors.address && (
-              <p className="mt-1 text-[10px] text-red-500">
-                {errors.address.message}
-              </p>
-            )}
+            <FieldError message={errors.address?.message} />
           </div>
 
           <div className="space-y-5 text-center lg:text-right">
@@ -127,18 +126,16 @@ const AddressPropertySection = () => {
                 : t("locationNotSelected")}
             </p>
 
-            {errors.location && (
-              <p className="mt-2 text-right text-[10px] text-red-500">
-                {errors.location.message ?? errors.location.root?.message}
-              </p>
-            )}
+            <FieldError
+              message={errors.location?.message ?? errors.location?.root?.message}
+            />
           </div>
         </div>
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
         <Link
-          href="/dashboard/properties/add/info/first-info?view=seller"
+          href={stepHref(0)}
           className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
         >
           <ChevronRight size={15} />
