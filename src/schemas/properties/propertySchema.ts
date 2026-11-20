@@ -36,7 +36,6 @@ export type IAddProperty = z.input<typeof propertySchema>;
 
 export const propertyImagesSchema = z
   .array(z.custom<File>((v) => typeof File !== "undefined" && v instanceof File))
-  .min(1, "imagesRequired")
   .max(4, "tooManyImages");
 
 export const addPropertyFormSchema = propertySchema.extend({

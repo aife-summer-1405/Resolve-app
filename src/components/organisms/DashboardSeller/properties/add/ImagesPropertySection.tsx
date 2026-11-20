@@ -9,18 +9,17 @@ import { useFormContext } from "react-hook-form";
 import { ChevronLeft, ChevronRight, Camera, Plus, X } from "lucide-react";
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
-import { FieldError } from "./FieldError";
-import { stepHref } from "./steps";
+
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
+import { FieldError } from "./FieldError";
 
 const MAX_IMAGES = 4;
 const MAX_SIZE_MB = 5;
 
 const ImagesPropertySection = () => {
   const t = useTranslations("addProperty");
-  const router = useRouter();
   const inputId = useId();
-  const { completeStep } = useAddProperty();
+  const { completeStep ,goToStep } = useAddProperty();
 
   const {
     watch,
@@ -85,7 +84,6 @@ const ImagesPropertySection = () => {
     if (!ok) return;
 
     completeStep(3);
-    router.push(stepHref(4));
   };
 
   const errorMessage =
@@ -167,13 +165,14 @@ const ImagesPropertySection = () => {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
-        <Link
-          href={stepHref(2)}
-          className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
-        >
-          <ChevronRight size={15} />
-          {t("previousStep")}
-        </Link>
+        <button
+  type="button"
+  onClick={() => goToStep(2)}
+  className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
+>
+  <ChevronRight size={15} />
+  {t("previousStep")}
+</button>
 
         <button
           type="button"

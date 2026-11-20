@@ -8,9 +8,8 @@ import { useFormContext } from "react-hook-form";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
-import { FieldError } from "./FieldError";
-import { stepHref } from "./steps";
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
+import { FieldError } from "./FieldError";
 
 const fieldClass =
   "h-[39px] w-full rounded-2xl border border-border bg-background px-3 text-xs text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500";
@@ -20,8 +19,7 @@ const labelClass =
 
 const FacilitiesPropertySection = () => {
   const t = useTranslations("addProperty");
-  const router = useRouter();
-  const { completeStep } = useAddProperty();
+  const { completeStep, goToStep } = useAddProperty();
 
   const {
     register,
@@ -62,7 +60,7 @@ const FacilitiesPropertySection = () => {
     if (!isValid) return;
 
     completeStep(2);
-    router.push(stepHref(3));
+  
   };
 
   const numberFields = [
@@ -152,13 +150,14 @@ const FacilitiesPropertySection = () => {
       </div>
 
       <div className="mt-10 flex flex-wrap items-center justify-start gap-3">
-        <Link
-          href={stepHref(1)}
-          className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
-        >
-          <ChevronRight size={15} />
-          {t("previousStep")}
-        </Link>
+      <button
+  type="button"
+  onClick={() => goToStep(1)}
+  className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
+>
+  <ChevronRight size={15} />
+  {t("previousStep")}
+</button>
 
         <button
           type="button"

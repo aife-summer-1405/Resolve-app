@@ -1,9 +1,11 @@
+
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import PriceRangeSlider from "@/src/components/common/PriceRangeSlider";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Search,
   SlidersHorizontal,
@@ -14,14 +16,18 @@ import {
   X,
   AlertTriangle,
 } from "lucide-react";
-
+import { toast } from "sonner";
+import { useDeleteSellerHouse } from "@/src/hooks/Seller_dashboard/useDeleteSellerHouse";
 import Pagination from "@/src/components/common/Pagination";
 import { useSellerHouses } from "@/src/hooks/Seller_dashboard/useSellerHouses";
 import type {
   SellerHousesParams,
   TransactionType,
+  ISellerHousesResponse,
 } from "@/src/types/Seller_Dashboard/SellerHousesType";
-
+import { useSellerHouseStore } from "@/src/store/sellerHouseStore";
+import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
+import { resetAddPropertyDraft } from "@/src/utils/addPropertyDraft";
 const LIMIT = 10;
 
 const TRANSACTION_LABELS: Record<TransactionType, string> = {
@@ -31,23 +37,28 @@ const TRANSACTION_LABELS: Record<TransactionType, string> = {
   mortgage: "رهن",
 };
 
+const PRICE_MIN = 0;
+const PRICE_MAX = 100_000_000; 
+const PRICE_STEP = 1_000_000;
 type Filters = {
   transactionType: "all" | TransactionType;
-  minPrice: string;
-  maxPrice: string;
+  priceRange: [number, number];
 };
 
 const EMPTY_FILTERS: Filters = {
   transactionType: "all",
-  minPrice: "",
-  maxPrice: "",
+  priceRange: [PRICE_MIN, PRICE_MAX],
 };
+
+type ISellerHouse = ISellerHousesResponse["houses"][number];
+
 
 const useDebounce = <T,>(value: T, delay = 400) => {
   const [debounced, setDebounced] = useState(value);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebounced(value), delay);
+
     return () => clearTimeout(timer);
   }, [value, delay]);
 
@@ -66,6 +77,11 @@ const inputClass =
 const SellerPropertiesSection = () => {
   const router = useRouter();
 
+
+const handleAddProperty = async () => {
+  await resetAddPropertyDraft();
+  router.push("/dashboard/properties/add?view=seller");
+};
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search.trim());
 
@@ -91,9 +107,13 @@ const SellerPropertiesSection = () => {
       order: "DESC",
       search: debouncedSearch || undefined,
       transaction_type:
-        filters.transactionType === "all" ? undefined : filters.transactionType,
-      minPrice: filters.minPrice ? Number(filters.minPrice) : undefined,
-      maxPrice: filters.maxPrice ? Number(filters.maxPrice) : undefined,
+        filters.transactionType === "all"
+          ? undefined
+          : filters.transactionType,
+ minPrice:
+  filters.priceRange[0] > PRICE_MIN ? filters.priceRange[0] : undefined,
+maxPrice:
+  filters.priceRange[1] < PRICE_MAX ? filters.priceRange[1] : undefined,
     }),
     [currentPage, debouncedSearch, filters]
   );
@@ -102,7 +122,10 @@ const SellerPropertiesSection = () => {
     useSellerHouses(params);
 
   const houses = data?.houses ?? [];
-  const totalPages = Math.max(1, Math.ceil((data?.totalCount ?? 0) / LIMIT));
+  const totalPages = Math.max(
+    1,
+    Math.ceil((data?.totalCount ?? 0) / LIMIT)
+  );
 
   useEffect(() => {
     const handleOutsideClick = (event: PointerEvent) => {
@@ -115,8 +138,10 @@ const SellerPropertiesSection = () => {
     };
 
     document.addEventListener("pointerdown", handleOutsideClick);
-    return () =>
+
+    return () => {
       document.removeEventListener("pointerdown", handleOutsideClick);
+    };
   }, []);
 
   const openFilters = () => {
@@ -137,25 +162,40 @@ const SellerPropertiesSection = () => {
     setShowFilters(false);
   };
 
-  const hasActiveFilters =
-    filters.transactionType !== "all" ||
-    !!filters.minPrice ||
-    !!filters.maxPrice;
+const hasActiveFilters =
+  filters.transactionType !== "all" ||
+  filters.priceRange[0] > PRICE_MIN ||
+  filters.priceRange[1] < PRICE_MAX;
 
-  const handleEdit = (id: string) => {
+  const setSelectedHouse = useSellerHouseStore(
+    (state) => state.setSelectedHouse
+  );
+
+  const handleEdit = (house: ISellerHouse) => {
     setOpenMenu(null);
-    router.push(`/dashboard/properties/add?edit=${id}`);
+    setSelectedHouse(house);
+    router.push(`/dashboard/properties/add?edit=${house.id}`);
   };
 
   const handleDelete = (id: string) => {
     setDeleteTarget(id);
     setOpenMenu(null);
   };
+  const {
+    mutateAsync: deleteHouse,
+    isPending: isDeleting,
+  } = useDeleteSellerHouse();
+  const confirmDelete = async () => {
+    if (deleteTarget === null || isDeleting) return;
 
-  const confirmDelete = () => {
-    // TODO: وقتی endpoint حذف داشتی، useDeleteHouse را اینجا صدا بزن
-    // و بعد invalidateQueries({ queryKey: ["houses"] })
-    setDeleteTarget(null);
+    try {
+      await deleteHouse(Number(deleteTarget));
+
+      setDeleteTarget(null);
+      toast.success("ملک با موفقیت حذف شد");
+    } catch {
+      toast.error("حذف ملک ناموفق بود. لطفاً دوباره تلاش کنید.");
+    }
   };
 
   return (
@@ -196,6 +236,7 @@ const SellerPropertiesSection = () => {
           >
             <SlidersHorizontal size={14} />
             فیلترها
+
             {hasActiveFilters && (
               <span className="absolute -left-1 -top-1 h-2.5 w-2.5 rounded-full bg-red-500" />
             )}
@@ -204,9 +245,8 @@ const SellerPropertiesSection = () => {
       </div>
 
       <div
-        className={`mt-3 overflow-x-auto transition-opacity ${
-          isFetching && !isPending ? "opacity-60" : "opacity-100"
-        }`}
+        className={`mt-3 overflow-x-auto transition-opacity ${isFetching && !isPending ? "opacity-60" : "opacity-100"
+          }`}
       >
         <table className="w-full min-w-[760px] border-separate border-spacing-x-0 border-spacing-y-2 text-center text-xs">
           <thead>
@@ -236,6 +276,7 @@ const SellerPropertiesSection = () => {
                   <p className="mb-3 text-red-500">
                     دریافت لیست املاک با خطا مواجه شد
                   </p>
+
                   <button
                     type="button"
                     onClick={() => refetch()}
@@ -318,7 +359,9 @@ const SellerPropertiesSection = () => {
                         type="button"
                         aria-label="عملیات"
                         onClick={() =>
-                          setOpenMenu(openMenu === house.id ? null : house.id)
+                          setOpenMenu(
+                            openMenu === house.id ? null : house.id
+                          )
                         }
                         className="rounded-md p-1 text-foreground hover:bg-surface"
                       >
@@ -329,7 +372,7 @@ const SellerPropertiesSection = () => {
                         <div className="absolute left-0 top-8 z-20 w-28 rounded-xl border border-border bg-surface p-1.5 text-right shadow-lg">
                           <button
                             type="button"
-                            onClick={() => handleEdit(house.id)}
+                            onClick={() => handleEdit(house)}
                             className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[11px] hover:bg-background"
                           >
                             <Pencil size={14} />
@@ -365,13 +408,14 @@ const SellerPropertiesSection = () => {
           onPageChange={setCurrentPage}
         />
 
-        <Link
-          href="/dashboard/properties/add/info/first-info?view=seller"
+        <button
+          type="button"
+          onClick={handleAddProperty}
           className="flex h-9 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-xs font-medium text-[#202020] transition hover:opacity-90"
         >
           <PlusCircle size={16} />
           افزودن ملک
-        </Link>
+        </button>
       </div>
 
       {showFilters && (
@@ -402,11 +446,12 @@ const SellerPropertiesSection = () => {
                 <label className="mb-1 block text-[9px] text-muted">
                   نوع معامله
                 </label>
+
                 <select
                   value={draftFilters.transactionType}
                   onChange={(event) =>
-                    setDraftFilters((f) => ({
-                      ...f,
+                    setDraftFilters((current) => ({
+                      ...current,
                       transactionType: event.target
                         .value as Filters["transactionType"],
                     }))
@@ -421,43 +466,37 @@ const SellerPropertiesSection = () => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-1 block text-[9px] text-muted">
-                    حداقل قیمت
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    value={draftFilters.minPrice}
-                    onChange={(event) =>
-                      setDraftFilters((f) => ({
-                        ...f,
-                        minPrice: event.target.value,
-                      }))
-                    }
-                    className={inputClass}
-                  />
-                </div>
+             <div>
+  <div className="mb-3 flex items-center justify-between text-[10px]">
+    <span className="text-muted">بازه قیمت (تومان)</span>
+  </div>
 
-                <div>
-                  <label className="mb-1 block text-[9px] text-muted">
-                    حداکثر قیمت
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    value={draftFilters.maxPrice}
-                    onChange={(event) =>
-                      setDraftFilters((f) => ({
-                        ...f,
-                        maxPrice: event.target.value,
-                      }))
-                    }
-                    className={inputClass}
-                  />
-                </div>
-              </div>
+  <PriceRangeSlider
+    min={PRICE_MIN}
+    max={PRICE_MAX}
+    step={PRICE_STEP}
+    value={draftFilters.priceRange}
+    onChange={(priceRange) =>
+      setDraftFilters((current) => ({ ...current, priceRange }))
+    }
+  />
+
+  <div className="mt-3 flex items-center justify-between gap-3 text-[10px]">
+    <div className="flex-1 rounded-lg border border-border bg-background px-2 py-1.5 text-center">
+      <span className="block text-[9px] text-muted">حداقل</span>
+      <span className="font-medium text-[#5BBF1A]">
+        {formatNumber(draftFilters.priceRange[0])}
+      </span>
+    </div>
+
+    <div className="flex-1 rounded-lg border border-border bg-background px-2 py-1.5 text-center">
+      <span className="block text-[9px] text-muted">حداکثر</span>
+      <span className="font-medium text-[#5BBF1A]">
+        {formatNumber(draftFilters.priceRange[1])}
+      </span>
+    </div>
+  </div>
+</div>
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -498,6 +537,7 @@ const SellerPropertiesSection = () => {
             />
 
             <h3 className="text-sm font-bold">حذف ملک</h3>
+
             <p className="mt-2 text-[10px] text-muted">
               آیا از حذف این ملک مطمئن هستید؟ این عملیات قابل بازگشت نیست.
             </p>
@@ -506,9 +546,10 @@ const SellerPropertiesSection = () => {
               <button
                 type="button"
                 onClick={confirmDelete}
-                className="min-w-[52px] rounded-lg bg-[#FF9900] px-4 py-1.5 text-[11px] font-medium text-white transition hover:opacity-90"
+                disabled={isDeleting}
+                className="min-w-[52px] rounded-lg bg-[#FF9900] px-4 py-1.5 text-[11px] font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                حذف
+                {isDeleting ? "در حال حذف..." : "حذف"}
               </button>
 
               <button

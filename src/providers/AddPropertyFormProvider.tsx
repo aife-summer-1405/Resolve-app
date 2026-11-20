@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -6,23 +7,18 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { del, get, set } from "idb-keyval";
-import { ChevronLeft } from "lucide-react";
 
 import {
   addPropertyFormSchema,
   type IProperty,
 } from "@/src/schemas/properties/propertySchema";
-import { STEP_SLUGS, stepHref } from "../components/organisms/DashboardSeller/properties/steps";
-import Stepper from "../components/organisms/DashboardSeller/properties/Stepper";
+
+export const LAST_STEP = 4;
 
 const DRAFT_KEY = "add-property:draft";
 const IMAGES_KEY = "add-property:images";
@@ -31,6 +27,7 @@ type HouseId = number | string | null;
 
 type Draft = {
   values: Omit<IProperty, "images">;
+  step: number;
   progress: number;
   houseId: HouseId;
 };
@@ -58,28 +55,42 @@ const getDefaultValues = (): IProperty => ({
 });
 
 type AddPropertyContextValue = {
+  step: number;
+  progress: number;
+  hydrated: boolean;
+  isEdit: boolean;
+  editId: string | null;
+  existingPhotos: string[];
+  setExistingPhotos: (photos: string[]) => void;
+  goToStep: (index: number) => void;
   completeStep: (index: number) => void;
   getHouseId: () => HouseId;
   setHouseId: (id: HouseId) => void;
+  loadForEdit: (values: IProperty, photos: string[]) => void;
   clearDraft: () => Promise<void>;
 };
 
-const AddPropertyContext = createContext<AddPropertyContextValue | null>(null);
+const AddPropertyContext =
+  createContext<AddPropertyContextValue | null>(null);
 
 export const useAddProperty = () => {
-  const ctx = useContext(AddPropertyContext);
-  if (!ctx) throw new Error("useAddProperty must be used inside the provider");
-  return ctx;
+  const context = useContext(AddPropertyContext);
+
+  if (!context) {
+    throw new Error("useAddProperty must be used inside the provider");
+  }
+
+  return context;
 };
 
 export default function AddPropertyFormProvider({
   children,
+  editId = null,
 }: {
   children: React.ReactNode;
+  editId?: string | null;
 }) {
-  const t = useTranslations("addProperty");
-  const router = useRouter();
-  const pathname = usePathname();
+  const isEdit = !!editId;
 
   const methods = useForm<IProperty>({
     resolver: zodResolver(addPropertyFormSchema),
@@ -87,174 +98,156 @@ export default function AddPropertyFormProvider({
     defaultValues: getDefaultValues(),
   });
 
-  const [hydrated, setHydrated] = useState(false);
+  const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
-
-  const progressRef = useRef(0);
-  const houseIdRef = useRef<HouseId>(null);
-  const clearingRef = useRef(false);
-  const lastImagesRef = useRef<File[]>([]);
-
-  const lastSegment = pathname?.split("/").filter(Boolean).pop() ?? "";
-  const currentStep = Math.max(0, STEP_SLUGS.indexOf(lastSegment));
+  const [hydrated, setHydrated] = useState(false);
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
+  const [houseId, setHouseIdState] = useState<HouseId>(null);
 
   const saveDraft = useCallback(() => {
-    if (clearingRef.current) return;
-    try {
-      const { images: _images, ...values } = methods.getValues();
-      const draft: Draft = {
-        values,
-        progress: progressRef.current,
-        houseId: houseIdRef.current,
-      };
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-    } catch {
-    }
-  }, [methods]);
+    if (isEdit) return;
+
+    const { images, ...values } = methods.getValues();
+
+    const draft: Draft = {
+      values,
+      step,
+      progress,
+      houseId,
+    };
+
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  }, [methods, step, progress, houseId, isEdit]);
 
   useEffect(() => {
-    let cancelled = false;
+    if (isEdit) {
+      setHydrated(true);
+      return;
+    }
 
-    (async () => {
-      let draft: Draft | null = null;
+    const restoreDraft = async () => {
       try {
         const raw = localStorage.getItem(DRAFT_KEY);
-        draft = raw ? (JSON.parse(raw) as Draft) : null;
-      } catch {
-        draft = null;
-      }
 
-      let images: File[] = [];
-      if (draft) {
-        try {
-          images = (await get<File[]>(IMAGES_KEY)) ?? [];
-        } catch {
-          images = [];
+        if (raw) {
+          const draft = JSON.parse(raw) as Draft;
+          const images = (await get<File[]>(IMAGES_KEY)) ?? [];
+
+          methods.reset({
+            ...getDefaultValues(),
+            ...draft.values,
+            images,
+          });
+
+          setStep(draft.step ?? 0);
+          setProgress(draft.progress ?? 0);
+          setHouseIdState(draft.houseId ?? null);
         }
+      } catch {
+        methods.reset(getDefaultValues());
+      } finally {
+        setHydrated(true);
       }
-
-      if (cancelled) return;
-
-      if (draft) {
-        methods.reset({ ...getDefaultValues(), ...draft.values, images });
-        progressRef.current = draft.progress ?? 0;
-        houseIdRef.current = draft.houseId ?? null;
-        setProgress(progressRef.current);
-        lastImagesRef.current = images;
-      }
-
-      setHydrated(true);
-    })();
-
-    return () => {
-      cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    restoreDraft();
+  }, [isEdit, methods]);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || isEdit) return;
 
-    let timer: ReturnType<typeof setTimeout>;
+    const subscription = methods.watch((values) => {
+      const images = (values.images ?? []) as File[];
 
-    const subscription = methods.watch(() => {
-      if (clearingRef.current) return;
-
-      const images = (methods.getValues("images") ?? []) as File[];
-      const last = lastImagesRef.current;
-      const changed =
-        images.length !== last.length || images.some((f, i) => f !== last[i]);
-
-      if (changed) {
-        lastImagesRef.current = images;
-        set(IMAGES_KEY, images).catch(() => {});
-      }
-
-      clearTimeout(timer);
-      timer = setTimeout(saveDraft, 250);
+      set(IMAGES_KEY, images).catch(() => {});
+      saveDraft();
     });
 
-    const flush = () => saveDraft();
-    window.addEventListener("pagehide", flush);
+    return () => subscription.unsubscribe();
+  }, [hydrated, isEdit, methods, saveDraft]);
 
-    return () => {
-      clearTimeout(timer);
-      subscription.unsubscribe();
-      window.removeEventListener("pagehide", flush);
-      saveDraft();
-    };
-  }, [hydrated, methods, saveDraft]);
-
-  useEffect(() => {
-    if (!hydrated || clearingRef.current) return;
-    if (currentStep > progress) router.replace(stepHref(progress));
-  }, [hydrated, currentStep, progress, router]);
-
-  const completeStep = useCallback(
+  const goToStep = useCallback(
     (index: number) => {
-      const next = Math.max(progressRef.current, index + 1);
-      progressRef.current = next;
-      setProgress(next);
-      saveDraft();
+      setStep(Math.max(0, Math.min(index, progress, LAST_STEP)));
     },
-    [saveDraft]
+    [progress]
   );
 
-  const getHouseId = useCallback(() => houseIdRef.current, []);
+  const completeStep = useCallback((index: number) => {
+    const next = Math.min(index + 1, LAST_STEP);
 
-  const setHouseId = useCallback(
-    (id: HouseId) => {
-      houseIdRef.current = id;
-      saveDraft();
+    setProgress((previous) => Math.max(previous, next));
+    setStep(next);
+  }, []);
+
+  const getHouseId = useCallback(() => houseId, [houseId]);
+
+  const setHouseId = useCallback((id: HouseId) => {
+    setHouseIdState(id);
+  }, []);
+
+  const loadForEdit = useCallback(
+    (values: IProperty, photos: string[]) => {
+      methods.reset({
+        ...getDefaultValues(),
+        ...values,
+        images: [],
+      });
+
+      setExistingPhotos(photos);
+      setProgress(LAST_STEP);
+      setStep(0);
     },
-    [saveDraft]
+    [methods]
   );
 
   const clearDraft = useCallback(async () => {
-    clearingRef.current = true;
-    try {
-      localStorage.removeItem(DRAFT_KEY);
-      await del(IMAGES_KEY);
-    } catch {
-    }
-    progressRef.current = 0;
-    houseIdRef.current = null;
-    lastImagesRef.current = [];
-    setProgress(0);
+    localStorage.removeItem(DRAFT_KEY);
+    await del(IMAGES_KEY);
+
     methods.reset(getDefaultValues());
+
+    setStep(0);
+    setProgress(0);
+    setHouseIdState(null);
+    setExistingPhotos([]);
   }, [methods]);
 
-  const contextValue = useMemo(
-    () => ({ completeStep, getHouseId, setHouseId, clearDraft }),
-    [completeStep, getHouseId, setHouseId, clearDraft]
+  const value = useMemo(
+    () => ({
+      step,
+      progress,
+      hydrated,
+      isEdit,
+      editId,
+      existingPhotos,
+      setExistingPhotos,
+      goToStep,
+      completeStep,
+      getHouseId,
+      setHouseId,
+      loadForEdit,
+      clearDraft,
+    }),
+    [
+      step,
+      progress,
+      hydrated,
+      isEdit,
+      editId,
+      existingPhotos,
+      goToStep,
+      completeStep,
+      getHouseId,
+      setHouseId,
+      loadForEdit,
+      clearDraft,
+    ]
   );
 
-  const canShow = hydrated && currentStep <= progress;
-
   return (
-    <AddPropertyContext.Provider value={contextValue}>
-      <FormProvider {...methods}>
-        <section
-          dir="rtl"
-          className="w-full rounded-2xl bg-surface p-3 text-foreground sm:p-5"
-        >
-          <div className="flex flex-col gap-3 border-b border-dashed border-border pb-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-sm font-semibold">{t("title")}</h2>
-
-            <Link
-              href="/dashboard/properties"
-              className="flex items-center gap-2 text-[11px] text-blue-500 transition hover:opacity-70"
-            >
-              {t("backToProperties")}
-              <ChevronLeft size={14} />
-            </Link>
-          </div>
-
-          <Stepper currentStep={currentStep} />
-
-          {canShow ? children : null}
-        </section>
-      </FormProvider>
+    <AddPropertyContext.Provider value={value}>
+      <FormProvider {...methods}>{children}</FormProvider>
     </AddPropertyContext.Provider>
   );
 }

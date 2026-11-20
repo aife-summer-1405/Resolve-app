@@ -2,19 +2,14 @@
 
 import apiServer from "@/lib/server";
 
-
 export const uploadHousePhotosAction = async (
   id: number | string,
   formData: FormData
 ) => {
-  try {
-    const response = await apiServer.post(
-      `/api/houses/upload/photos/${id}`,
-      formData
-    );
+  const response = await apiServer.put(
+    `/api/houses/upload/photos/${id}`,
+    formData
+  );
 
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return response.data;
 };

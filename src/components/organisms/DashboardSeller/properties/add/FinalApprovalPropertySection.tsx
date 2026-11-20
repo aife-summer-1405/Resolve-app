@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   CheckCircle2,
   ChevronRight,
@@ -20,41 +20,54 @@ import {
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
 import { useCreateHouse } from "@/src/hooks/Seller_dashboard/DashboardPage/useCreateHouse";
+import { useUpdateHouse } from "@/src/hooks/Seller_dashboard/useUpdateHouse";
 import { useUploadHousePhotos } from "@/src/hooks/Seller_dashboard/DashboardPage/useUploadHousePhotos";
-import { FieldError } from "./FieldError";
-import { stepHref } from "./steps";
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
+import { FieldError } from "./FieldError";
+import { useSellerHouseStore } from "@/src/store/sellerHouseStore";
+
+type Status = "success" | "saveFailed" | "uploadFailed";
 
 const FinalApprovalPropertySection = () => {
   const t = useTranslations("addProperty");
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { getValues, trigger } = useFormContext<IProperty>();
-  const { getHouseId, setHouseId, clearDraft } = useAddProperty();
+  const { getValues, trigger, watch } = useFormContext<IProperty>();
+  const {
+    isEdit,
+    editId,
+    existingPhotos,
+    getHouseId,
+    setHouseId,
+    clearDraft,
+    goToStep,
+  } = useAddProperty();
 
   const { mutateAsync: createHouse, isPending: isCreating } = useCreateHouse();
+  const { mutateAsync: updateHouse, isPending: isUpdating } = useUpdateHouse();
   const { mutateAsync: uploadImages, isPending: isUploading } =
     useUploadHousePhotos();
 
-  const isPending = isCreating || isUploading;
+  const isPending = isCreating || isUpdating || isUploading;
 
-  const values = getValues();
+  const values = watch();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // پیش‌نمایش تصویر اول
-  const [cover, setCover] = useState<string | null>(null);
+  const [newCover, setNewCover] = useState<string | null>(null);
   const firstImage = values.images?.[0];
 
   useEffect(() => {
     if (!firstImage) {
-      setCover(null);
+      setNewCover(null);
       return;
     }
     const url = URL.createObjectURL(firstImage);
-    setCover(url);
+    setNewCover(url);
     return () => URL.revokeObjectURL(url);
   }, [firstImage]);
+
+  const cover = newCover ?? (isEdit ? existingPhotos[0] ?? null : null);
 
   const transactionLabel = useMemo(() => {
     const map: Record<string, string> = {
@@ -80,6 +93,24 @@ const FinalApprovalPropertySection = () => {
     { icon: <Wallet size={19} />, text: transactionLabel },
   ].filter((item) => item.text);
 
+  const uploadNewImages = async (id: number | string, images: File[]) => {
+    if (images.length === 0) return true;
+
+    const formData = new FormData();
+    images.forEach((image) => {
+      formData.append("photos", image);
+    });
+
+    try {
+      await uploadImages({ id, formData });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const clearSelectedHouse = useSellerHouseStore(
+    (state) => state.clearSelectedHouse
+  );
   const onSubmit = async () => {
     if (isPending) return;
     setSubmitError(null);
@@ -90,44 +121,63 @@ const FinalApprovalPropertySection = () => {
       return;
     }
 
-    const { images = [], ...data } = getValues();
+    const { images = [], sellerId, sellerName, ...data } = getValues();
 
-    // ۱) ساخت آگهی (فقط اگر قبلاً ساخته نشده)
-    let houseId = getHouseId();
+    let status: Status = "success";
 
-    if (houseId === null) {
-      try {
-        const house = await createHouse(data);
+    try {
+      if (isEdit && editId) {
+        await updateHouse({
+          id: Number(editId),
+          data: {
+            ...data,
+            photos: existingPhotos,
+            last_updated: new Date().toISOString(),
+          },
+        });
 
-        if (house?.id === undefined || house?.id === null) {
-          throw new Error("House ID not found");
+        if (!(await uploadNewImages(Number(editId), images))) {
+          status = "uploadFailed";
         }
 
-        houseId = house.id;
-        setHouseId(houseId); // با refresh هم می‌ماند
-      } catch {
-        setSubmitError("submitFailed");
-        return;
+      } else {
+        let houseId = getHouseId();
+
+        if (houseId === null) {
+          const house = await createHouse({ ...data, sellerId, sellerName });
+
+          if (house?.id === undefined || house?.id === null) {
+            throw new Error("House ID not found");
+          }
+
+          houseId = house.id;
+          setHouseId(houseId);
+        }
+
+        if (!(await uploadNewImages(Number(houseId), images))) status = "uploadFailed";
       }
+    } catch {
+      status = "saveFailed";
     }
 
-    // ۲) آپلود تصاویر
-    if (images.length > 0) {
-      const formData = new FormData();
-      images.forEach((image) => formData.append("photos", image));
-
-      try {
-        await uploadImages({ id: houseId, formData });
-      } catch {
-        setSubmitError("imagesUploadFailed");
-        return;
-      }
-    }
-
+    if (!isEdit) await clearDraft();
     await queryClient.invalidateQueries({ queryKey: ["houses"] });
 
-    // فقط بعد از موفقیت کامل، پیش‌نویس پاک می‌شود
-    await clearDraft();
+    if (status === "success") {
+      toast.success(isEdit ? "ملک با موفقیت ویرایش شد" : "ملک با موفقیت ثبت شد");
+      clearSelectedHouse();
+    } else if (status === "uploadFailed") {
+      toast.error(
+        "اطلاعات ملک ذخیره شد ولی آپلود تصاویر ناموفق بود. از بخش ویرایش دوباره تصاویر را اضافه کنید."
+      );
+    } else {
+      toast.error(
+        isEdit
+          ? "ویرایش ملک ناموفق بود. لطفاً دوباره تلاش کنید."
+          : "ثبت ملک ناموفق بود. لطفاً دوباره تلاش کنید."
+      );
+    }
+
     router.push("/dashboard/properties");
   };
 
@@ -171,7 +221,7 @@ const FinalApprovalPropertySection = () => {
             </p>
           )}
 
-          {values.tags.length > 0 && (
+          {values.tags?.length > 0 && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="text-[10px] text-muted">{t("previewTags")}:</span>
               {values.tags.map((tag) => (
@@ -207,13 +257,14 @@ const FinalApprovalPropertySection = () => {
       {submitError && <FieldError message={submitError} />}
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
-        <Link
-          href={stepHref(3)}
+        <button
+          type="button"
+          onClick={() => goToStep(3)}
           className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
         >
           <ChevronRight size={15} />
           {t("previousStep")}
-        </Link>
+        </button>
 
         <button
           type="button"

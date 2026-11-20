@@ -1,4 +1,3 @@
-
 import "server-only";
 
 import axios from "axios";
@@ -7,7 +6,6 @@ import { cookies } from "next/headers";
 const apiServer = axios.create({
   baseURL: process.env.API_URL,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
   timeout: 300000,

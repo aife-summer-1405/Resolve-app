@@ -11,9 +11,11 @@ import {
 
 type Props = {
   currentStep: number; // از ۰ شروع می‌شود
+  maxStep?: number; // دورترین مرحله مجاز
+  onStepClick?: (index: number) => void;
 };
 
-const Stepper = ({ currentStep }: Props) => {
+const Stepper = ({ currentStep, maxStep = currentStep, onStepClick }: Props) => {
   const t = useTranslations("addProperty");
 
   const steps = [
@@ -28,11 +30,7 @@ const Stepper = ({ currentStep }: Props) => {
     <div className="my-5 flex items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-background px-4 py-4">
       {steps.map((step, index) => {
         const status =
-          index < currentStep
-            ? "done"
-            : index === currentStep
-              ? "active"
-              : "todo";
+          index < currentStep ? "done" : index === currentStep ? "active" : "todo";
 
         const textClass = {
           done: "font-medium text-primary",
@@ -46,19 +44,25 @@ const Stepper = ({ currentStep }: Props) => {
           todo: "border-border text-muted",
         }[status];
 
+        const clickable = !!onStepClick && index <= maxStep && index !== currentStep;
+
         return (
-          <div
-            key={index}
-            className="flex min-w-max flex-1 items-center gap-2"
-          >
-            <div className={`flex shrink-0 items-center gap-2 text-[10px] ${textClass}`}>
+          <div key={index} className="flex min-w-max flex-1 items-center gap-2">
+            <button
+              type="button"
+              disabled={!clickable}
+              onClick={() => onStepClick?.(index)}
+              className={`flex shrink-0 items-center gap-2 text-[10px] ${textClass} ${
+                clickable ? "cursor-pointer hover:opacity-70" : "cursor-default"
+              }`}
+            >
               <span
                 className={`flex h-7 w-7 items-center justify-center rounded-full border ${circleClass}`}
               >
                 {step.icon}
               </span>
               {step.title}
-            </div>
+            </button>
 
             {index !== steps.length - 1 && (
               <div

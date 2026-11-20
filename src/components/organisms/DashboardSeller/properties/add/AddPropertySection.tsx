@@ -10,9 +10,7 @@ import { getCategoriesAction } from "@/src/actions/categoryActions";
 import type { ICategoriesResponse } from "@/src/types/HousereservesType/CategoriesType";
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
 import { FieldError } from "./FieldError";
-import { stepHref } from "./steps";
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
-
 const fieldClass =
   "h-[39px] w-full rounded-2xl border border-border bg-background px-3 text-xs text-foreground outline-none transition placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-red-500";
 
@@ -21,7 +19,6 @@ const labelClass =
 
 const AddPropertySection = () => {
   const t = useTranslations("addProperty");
-  const router = useRouter();
   const { completeStep } = useAddProperty();
 
   const [categories, setCategories] = useState<ICategoriesResponse["data"]>([]);
@@ -61,7 +58,6 @@ const AddPropertySection = () => {
     if (!isValid) return;
 
     completeStep(0);
-    router.push(stepHref(1));
   };
 
   return (
