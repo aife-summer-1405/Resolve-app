@@ -9,9 +9,13 @@ import {
   Users,
   SlidersHorizontal,
   BadgeCheck,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useGetAdminUsers } from "@/src/hooks/dashboard_Admin/useGetAdminUsers";
+import type { IAdminUser } from "@/src/types/Admin_Dashboard/AdminUsers";
 import Pagination from "@/src/components/common/Pagination";
+import EditAdminUserModal from "./EditAdminUserModal";
 
 const AdminUsersSection = () => {
   const t = useTranslations("AdminUsers");
@@ -19,6 +23,8 @@ const AdminUsersSection = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedUser, setSelectedUser] = useState<IAdminUser | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | number | null>(null);
 
   const limit = 10;
 
@@ -63,7 +69,6 @@ const AdminUsersSection = () => {
         <div className="flex w-full items-center justify-between rounded-xl bg-[#222222] p-5">
           <div className="flex flex-col gap-3">
             <span className="text-sm text-gray-400">{t("totalUsers")}</span>
-
             <span className="text-3xl font-bold text-white">{totalCount}</span>
           </div>
 
@@ -85,15 +90,12 @@ const AdminUsersSection = () => {
               <option value="" className="bg-[#222222]">
                 {t("allRoles")}
               </option>
-
               <option value="admin" className="bg-[#222222]">
                 {t("adminRole")}
               </option>
-
               <option value="user" className="bg-[#222222]">
                 {t("userRole")}
               </option>
-
               <option value="seller" className="bg-[#222222]">
                 {t("sellerRole")}
               </option>
@@ -118,11 +120,9 @@ const AdminUsersSection = () => {
               <option value="" className="bg-[#222222]">
                 {t("allStatuses")}
               </option>
-
               <option value="verified" className="bg-[#222222]">
                 {t("verified")}
               </option>
-
               <option value="notVerified" className="bg-[#222222]">
                 {t("notVerified")}
               </option>
@@ -141,7 +141,6 @@ const AdminUsersSection = () => {
 
           <div className="flex items-center gap-2 rounded-xl border border-white/50 px-3 py-2 sm:w-64">
             <Search size={17} className="shrink-0 text-gray-400" />
-
             <input
               type="text"
               placeholder={t("searchPlaceholder")}
@@ -157,19 +156,15 @@ const AdminUsersSection = () => {
                 <th className="rounded-s-xl px-4 py-3 text-start font-medium">
                   {t("user")}
                 </th>
-
                 <th className="px-4 py-3 text-start font-medium">
                   {t("phone")}
                 </th>
-
                 <th className="px-4 py-3 text-start font-medium">
                   {t("role")}
                 </th>
-
                 <th className="px-4 py-3 text-start font-medium">
                   {t("status")}
                 </th>
-
                 <th className="rounded-e-xl px-4 py-3 text-center font-medium">
                   {t("actions")}
                 </th>
@@ -248,10 +243,53 @@ const AdminUsersSection = () => {
                     </td>
 
                     <td className="rounded-e-xl px-4 py-3 text-center">
-                      <MoreHorizontal
-                        size={20}
-                        className="mx-auto text-gray-300"
-                      />
+                      <div className="relative inline-flex">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenMenuId(
+                              openMenuId === user.id ? null : user.id,
+                            )
+                          }
+                          className="rounded-lg p-2 text-gray-300 transition hover:bg-white/10 hover:text-[#91FF45]"
+                        >
+                          <MoreHorizontal size={20} />
+                        </button>
+
+                        {openMenuId === user.id && (
+                          <>
+                            <button
+                              type="button"
+                              aria-label="Close menu"
+                              onClick={() => setOpenMenuId(null)}
+                              className="fixed inset-0 z-10 cursor-default"
+                            />
+
+                            <div className="absolute end-10 top-0 z-20 w-36 overflow-hidden rounded-xl border border-white/10 bg-[#2A2A2A] p-1 text-start shadow-xl">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setOpenMenuId(null);
+                                }}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-gray-200 transition hover:bg-white/10 hover:text-[#91FF45]"
+                              >
+                                <Pencil size={15} />
+                                {t("editUser")}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => setOpenMenuId(null)}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-400 transition hover:bg-white/10"
+                              >
+                                <Trash2 size={15} />
+                                {t("deleteUser")}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -272,6 +310,13 @@ const AdminUsersSection = () => {
           />
         </div>
       </div>
+
+      {selectedUser && (
+        <EditAdminUserModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </section>
   );
 };
