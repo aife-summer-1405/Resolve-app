@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
-  Search,
   UserRound,
   MoreHorizontal,
   Users,
@@ -11,8 +11,10 @@ import {
   BadgeCheck,
   Pencil,
   Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import { useGetAdminUsers } from "@/src/hooks/dashboard_Admin/useGetAdminUsers";
+import { useDeleteAdminUser } from "@/src/hooks/dashboard_Admin/useDeleteAdminUser";
 import type { IAdminUser } from "@/src/types/Admin_Dashboard/AdminUsers";
 import Pagination from "@/src/components/common/Pagination";
 import EditAdminUserModal from "./EditAdminUserModal";
@@ -24,6 +26,8 @@ const AdminUsersSection = () => {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedUser, setSelectedUser] = useState<IAdminUser | null>(null);
+  const [selectedDeleteUser, setSelectedDeleteUser] =
+    useState<IAdminUser | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | number | null>(null);
 
   const limit = 10;
@@ -35,6 +39,8 @@ const AdminUsersSection = () => {
       ? (selectedRole as "admin" | "user" | "seller")
       : undefined,
   });
+
+  const deleteUser = useDeleteAdminUser();
 
   const users = data?.data ?? [];
   const totalCount = data?.totalCount ?? 0;
@@ -57,19 +63,34 @@ const AdminUsersSection = () => {
     setCurrentPage(1);
   };
 
+  const handleDeleteUser = () => {
+    if (!selectedDeleteUser) return;
+
+    deleteUser.mutate(selectedDeleteUser.id, {
+      onSuccess: () => {
+        setSelectedDeleteUser(null);
+
+        if (filteredUsers.length === 1 && currentPage > 1) {
+          setCurrentPage((prev) => prev - 1);
+        }
+      },
+    });
+  };
+
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
-        <h1 className="text-lg font-bold text-white">{t("title")}</h1>
-        <p className="text-xs text-gray-400">{t("description")}</p>
+        <h1 className="text-lg font-bold text-foreground">{t("title")}</h1>
+        <p className="text-xs text-muted">{t("description")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {/* Total Users */}
-        <div className="flex w-full items-center justify-between rounded-xl bg-[#222222] p-5">
+        <div className="flex w-full items-center justify-between rounded-xl bg-surface p-5">
           <div className="flex flex-col gap-3">
-            <span className="text-sm text-gray-400">{t("totalUsers")}</span>
-            <span className="text-3xl font-bold text-white">{totalCount}</span>
+            <span className="text-sm text-muted">{t("totalUsers")}</span>
+            <span className="text-3xl font-bold text-foreground">
+              {totalCount}
+            </span>
           </div>
 
           <div className="flex size-14 items-center justify-center rounded-xl bg-[#91FF45] text-black">
@@ -77,26 +98,25 @@ const AdminUsersSection = () => {
           </div>
         </div>
 
-        {/* Role Filter */}
-        <div className="flex w-full items-center justify-between gap-5 rounded-xl bg-[#222222] p-5">
+        <div className="flex w-full items-center justify-between gap-5 rounded-xl bg-surface p-5">
           <div className="flex flex-1 flex-col gap-3">
-            <span className="text-sm text-gray-400">{t("roleFilter")}</span>
+            <span className="text-sm text-muted">{t("roleFilter")}</span>
 
             <select
               value={selectedRole}
               onChange={(e) => handleRoleChange(e.target.value)}
-              className="w-full cursor-pointer bg-transparent text-sm text-white outline-none"
+              className="w-full cursor-pointer bg-transparent text-sm text-foreground outline-none"
             >
-              <option value="" className="bg-[#222222]">
+              <option value="" className="bg-surface text-foreground">
                 {t("allRoles")}
               </option>
-              <option value="admin" className="bg-[#222222]">
+              <option value="admin" className="bg-surface text-foreground">
                 {t("adminRole")}
               </option>
-              <option value="user" className="bg-[#222222]">
+              <option value="user" className="bg-surface text-foreground">
                 {t("userRole")}
               </option>
-              <option value="seller" className="bg-[#222222]">
+              <option value="seller" className="bg-surface text-foreground">
                 {t("sellerRole")}
               </option>
             </select>
@@ -107,23 +127,25 @@ const AdminUsersSection = () => {
           </div>
         </div>
 
-        {/* Status Filter */}
-        <div className="flex w-full items-center justify-between gap-5 rounded-xl bg-[#222222] p-5">
+        <div className="flex w-full items-center justify-between gap-5 rounded-xl bg-surface p-5">
           <div className="flex flex-1 flex-col gap-3">
-            <span className="text-sm text-gray-400">{t("statusFilter")}</span>
+            <span className="text-sm text-muted">{t("statusFilter")}</span>
 
             <select
               value={selectedStatus}
               onChange={(e) => handleStatusChange(e.target.value)}
-              className="w-full cursor-pointer bg-transparent text-sm text-white outline-none"
+              className="w-full cursor-pointer bg-transparent text-sm text-foreground outline-none"
             >
-              <option value="" className="bg-[#222222]">
+              <option value="" className="bg-surface text-foreground">
                 {t("allStatuses")}
               </option>
-              <option value="verified" className="bg-[#222222]">
+              <option value="verified" className="bg-surface text-foreground">
                 {t("verified")}
               </option>
-              <option value="notVerified" className="bg-[#222222]">
+              <option
+                value="notVerified"
+                className="bg-surface text-foreground"
+              >
                 {t("notVerified")}
               </option>
             </select>
@@ -135,24 +157,17 @@ const AdminUsersSection = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 rounded-xl bg-[#222222] p-4 sm:p-5">
-        <div className="flex flex-col gap-4 border-b border-dashed border-white/30 pb-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-sm font-bold text-white">{t("usersList")}</h2>
-
-          <div className="flex items-center gap-2 rounded-xl border border-white/50 px-3 py-2 sm:w-64">
-            <Search size={17} className="shrink-0 text-gray-400" />
-            <input
-              type="text"
-              placeholder={t("searchPlaceholder")}
-              className="w-full bg-transparent text-xs text-white outline-none placeholder:text-gray-500"
-            />
-          </div>
+      <div className="flex flex-col gap-5 rounded-xl bg-surface p-4 sm:p-5">
+        <div className="border-b border-dashed border-border pb-4">
+          <h2 className="text-sm font-bold text-foreground">
+            {t("usersList")}
+          </h2>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px] border-separate border-spacing-y-2 text-sm">
             <thead>
-              <tr className="bg-[#171717] text-gray-400">
+              <tr className="bg-background text-muted">
                 <th className="rounded-s-xl px-4 py-3 text-start font-medium">
                   {t("user")}
                 </th>
@@ -176,7 +191,7 @@ const AdminUsersSection = () => {
                 <tr>
                   <td
                     colSpan={5}
-                    className="rounded-xl bg-[#171717] px-4 py-12 text-center text-gray-400"
+                    className="rounded-xl bg-background px-4 py-12 text-center text-muted"
                   >
                     {t("loading")}
                   </td>
@@ -185,7 +200,7 @@ const AdminUsersSection = () => {
                 <tr>
                   <td
                     colSpan={5}
-                    className="rounded-xl bg-[#171717] px-4 py-12 text-center text-red-400"
+                    className="rounded-xl bg-background px-4 py-12 text-center text-red-500"
                   >
                     {t("error")}
                   </td>
@@ -194,25 +209,27 @@ const AdminUsersSection = () => {
                 <tr>
                   <td
                     colSpan={5}
-                    className="rounded-xl bg-[#171717] px-4 py-12 text-center text-gray-400"
+                    className="rounded-xl bg-background px-4 py-12 text-center text-muted"
                   >
                     {t("noUsers")}
                   </td>
                 </tr>
               ) : (
                 filteredUsers.map((user) => (
-                  <tr key={user.id} className="bg-[#171717] text-white">
+                  <tr key={user.id} className="bg-background text-foreground">
                     <td className="rounded-s-xl px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#3A3A3A]">
+                        <div className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-card">
                           {user.profilePicture ? (
-                            <img
+                            <Image
                               src={user.profilePicture}
                               alt={user.fullName}
-                              className="size-full object-cover"
+                              fill
+                              sizes="48px"
+                              className="object-cover"
                             />
                           ) : (
-                            <UserRound size={22} className="text-gray-300" />
+                            <UserRound size={22} className="text-muted" />
                           )}
                         </div>
 
@@ -222,11 +239,11 @@ const AdminUsersSection = () => {
                       </div>
                     </td>
 
-                    <td className="px-4 py-3 text-xs text-gray-300">
+                    <td className="px-4 py-3 text-xs text-muted">
                       {user.phoneNumber || "-"}
                     </td>
 
-                    <td className="px-4 py-3 text-xs text-gray-300">
+                    <td className="px-4 py-3 text-xs text-muted">
                       {user.role || "-"}
                     </td>
 
@@ -251,7 +268,7 @@ const AdminUsersSection = () => {
                               openMenuId === user.id ? null : user.id,
                             )
                           }
-                          className="rounded-lg p-2 text-gray-300 transition hover:bg-white/10 hover:text-[#91FF45]"
+                          className="rounded-lg p-2 text-muted transition hover:bg-card hover:text-[#91FF45]"
                         >
                           <MoreHorizontal size={20} />
                         </button>
@@ -265,14 +282,14 @@ const AdminUsersSection = () => {
                               className="fixed inset-0 z-10 cursor-default"
                             />
 
-                            <div className="absolute end-10 top-0 z-20 w-36 overflow-hidden rounded-xl border border-white/10 bg-[#2A2A2A] p-1 text-start shadow-xl">
+                            <div className="absolute end-10 top-0 z-20 w-36 overflow-hidden rounded-xl bg-surface p-1 text-start shadow-xl">
                               <button
                                 type="button"
                                 onClick={() => {
                                   setSelectedUser(user);
                                   setOpenMenuId(null);
                                 }}
-                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-gray-200 transition hover:bg-white/10 hover:text-[#91FF45]"
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-foreground transition hover:bg-card hover:text-[#91FF45]"
                               >
                                 <Pencil size={15} />
                                 {t("editUser")}
@@ -280,8 +297,11 @@ const AdminUsersSection = () => {
 
                               <button
                                 type="button"
-                                onClick={() => setOpenMenuId(null)}
-                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-400 transition hover:bg-white/10"
+                                onClick={() => {
+                                  setSelectedDeleteUser(user);
+                                  setOpenMenuId(null);
+                                }}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-500 transition hover:bg-card"
                               >
                                 <Trash2 size={15} />
                                 {t("deleteUser")}
@@ -299,7 +319,7 @@ const AdminUsersSection = () => {
         </div>
 
         <div className="mt-2 flex flex-col-reverse items-center justify-between gap-3 pt-4 sm:flex-row">
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-muted">
             {t("page")} {currentPage} / {totalPages}
           </span>
 
@@ -316,6 +336,65 @@ const AdminUsersSection = () => {
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
         />
+      )}
+
+      {selectedDeleteUser && (
+        <div
+          dir="rtl"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+          onClick={() => {
+            if (!deleteUser.isPending) {
+              setSelectedDeleteUser(null);
+            }
+          }}
+        >
+          <div
+            className="flex w-full max-w-[390px] flex-col items-center rounded-[22px] bg-surface px-5 py-6 text-foreground shadow-2xl sm:px-6 sm:py-7"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <AlertTriangle
+              size={62}
+              strokeWidth={1.8}
+              className="mb-7 fill-[#FFB800] text-black sm:mb-9"
+            />
+
+            <h3 className="mb-4 text-center text-sm font-bold sm:text-base">
+              {t("deleteTitle")}
+            </h3>
+
+            <p className="mb-7 text-center text-xs leading-6 text-muted sm:mb-8">
+              {t("deleteDescription")}
+            </p>
+
+            <span className="mb-7 text-xs font-medium text-foreground">
+              {selectedDeleteUser.fullName}
+            </span>
+
+            {deleteUser.isError && (
+              <p className="mb-4 text-xs text-red-500">{t("deleteError")}</p>
+            )}
+
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                disabled={deleteUser.isPending}
+                onClick={handleDeleteUser}
+                className="rounded-lg bg-[#FF9500] px-5 py-2 text-[11px] text-black transition hover:bg-[#E98500] disabled:opacity-50"
+              >
+                {deleteUser.isPending ? t("deleting") : t("confirmDelete")}
+              </button>
+
+              <button
+                type="button"
+                disabled={deleteUser.isPending}
+                onClick={() => setSelectedDeleteUser(null)}
+                className="text-[11px] text-foreground transition hover:opacity-70 disabled:opacity-50"
+              >
+                {t("cancel")}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </section>
   );
