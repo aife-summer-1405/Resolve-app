@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
         hostname: "aife-api.hexorix.net",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.mos.cms.futurecdn.net",
+      },
     ],
   },
 };
