@@ -10,6 +10,7 @@ export const useGetCustomerBookings = (
   params: IGetCustomerBookingsParams = {},
   enabled = true
 ) => {
+  console.log(1111111111111,enabled, userId, params)
   return useQuery({
     queryKey: ["customer-bookings", userId, params],
     queryFn: () => getCustomerBookingsAction(userId!, params),

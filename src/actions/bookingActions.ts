@@ -92,3 +92,9 @@ export const cancelBookingAction = async (
 
   return data;
 };
+
+export const continueBookingAction = async (id: number | string) => {
+  const { data } = await apiServer.post(`/api/bookings/${id}/continue`);
+
+  return data;
+};

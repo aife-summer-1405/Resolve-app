@@ -19,9 +19,9 @@ import {
 } from "lucide-react";
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
-import { useCreateHouse } from "@/src/hooks/Seller_dashboard/DashboardPage/useCreateHouse";
+import { useCreateHouse } from "@/src/hooks/Seller_dashboard/useCreateHouse";
 import { useUpdateHouse } from "@/src/hooks/Seller_dashboard/useUpdateHouse";
-import { useUploadHousePhotos } from "@/src/hooks/Seller_dashboard/DashboardPage/useUploadHousePhotos";
+import { useUploadHousePhotos } from "@/src/hooks/Seller_dashboard/useUploadHousePhotos";
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
 import { FieldError } from "./FieldError";
 import { useSellerHouseStore } from "@/src/store/sellerHouseStore";
