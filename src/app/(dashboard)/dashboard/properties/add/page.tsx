@@ -1,12 +1,16 @@
-import AddPropertySection from "@/src/components/organisms/DashboardSeller/properties/AddPropertySection";
+import AddPropertyFormProvider from "@/src/providers/AddPropertyFormProvider";
+import AddPropertyWizard from "@/src/components/organisms/DashboardSeller/properties/add/AddPropertyWizard";
 
+export default async function AddPropertyPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ edit?: string }>;
+}) {
+  const { edit } = await searchParams;
 
-const AddPropertyPage = () => {
   return (
-    <div className="mt-5 w-full">
-      <AddPropertySection />
-    </div>
+    <AddPropertyFormProvider key={edit ?? "new"} editId={edit ?? null}>
+      <AddPropertyWizard />
+    </AddPropertyFormProvider>
   );
-};
-
-export default AddPropertyPage;
+}

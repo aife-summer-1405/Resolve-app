@@ -232,7 +232,6 @@
     "unconfirmed": "تأیید نشده",
     "loading": "در حال دریافت اطلاعات...",
     "error": "خطا در دریافت رزروها",
-
     "empty": "هنوز رزروی ثبت نشده است"
   },
   "UserInformation": {
@@ -316,7 +315,6 @@
     "passengerInformation": "اطلاعات مسافران",
     "to": "تا"
   },
-
   "FavoritesSection": {
     "savedList": "لیست رزروهای ذخیره شده",
     "search": "جستجو",
@@ -465,7 +463,8 @@
     "mapInstruction": "برای انتخاب موقعیت، روی نقشه کلیک کنید",
     "selectedLocation": "موقعیت انتخاب‌شده",
     "locationNotSelected": "هنوز موقعیتی انتخاب نشده است",
-
+    "yardType": "نوع حیاط:",
+    "loadingMap": "در حال بارگذاری نقشه...",
     "selectLocationEnd": "را تعیین کنید.",
     "roomsCount": "تعداد اتاق:",
     "roomsPlaceholder": "اتاق",
@@ -506,8 +505,13 @@
     "previewResidential": "مسکونی",
     "previewApartment": "آپارتمانی",
     "previewPrice": "۷۵۰٬۰۰۰٬۰۰۰",
-    "submitListing": "ثبت آگهی",
-    "submitPreviewMessage": "پیش‌نمایش آگهی آماده است؛ اتصال ثبت نهایی در مرحله بعد انجام می‌شود."
+    "submitPreviewMessage": "پیش‌نمایش آگهی آماده است؛ اتصال ثبت نهایی در مرحله بعد انجام می‌شود.",
+    "formInvalid": "لطفاً فیلدهای الزامی را به‌درستی تکمیل کنید.",
+    "submitFailed": "ثبت آگهی با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+    "imagesUploadFailed": "آگهی با موفقیت ثبت شد، اما بارگذاری تصاویر با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+    "mortgage": "رهن و اجاره",
+     "submitting": "در حال ثبت...",
+    "submitListing": "ثبت ملک"
   },
   "Reservations": {
     "title": "لیست رزروهای مشتریان",
