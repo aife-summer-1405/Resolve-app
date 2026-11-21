@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   return (
-    <main className="min-h-screen ">
+    <main className="min-h-screen mt-15">
       <ArticlesContent />
       <ArticlesCategories />
       <ArticlesList />

@@ -1,5 +1,5 @@
 
-import SellerPropertiesSection from "@/src/components/organisms/DashboardSeller/properties/SellerPropertiesSection";
+import SellerPropertiesSection from "@/src/components/organisms/DashboardSeller/properties/add/SellerPropertiesSection";
 
 const PropertiesPage = () => {
   return (
