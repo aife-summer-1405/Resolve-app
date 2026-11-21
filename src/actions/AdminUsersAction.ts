@@ -6,9 +6,12 @@ import type {
   IAdminUsersResponse,
   IUpdateAdminUserPayload,
 } from "@/src/types/Admin_Dashboard/AdminUsers";
+
 interface IGetAdminUsersParams {
   page: number;
   limit: number;
+  email?: string;
+  role?: "admin" | "user" | "seller";
 }
 
 export const getAdminUsersAction = async (

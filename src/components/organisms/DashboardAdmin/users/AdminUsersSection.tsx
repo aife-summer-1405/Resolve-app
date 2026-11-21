@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
+  Search,
   UserRound,
   MoreHorizontal,
   Users,
@@ -25,6 +26,8 @@ const AdminUsersSection = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
+  const [debouncedEmail, setDebouncedEmail] = useState("");
   const [selectedUser, setSelectedUser] = useState<IAdminUser | null>(null);
   const [selectedDeleteUser, setSelectedDeleteUser] =
     useState<IAdminUser | null>(null);
@@ -32,9 +35,18 @@ const AdminUsersSection = () => {
 
   const limit = 10;
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedEmail(searchEmail.trim());
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchEmail]);
+
   const { data, isLoading, isError } = useGetAdminUsers({
     page: currentPage,
     limit,
+    email: debouncedEmail || undefined,
     role: selectedRole
       ? (selectedRole as "admin" | "user" | "seller")
       : undefined,
@@ -49,9 +61,13 @@ const AdminUsersSection = () => {
   const filteredUsers = users.filter((user) => {
     if (selectedStatus === "verified") return user.emailVerified;
     if (selectedStatus === "notVerified") return !user.emailVerified;
-
     return true;
   });
+
+  const handleSearchChange = (value: string) => {
+    setSearchEmail(value);
+    setCurrentPage(1);
+  };
 
   const handleRoleChange = (role: string) => {
     setSelectedRole(role);
@@ -158,29 +174,41 @@ const AdminUsersSection = () => {
       </div>
 
       <div className="flex flex-col gap-5 rounded-xl bg-surface p-4 sm:p-5">
-        <div className="border-b border-dashed border-border pb-4">
+        <div className="flex justify-between gap-4 border-b border-dashed border-border pb-4">
           <h2 className="text-sm font-bold text-foreground">
             {t("usersList")}
           </h2>
+
+          <div className="flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-3 transition focus-within:border-[#91FF45] sm:w-80">
+            <input
+              type="text"
+              value={searchEmail}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder={t("searchPlaceholder")}
+              className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted"
+              dir="ltr"
+            />
+            <Search size={18} className="shrink-0 text-muted" />
+          </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px] border-separate border-spacing-y-2 text-sm">
+          <table className="w-full min-w-[800px] table-fixed border-separate border-spacing-y-2 text-sm">
             <thead>
               <tr className="bg-background text-muted">
-                <th className="rounded-s-xl px-4 py-3 text-start font-medium">
+                <th className="w-[35%] rounded-s-xl px-4 py-3 text-start font-medium">
                   {t("user")}
                 </th>
-                <th className="px-4 py-3 text-start font-medium">
+                <th className="w-[20%] px-4 py-3 text-start font-medium">
                   {t("phone")}
                 </th>
-                <th className="px-4 py-3 text-start font-medium">
+                <th className="w-[15%] px-4 py-3 text-start font-medium">
                   {t("role")}
                 </th>
-                <th className="px-4 py-3 text-start font-medium">
+                <th className="w-[15%] px-4 py-3 text-start font-medium">
                   {t("status")}
                 </th>
-                <th className="rounded-e-xl px-4 py-3 text-center font-medium">
+                <th className="w-[15%] rounded-e-xl px-4 py-3 text-center font-medium">
                   {t("actions")}
                 </th>
               </tr>
@@ -217,7 +245,7 @@ const AdminUsersSection = () => {
               ) : (
                 filteredUsers.map((user) => (
                   <tr key={user.id} className="bg-background text-foreground">
-                    <td className="rounded-s-xl px-4 py-3">
+                    <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-card">
                           {user.profilePicture ? (
@@ -233,9 +261,18 @@ const AdminUsersSection = () => {
                           )}
                         </div>
 
-                        <span className="text-xs font-medium">
-                          {user.fullName || "-"}
-                        </span>
+                        <div className="flex min-w-0 flex-col items-start gap-1">
+                          <span className="w-full truncate text-xs font-medium text-foreground">
+                            {user.fullName || "-"}
+                          </span>
+
+                          <span
+                            className="w-full truncate text-start text-xs text-muted"
+                            dir="ltr"
+                          >
+                            {user.email || "-"}
+                          </span>
+                        </div>
                       </div>
                     </td>
 
@@ -259,7 +296,7 @@ const AdminUsersSection = () => {
                       </span>
                     </td>
 
-                    <td className="rounded-e-xl px-4 py-3 text-center">
+                    <td className="px-4 py-3 text-center">
                       <div className="relative inline-flex">
                         <button
                           type="button"
