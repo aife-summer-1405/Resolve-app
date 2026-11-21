@@ -174,8 +174,7 @@ const hasActiveFilters =
   const handleEdit = (house: ISellerHouse) => {
     setOpenMenu(null);
     setSelectedHouse(house);
-    router.push(`/dashboard/properties/add?edit=${house.id}`);
-  };
+router.push(`/dashboard/properties/add?edit=${house.id}&view=seller`);  };
 
   const handleDelete = (id: string) => {
     setDeleteTarget(id);

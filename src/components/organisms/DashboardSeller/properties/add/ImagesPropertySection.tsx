@@ -2,14 +2,11 @@
 
 import { useEffect, useId, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { ChevronLeft, ChevronRight, Camera, Plus, X } from "lucide-react";
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
-
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
 import { FieldError } from "./FieldError";
 
@@ -19,8 +16,8 @@ const MAX_SIZE_MB = 5;
 const ImagesPropertySection = () => {
   const t = useTranslations("addProperty");
   const inputId = useId();
-  const { completeStep ,goToStep } = useAddProperty();
-
+  const { completeStep, goToStep, existingPhotos, setExistingPhotos } =
+    useAddProperty();
   const {
     watch,
     setValue,
@@ -38,6 +35,18 @@ const ImagesPropertySection = () => {
     setPreviews(urls);
     return () => urls.forEach((url) => URL.revokeObjectURL(url));
   }, [images]);
+
+  // همه تصاویر برای نمایش: اول قدیمی‌ها (URL سرور)، بعد جدیدها (پیش‌نمایش فایل)
+  const slots = [
+    ...existingPhotos.map((src, i) => ({
+      kind: "existing" as const,
+      src,
+      index: i,
+    })),
+    ...previews.map((src, i) => ({ kind: "new" as const, src, index: i })),
+  ];
+
+  const totalCount = existingPhotos.length + images.length;
 
   const updateImages = (next: File[]) => {
     setValue("images", next, {
@@ -66,22 +75,33 @@ const ImagesPropertySection = () => {
       valid.push(file);
     }
 
-    if (images.length + valid.length > MAX_IMAGES) error = "tooManyImages";
+    const remaining = MAX_IMAGES - totalCount;
+    if (valid.length > remaining) error = "tooManyImages";
 
     setFileError(error);
 
-    const next = [...images, ...valid].slice(0, MAX_IMAGES);
-    if (next.length !== images.length) updateImages(next);
+    const toAdd = valid.slice(0, Math.max(0, remaining));
+    if (toAdd.length > 0) updateImages([...images, ...toAdd]);
   };
 
-  const removeImage = (index: number) => {
+  const removeSlot = (slot: (typeof slots)[number]) => {
     setFileError(null);
-    updateImages(images.filter((_, i) => i !== index));
+
+    if (slot.kind === "existing") {
+      setExistingPhotos(existingPhotos.filter((_, i) => i !== slot.index));
+    } else {
+      updateImages(images.filter((_, i) => i !== slot.index));
+    }
   };
 
   const onNext = async () => {
     const ok = await trigger("images");
     if (!ok) return;
+
+    if (totalCount === 0) {
+      setFileError("imagesRequired");
+      return;
+    }
 
     completeStep(3);
   };
@@ -101,18 +121,18 @@ const ImagesPropertySection = () => {
 
         <div className="mx-auto grid max-w-[660px] grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           {Array.from({ length: MAX_IMAGES }).map((_, index) => {
-            const preview = previews[index];
-            const isAddSlot = index === images.length;
+            const slot = slots[index];
+            const isAddSlot = index === slots.length;
 
             return (
               <div
-                key={index}
+                key={slot ? `${slot.kind}-${slot.index}-${slot.src}` : `empty-${index}`}
                 className="relative aspect-square w-full overflow-hidden rounded-[24px]"
               >
-                {preview ? (
+                {slot ? (
                   <>
                     <Image
-                      src={preview}
+                      src={slot.src}
                       alt={`${t("propertyImageAlt")} ${index + 1}`}
                       fill
                       unoptimized
@@ -121,7 +141,7 @@ const ImagesPropertySection = () => {
                     />
                     <button
                       type="button"
-                      onClick={() => removeImage(index)}
+                      onClick={() => removeSlot(slot)}
                       aria-label={t("removeImage")}
                       className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/65 text-white transition hover:bg-black"
                     >
@@ -166,13 +186,13 @@ const ImagesPropertySection = () => {
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
         <button
-  type="button"
-  onClick={() => goToStep(2)}
-  className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
->
-  <ChevronRight size={15} />
-  {t("previousStep")}
-</button>
+          type="button"
+          onClick={() => goToStep(2)}
+          className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
+        >
+          <ChevronRight size={15} />
+          {t("previousStep")}
+        </button>
 
         <button
           type="button"

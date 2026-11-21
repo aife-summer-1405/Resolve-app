@@ -29,7 +29,6 @@ type ISellerHouse = ISellerHousesResponse["houses"][number];
 
 const AddPropertyWizard = () => {
     const t = useTranslations("addProperty");
-    const queryClient = useQueryClient();
 
     const {
         step,
@@ -111,7 +110,7 @@ const AddPropertyWizard = () => {
                 </h2>
 
                 <Link
-                    href="/dashboard/properties"
+                    href="/dashboard/properties?view=seller"
                     className="flex items-center gap-2 text-[11px] text-blue-500 transition hover:opacity-70"
                 >
                     {t("backToProperties")}
