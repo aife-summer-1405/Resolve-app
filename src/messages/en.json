@@ -596,7 +596,6 @@
     "userRole": "User",
     "sellerRole": "Seller",
     "usersList": "Users List",
-    "searchPlaceholder": "Search by user name",
     "user": "User",
     "role": "Role",
     "status": "Status",
@@ -627,6 +626,7 @@
     "deleteDescription": "Are you sure you want to delete this user? This action cannot be undone.",
     "confirmDelete": "Yes, Delete",
     "deleting": "Deleting...",
-    "deleteError": "Failed to delete user."
+    "deleteError": "Failed to delete user.",
+    "searchPlaceholder": "Enter the user's full email..."
   }
 }

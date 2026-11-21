@@ -7,6 +7,7 @@ interface IGetAdminUsersParams {
   page: number;
   limit: number;
   role?: "admin" | "user" | "seller";
+  email?: string;
 }
 
 export const useGetAdminUsers = (params: IGetAdminUsersParams) => {
