@@ -234,7 +234,7 @@
     "loading": "در حال دریافت اطلاعات...",
     "error": "خطا در دریافت رزروها",
     "empty": "هنوز رزروی ثبت نشده است",
-   "approved": "تایید شده",
+    "approved": "تایید شده",
     "pending": "در انتظار",
     "cancelled": "لغو شده"
   },
@@ -395,7 +395,7 @@
     "activeReservations": "رزروهای فعال",
     "pendingReservations": "رزروهای در انتظار",
     "todayViews": "بازدیدهای امروز",
-       "approved": "تایید شده",
+    "approved": "تایید شده",
     "pending": "در انتظار",
     "cancelled": "لغو شده"
   },
@@ -638,7 +638,68 @@
     "deleteError": "حذف کاربر با خطا مواجه شد.",
     "searchPlaceholder": "ایمیل کامل کاربر را وارد کنید..."
   },
+
   "AdminHouses": {
+    "title": "مدیریت املاک",
+    "description": "مشاهده، جست‌وجو و مدیریت املاک ثبت‌شده در سایت",
+
+    "totalHouses": "تعداد کل املاک",
+    "discountedHouses": "املاک دارای تخفیف",
+    "totalComments": "مجموع نظرات ثبت‌شده",
+
+    "housesList": "لیست املاک",
+    "searchPlaceholder": "جست‌وجوی نام یا آدرس ملک...",
+
+    "allCategories": "همه دسته‌بندی‌ها",
+    "allTransactions": "همه نوع معاملات",
+
+    "house": "ملک",
+    "price": "قیمت",
+    "transactionType": "نوع معامله",
+    "facilities": "امکانات",
+    "rating": "امتیاز",
+    "actions": "عملیات",
+
+    "editHouse": "ویرایش ملک",
+    "deleteHouse": "حذف ملک",
+
+    "loading": "در حال دریافت اطلاعات املاک...",
+    "error": "دریافت اطلاعات املاک با خطا مواجه شد.",
+    "empty": "ملکی پیدا نشد.",
+
+    "deleteTitle": "حذف ملک",
+    "deleteDescription": "آیا از حذف این ملک اطمینان دارید؟ این عملیات قابل بازگشت نیست.",
+    "deleteError": "حذف ملک با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+    "deleting": "در حال حذف...",
+    "confirmDelete": "بله، حذف شود",
+    "cancel": "انصراف",
+
+    "currency": "تومان",
     "page": "صفحه"
+  },
+  "EditHouseModal": {
+    "title": "ویرایش ملک",
+    "description": "اطلاعات ملک انتخاب‌شده را ویرایش کنید.",
+    "houseTitle": "عنوان ملک",
+    "address": "آدرس",
+    "price": "قیمت",
+    "rate": "امتیاز",
+    "category": "دسته‌بندی",
+    "transactionType": "نوع معامله",
+    "capacity": "ظرفیت",
+    "rooms": "تعداد اتاق‌ها",
+    "bathrooms": "تعداد سرویس بهداشتی",
+    "parking": "تعداد پارکینگ",
+    "yardType": "نوع حیاط",
+    "latitude": "عرض جغرافیایی (Lat)",
+    "longitude": "طول جغرافیایی (Lng)",
+    "photos": "تصاویر (هر آدرس در یک خط)",
+    "tags": "تگ‌ها (با کاما جدا کنید)",
+    "caption": "توضیحات",
+    "lastUpdated": "تاریخ آخرین به‌روزرسانی",
+    "updateError": "ویرایش ملک با خطا مواجه شد. لطفاً اطلاعات را بررسی و دوباره تلاش کنید.",
+    "cancel": "انصراف",
+    "saving": "در حال ذخیره...",
+    "saveChanges": "ذخیره تغییرات"
   }
 }

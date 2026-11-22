@@ -2,11 +2,17 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getAdminHousesAction } from "@/src/actions/AdminHousesAction";
-import type { IGetAdminHousesParams } from "@/src/types/Admin_Dashboard/AdminHouses";
 
-export const useGetAdminHouses = (params: IGetAdminHousesParams) => {
+export const useGetAdminHouses = () => {
   return useQuery({
-    queryKey: ["admin-houses", params],
-    queryFn: () => getAdminHousesAction(params),
+    queryKey: ["admin-houses-all"],
+    queryFn: () =>
+      getAdminHousesAction({
+        page: 1,
+        limit: 100,
+      }),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };
