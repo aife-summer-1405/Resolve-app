@@ -2,47 +2,25 @@
 
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
+import { IGetPaymentsResponse, IPayment } from "@/src/types/dashboard/payment";
 
 type ReservationPaymentsModalProps = {
   isOpen: boolean;
   onClose: () => void;
+payments: IPayment[];
 };
 
 const ReservationPaymentsModal = ({
   isOpen,
   onClose,
+  payments
 }: ReservationPaymentsModalProps) => {
   const t = useTranslations("BookingManagementSection");
 
   if (!isOpen) return null;
 
-  const payments = [
-    {
-      id: 1,
-      date: "۱۲ مرداد - ۱۴۰۱ / ۱۳:۳۳",
-      trackingCode: "۱۳۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: "۱,۲۵۰,۰۰۰",
-    },
-    {
-      id: 2,
-      date: "۱۲ مرداد - ۱۴۰۱ / ۱۳:۳۳",
-      trackingCode: "۱۳۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: "۱,۲۵۰,۰۰۰",
-    },
-    {
-      id: 3,
-      date: "۱۲ مرداد - ۱۴۰۱ / ۱۳:۳۳",
-      trackingCode: "۱۳۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: "۱,۲۵۰,۰۰۰",
-    },
-    {
-      id: 4,
-      date: "۱۲ مرداد - ۱۴۰۱ / ۱۳:۳۳",
-      trackingCode: "۱۳۳۴۵۶۷۸۹۱۲۳۴۵۶",
-      amount: "۱,۲۵۰,۰۰۰",
-    },
-  ];
-
+  const paymentsList = payments || [];
+  
   return (
     <div
       className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-black/60 p-3 sm:p-5"
@@ -81,41 +59,45 @@ const ReservationPaymentsModal = ({
                     {t("trackingNumber")}
                   </th>
 
-                  <th className="rounded-l-lg px-3 py-2.5 font-medium">
+                  <th className=" px-3 py-2.5 font-medium">
                     {t("paymentAmount")}
+                  </th>
+                  <th className="rounded-l-lg px-3 py-2.5 font-medium">
+                    عملیات
                   </th>
                 </tr>
               </thead>
 
               <tbody>
-                {payments.map((payment, index) => (
+                {paymentsList.map((payment, index) => (
                   <tr
                     key={payment.id}
-                    className={`text-[10px] text-foreground ${
+                    className={`text-[10px] text-foreground w-full${
                       index % 2 === 1
                         ? "bg-background"
                         : "bg-transparent"
                     }`}
                   >
                     <td className="whitespace-nowrap rounded-r-lg px-3 py-3">
-                      {payment.date}
+                      {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : "N/A" }
                     </td>
 
                     <td className="whitespace-nowrap px-3 py-3">
-                      {payment.trackingCode}
+                      {payment.id}
                     </td>
 
                     <td className="whitespace-nowrap rounded-l-lg px-3 py-3">
-                      <div className="flex items-center justify-center gap-3">
+                     
                         <span>{payment.amount}</span>
-
+</td>
+<td>
                         <button
                           type="button"
                           className="whitespace-nowrap text-[10px] text-foreground transition hover:text-primary"
                         >
                           {t("viewReceipt")}
                         </button>
-                      </div>
+                 
                     </td>
                   </tr>
                 ))}

@@ -205,7 +205,10 @@
     "viewNewReviews": "مشاهده نظرات",
     "backToAdmin": "بازگشت به پنل ادمین",
     "users": "مدیریت کاربران",
-    "houses": "مدیریت املاک"
+    "houses": "مدیریت املاک",
+     "walletBalance": "شارژ کردن کیف پول",
+  "walletTerms": "برداشت وجه",
+  "recentTransactions": "تراکنش‌های اخیر شما"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
