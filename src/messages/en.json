@@ -204,7 +204,8 @@
     "newReviews": "New Reviews",
     "viewNewReviews": "View Reviews",
     "backToAdmin": "Back to Admin Panel",
-    "users": "User Management"
+    "users": "User Management",
+    "houses": "Houses Management"
   },
   "DashboardStatCard": {
     "view": "View"
@@ -511,12 +512,11 @@
     "previewPrice": "750,000,000",
     "submitListing": "Submit Listing",
     "submitPreviewMessage": "Your listing preview is ready. Final submission will be connected later.",
-"formInvalid": "Please complete the required fields correctly.",
-"submitFailed": "Failed to submit the property. Please try again.",
-"imagesUploadFailed": "The property was created, but uploading images failed. Please try again.",
+    "formInvalid": "Please complete the required fields correctly.",
+    "submitFailed": "Failed to submit the property. Please try again.",
+    "imagesUploadFailed": "The property was created, but uploading images failed. Please try again.",
     "imagesRequired": "Please select at least one image for the property.",
     "mortgage": "Mortgage"
-
   },
   "Reservations": {
     "title": "Customer Reservations",
@@ -634,5 +634,8 @@
     "deleting": "Deleting...",
     "deleteError": "Failed to delete user.",
     "searchPlaceholder": "Enter the user's full email..."
+  },
+  "AdminHouses": {
+    "page": "Page"
   }
 }

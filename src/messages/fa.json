@@ -204,7 +204,8 @@
     "newReviews": "نظرات جدید",
     "viewNewReviews": "مشاهده نظرات",
     "backToAdmin": "بازگشت به پنل ادمین",
-    "users": "مدیریت کاربران"
+    "users": "مدیریت کاربران",
+    "houses": "مدیریت املاک"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
@@ -516,7 +517,7 @@
     "submitFailed": "ثبت آگهی با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
     "imagesUploadFailed": "آگهی با موفقیت ثبت شد، اما بارگذاری تصاویر با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
     "mortgage": "رهن و اجاره",
-     "submitting": "در حال ثبت...",
+    "submitting": "در حال ثبت...",
     "submitListing": "ثبت ملک"
   },
   "Reservations": {
@@ -636,5 +637,8 @@
     "deleting": "در حال حذف...",
     "deleteError": "حذف کاربر با خطا مواجه شد.",
     "searchPlaceholder": "ایمیل کامل کاربر را وارد کنید..."
+  },
+  "AdminHouses": {
+    "page": "صفحه"
   }
 }
