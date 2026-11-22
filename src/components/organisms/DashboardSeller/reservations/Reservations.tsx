@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 
-import { useGetCustomerBookings } from "@/src/hooks/Seller_dashboard/DashboardPage/useGetCustomerBookings";
+import { useGetCustomerBookings } from "@/src/hooks/Seller_dashboard/useGetCustomerBookings";
 import { useUserData } from "@/src/providers/UserDataContextProvider";
 
 import {
@@ -31,9 +31,10 @@ import ReservationListModal from "../../DashboardBuyer/reservations/modals/Reser
 import ReservationPaymentsModal from "../../DashboardBuyer/reservations/modals/ReservationPaymentsModal";
 import ReservationDetailsModal from "../../DashboardBuyer/reservations/modals/ReservationDetailsModal";
 import ReservationHistoryModal from "../../DashboardBuyer/reservations/modals/ReservationHistoryModal";
-import { useCancelBooking } from "@/src/hooks/Seller_dashboard/DashboardPage/useCancelBooking";
+import { useCancelBooking } from "@/src/hooks/Seller_dashboard/useCancelBooking";
 import { useDeleteBooking } from "@/src/hooks/dashboard/useDeleteBooking";
 import { toast } from "sonner";
+import { useContinueBooking } from "@/src/hooks/Seller_dashboard/useContinueBooking";
 
 const LIMIT = 10;
 
@@ -211,7 +212,21 @@ const Reservations = () => {
       page,
     }));
   };
+  const { mutate: continueBooking, isPending } = useContinueBooking();
 
+  const handleApproveBooking = (item: ICustomerBooking) => {
+
+    continueBooking(item.id, {
+      onSuccess: () => {
+        toast.success("رزرو با موفقیت تایید شد");
+        setActiveMenu(null);
+      },
+      onError: () => {
+        toast.error("تایید رزرو با خطا مواجه شد");
+      },
+    });
+
+  }
   const { mutate: cancelBooking, isPending: isCanceling } =
     useCancelBooking();
 
@@ -343,10 +358,12 @@ const Reservations = () => {
                 const status = getStatus(item.status);
 
                 const traveler = item.traveler_details?.[0];
+                console.log("traveler",traveler)
 
                 const travelerName = traveler
                   ? `${traveler.firstName} ${traveler.lastName}`
                   : "—";
+                console.log("traveler",travelerName)
 
                 const dates = item.reservedDates?.length
                   ? item.reservedDates
@@ -430,10 +447,10 @@ const Reservations = () => {
                             <>
                               <button
                                 type="button"
-                                // onClick={() => handleApproveBooking(item)}
+                                onClick={() => handleApproveBooking(item)}
                                 className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-[11px] text-green-500 hover:bg-background"
                               >
-                                تأیید رزرو
+                               {isPending ? "در حال پردازش..." : "ادامه رزرو"}
                                 <Check size={14} />
                               </button>
 
