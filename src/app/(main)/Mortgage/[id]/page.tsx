@@ -40,7 +40,7 @@ export default async function PropertyDetailsPage({
   if (!result) notFound();
 
   return (
-    <main dir="rtl" className="min-h-screen mt-10 text-white">
+    <main dir="rtl" className="min-h-screen mt-20 text-white">
       <div className="mx-auto max-w-[1600px] space-y-5 px-5 py-5 lg:px-8">
         <nav dir="rtl" className="flex flex-wrap items-center gap-2 text-xs text-white/50">
           <span>خانه</span>
