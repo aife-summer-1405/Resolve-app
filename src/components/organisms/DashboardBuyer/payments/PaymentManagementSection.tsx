@@ -42,6 +42,7 @@ const PaymentManagementSection = () => {
   );
 
   const { data, isLoading, isError } = useGetPayments(params);
+  console.log(data);
 
   const payments = data?.payments ?? [];
   const totalCount = data?.totalCount ?? 0;
@@ -111,10 +112,10 @@ const PaymentManagementSection = () => {
     return [
       isPersian ? "رسید پرداخت" : "Payment Receipt",
       `${isPersian ? "شناسه پرداخت" : "Payment ID"}: ${payment.id}`,
-      `${isPersian ? "شماره پیگیری" : "Tracking Number"}: ${payment.transactionId ?? "—"}`,
+      `${isPersian ? "شماره پیگیری" : "Tracking Number"}: ${payment.id ?? "—"}`,
       `${isPersian ? "مبلغ" : "Amount"}: ${formatAmount(payment.amount)}`,
       `${isPersian ? "وضعیت" : "Status"}: ${getStatus(payment.status).label}`,
-      `${isPersian ? "تاریخ" : "Date"}: ${formatDate(payment.createdAt)}`,
+      `${isPersian ? "تاریخ" : "Date"}: ${formatDate(payment.createdAt??"N/A")}`,
       `${isPersian ? "شناسه رزرو" : "Booking ID"}: ${payment.bookingId ?? "—"}`,
       `${isPersian ? "توضیحات" : "Description"}: ${payment.description}`,
     ].join("\n");
@@ -284,11 +285,11 @@ const PaymentManagementSection = () => {
                     className="text-[10px] text-foreground"
                   >
                     <td className="whitespace-nowrap rounded-r-lg px-4 py-2.5">
-                      {formatDate(payment.createdAt)}
+                      {(payment?.createdAt) ? formatDate(payment.createdAt) : "N/A"}
                     </td>
 
                     <td className="whitespace-nowrap px-3 py-2.5 text-center">
-                      {payment.transactionId ?? "—"}
+                      {payment.id ?? "—"}
                     </td>
 
                     <td className="whitespace-nowrap px-3 py-2.5 text-center">
