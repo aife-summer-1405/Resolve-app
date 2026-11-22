@@ -100,6 +100,7 @@ const BookingPage = ({
                             const paymentUrl = new URL(paymentResponse.paymentUrl);
                             paymentUrl.searchParams.set("houseId", String(result.id));
                             paymentUrl.searchParams.set("bookingId", String(booking.id));
+                            paymentUrl.searchParams.set("price", String(result.price));
 
                             window.location.assign(paymentUrl.toString());
                         },
@@ -180,7 +181,7 @@ const BookingPage = ({
                             رزرو بلیط شما با موفقیت انجام شد !                    </h2>
                         <div className="flex flex-col md:flex-row gap-5 justify-center mt-3">
                             <button onClick={onBack} className="text-white border border-white rounded-full p-2">بازگشت به صفحه اصلی</button>
-                            <button className="text-primary border border-primary rounded-full p-2">بلیط های من</button>
+                            {/* <button className="text-primary border border-primary rounded-full p-2">بلیط های من</button> */}
                         </div>
                     </div>
                 )}

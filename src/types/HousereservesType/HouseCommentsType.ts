@@ -27,7 +27,7 @@ export interface IHouseCommentsResponse {
 }
 
 export interface ICreateCommentInput {
-    house_id: number;
+    house_id: number | string;
     title: string;
     caption: string;
     rating: number;

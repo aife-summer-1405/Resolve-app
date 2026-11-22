@@ -48,7 +48,7 @@ interface IFiltersProps {
 }
 
 const fieldClass =
-  "w-full min-w-0 bg-transparent text-right text-sm text-textgray outline-none";
+  "w-full min-w-0 bg-card text-right text-sm text-textgray outline-none";
 
 const iconClass = "shrink-0 text-textgray";
 
@@ -87,7 +87,6 @@ function Filters({
               ))}
             </select>
 
-            <ChevronDown size={20} className={iconClass} />
           </div>
         </Field>
       </div>
@@ -114,7 +113,6 @@ function Filters({
               <option value="price:DESC">قیمت: از زیاد به کم</option>
             </select>
 
-            <ChevronDown size={20} className={iconClass} />
           </div>
         </Field>
       </div>

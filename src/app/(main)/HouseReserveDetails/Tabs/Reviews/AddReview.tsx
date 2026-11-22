@@ -9,36 +9,38 @@ import { useCreateComment } from "@/src/hooks/useCreateComment";
 import LoginRequiredModal from "@/src/components/organisms/auth/LoginRequiredModal";
 import { ChevronLeft, Star } from "lucide-react";
 import { useUserData } from "@/src/providers/UserDataContextProvider";
+import { toast } from "sonner";
 
 interface IAddReviewProps {
     houseId: string;
 }
 
-const AddReview = ({ houseId}: IAddReviewProps) => {
+const AddReview = ({ houseId }: IAddReviewProps) => {
     const [rating, setRating] = useState<number[]>([4.5]);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+
     const [title, setTitle] = useState("");
     const [caption, setCaption] = useState("");
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const { userlogin } = useUserData();
-
-
+    const { userlogin, userData } = useUserData();
+    const userName = userData?.user.firstName && userData?.user.lastName ? `${userData.user.firstName} ${userData.user.lastName}` : "";
+    const userEmail = userData?.user.email;
+    const [name, setName] = useState(userName || "");
+    const [email, setEmail] = useState(userEmail || "");
     const replyId = useReplyStore((state) => state.replyId);
     const clearReply = useReplyStore((state) => state.clearReply);
 
     const { mutate, isPending } = useCreateComment(houseId);
 
     const resetForm = () => {
-        setName("");
-        setEmail("");
+        setName(name);
+        setEmail(email);
         setTitle("");
         setCaption("");
         setRating([4.5]);
     };
 
     const handleSubmit = () => {
-   
+
         if (!userlogin) {
             setShowLoginModal(true);
             return;
@@ -46,9 +48,9 @@ const AddReview = ({ houseId}: IAddReviewProps) => {
 
         if (!caption.trim() || isPending) return;
         mutate(
-            
+
             {
-                house_id: Number(houseId),
+                house_id: String(houseId),
                 title: title.trim() || "نظر کاربر",
                 caption: caption.trim(),
                 rating: replyId ? 5 : rating[0],
@@ -56,7 +58,7 @@ const AddReview = ({ houseId}: IAddReviewProps) => {
             },
             {
                 onSuccess: () => {
-                    console.log("نظر با موفقیت ارسال شد");
+                    toast.success("نظر با موفقیت ارسال شد");
                     resetForm();
                     clearReply();
                 },
@@ -74,40 +76,26 @@ const AddReview = ({ houseId}: IAddReviewProps) => {
                     borderImageSlice: 1,
                 }}
             >
-                {replyId ? (
-                    <div className="md:hidden">
-                        <Field legend="برای نظر">
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(event) => setTitle(event.target.value)}
-                                placeholder="عنوان پاسخ"
-                                className="w-full bg-transparent outline-none"
-                            />
-                        </Field>
-                    </div>
-                ) : (
-                    <div className="md:hidden">
-                        <Field legend="امتیاز شما">
-                            <div className="flex w-full  items-center gap-4 rounded-xl">
-                                <div className="flex  items-center gap-1">
-                                    <Star className="size-4 fill-current" />
-                                    <span>{rating[0].toLocaleString("fa-IR")}</span>
-                                </div>
-
-                                <Slider
-                                    dir="rtl"
-                                    min={1}
-                                    max={5}
-                                    step={0.5}
-                                    value={rating}
-                                    onValueChange={setRating}
-                                    className="w-full"
-                                />
+                <div className="md:hidden">
+                    <Field legend="امتیاز شما">
+                        <div className="flex w-full  items-center gap-4 rounded-xl">
+                            <div className="flex  items-center gap-1">
+                                <Star className="size-4 fill-current" />
+                                <span>{rating[0].toLocaleString("fa-IR")}</span>
                             </div>
-                        </Field>
-                    </div>
-                )}
+
+                            <Slider
+                                dir="rtl"
+                                min={1}
+                                max={5}
+                                step={0.5}
+                                value={rating}
+                                onValueChange={setRating}
+                                className="w-full"
+                            />
+                        </div>
+                    </Field>
+                </div>
 
                 <div className="flex flex-row gap-2">
                     <div className="w-2/4 md:w-1/4">
@@ -133,46 +121,31 @@ const AddReview = ({ houseId}: IAddReviewProps) => {
                             />
                         </Field>
                     </div>
-
-                    {replyId ? (
-                        <div className="hidden w-2/4 md:block">
-                            <Field legend="برای نظر">
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={(event) => setTitle(event.target.value)}
-                                    placeholder="عنوان پاسخ"
-                                    className="w-full bg-transparent outline-none"
-                                />
-                            </Field>
-                        </div>
-                    ) : (
-                        <div className="hidden w-2/4 md:block">
-                            <Field legend="امتیاز شما">
-                                <div className="flex w-full  items-center gap-4 rounded-xl">
-                                    <div className="flex  items-center gap-1">
-                                        <Star className="size-4 fill-current" />
-                                        <span>{rating[0].toLocaleString("fa-IR")}</span>
-                                    </div>
-
-                                    <Slider
-                                        dir="rtl"
-                                        min={1}
-                                        max={5}
-                                        step={0.5}
-                                        value={rating}
-                                        onValueChange={setRating}
-                                        className="w-full"
-                                    />
+                    <div className="hidden w-2/4 md:block">
+                        <Field legend="امتیاز شما">
+                            <div className="flex w-full  items-center gap-4 rounded-xl">
+                                <div className="flex  items-center gap-1">
+                                    <Star className="size-4 fill-current" />
+                                    <span>{rating[0].toLocaleString("fa-IR")}</span>
                                 </div>
-                            </Field>
-                        </div>
-                    )}
+
+                                <Slider
+                                    dir="rtl"
+                                    min={1}
+                                    max={5}
+                                    step={0.5}
+                                    value={rating}
+                                    onValueChange={setRating}
+                                    className="w-full"
+                                />
+                            </div>
+                        </Field>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <div className="w-full">
-                        <Field legend="متن نظر">
+                        <Field legend={replyId ? "متن پاسخ" : "متن نظر"}>
                             <input
                                 type="text"
                                 value={caption}
