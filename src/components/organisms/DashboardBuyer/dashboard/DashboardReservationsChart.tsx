@@ -1,6 +1,6 @@
-
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -14,6 +14,11 @@ import { IBookingResponse } from "@/src/types/HousereservesType/BookingType";
 
 interface IDashboardReservationsChartProps {
   reservations: IBookingResponse[];
+}
+
+interface IChartData {
+  month: string;
+  count: number;
 }
 
 const months = [
@@ -36,20 +41,20 @@ const persianDateFormatter = new Intl.DateTimeFormat(
   {
     year: "numeric",
     month: "numeric",
+    timeZone: "Asia/Tehran",
   }
 );
 
-const DashboardReservationsChart = ({
-  reservations,
-}: IDashboardReservationsChartProps) => {
-  const currentPersianYear = persianDateFormatter.formatToParts(new Date())
+const getChartData = (reservations: IBookingResponse[]): IChartData[] => {
+  const currentPersianYear = persianDateFormatter
+    .formatToParts(new Date())
     .find((part) => part.type === "year")?.value;
 
-  const chartData = months.map((month, index) => {
+  return months.map((month, index) => {
     const count = reservations.filter((reservation) => {
-      const date = new Date(reservation.createdAt);
-
-      const dateParts = persianDateFormatter.formatToParts(date);
+      const dateParts = persianDateFormatter.formatToParts(
+        new Date(reservation.createdAt)
+      );
 
       const reservationYear = dateParts.find(
         (part) => part.type === "year"
@@ -65,11 +70,27 @@ const DashboardReservationsChart = ({
       );
     }).length;
 
-    return {
-      month,
-      count,
-    };
+    return { month, count };
   });
+};
+
+const DashboardReservationsChart = ({
+  reservations,
+}: IDashboardReservationsChartProps) => {
+  const [chartData, setChartData] = useState<IChartData[]>([]);
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setChartData(getChartData(reservations));
+    setIsMounted(true);
+  }, [reservations]);
+
+  if (!isMounted) {
+    return (
+      <div className="h-full w-full animate-pulse rounded-lg bg-card" />
+    );
+  }
 
   return (
     <div className="h-full w-full" dir="ltr">
@@ -78,10 +99,7 @@ const DashboardReservationsChart = ({
           data={chartData}
           margin={{ top: 10, right: 5, left: -20, bottom: 0 }}
         >
-          <CartesianGrid
-            stroke="#ffffff15"
-            vertical={false}
-          />
+          <CartesianGrid stroke="#ffffff15" vertical={false} />
 
           <XAxis
             dataKey="month"

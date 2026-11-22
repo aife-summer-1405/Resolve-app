@@ -81,7 +81,7 @@ export const HouseReserveFlow = ({ result }: IPageProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-14" dir="lrt">
+        <div className="flex flex-col gap-14 max-w-[1440px] m-auto" dir="lrt">
             <Header result={result} />
 
             <div className="flex flex-col gap-10 md:flex-row">

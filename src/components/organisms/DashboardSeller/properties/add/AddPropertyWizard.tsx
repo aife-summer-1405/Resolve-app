@@ -102,7 +102,7 @@ const AddPropertyWizard = () => {
     return (
         <section
             dir="rtl"
-            className="w-full rounded-2xl bg-surface p-3 text-foreground sm:p-5"
+            className="w-full rounded-2xl bg-surface p-3 text-foreground sm:p-5 mt-6"
         >
             <div className="flex flex-col gap-3 border-b border-dashed border-border pb-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="text-sm font-semibold">
