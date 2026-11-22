@@ -30,7 +30,7 @@ const clearStorage = () => {
     sessionStorage.removeItem("bookingId");
 };
 
-export const HouseReserveFlow = ({ result    }: IPageProps) => {
+export const HouseReserveFlow = ({ result }: IPageProps) => {
     const [showBooking, setShowBooking] = useState(false);
     const [reservation, setReservation] = useState<IReservation | null>(null);
     const [isRestored, setIsRestored] = useState(false);

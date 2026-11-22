@@ -7,6 +7,7 @@ interface IPageProps {
 
 const HouseReserveDetails = async ({ params }: IPageProps) => {
     const { id } = await params;
+    
     const result = await getHouseById(id);
 
     if (!result) {

@@ -1,45 +1,65 @@
 "use client";
 
 import {
-    createContext,
-    useContext,
-    useState,
-    type ReactNode,
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 
+import { IUserProfileResponse } from "../types/AuthType/Authtype";
+
 interface IUserDataContext {
-    userlogin: boolean;
-    setUserLogin: (value: boolean) => void;
+  userlogin: boolean;
+  setUserLogin: Dispatch<SetStateAction<boolean>>;
+  userData: IUserProfileResponse | null;
+  setUserData: Dispatch<SetStateAction<IUserProfileResponse | null>>;
 }
 
 const UserDataContext = createContext<IUserDataContext | null>(null);
 
 interface IUserDataContextProviderProps {
-    children: ReactNode;
-    initialUserLogin: boolean;
+  children: ReactNode;
+  initialUserLogin: boolean;
+  initialUserData: IUserProfileResponse | null;
 }
 
 const UserDataContextProvider = ({
-    children,
-    initialUserLogin,
+  children,
+  initialUserLogin,
+  initialUserData,
 }: IUserDataContextProviderProps) => {
-    const [userlogin, setUserLogin] = useState(initialUserLogin);
+  const [userlogin, setUserLogin] = useState(initialUserLogin);
+  const [userData, setUserData] = useState<IUserProfileResponse | null>(
+    initialUserData
+  );
 
-    return (
-        <UserDataContext.Provider value={{ userlogin, setUserLogin }}>
-            {children}
-        </UserDataContext.Provider>
-    );
+  return (
+    <UserDataContext.Provider
+      value={{
+        userlogin,
+        setUserLogin,
+        userData,
+        setUserData,
+      }}
+    >
+      {children}
+    </UserDataContext.Provider>
+  );
 };
 
 export const useUserData = () => {
-    const context = useContext(UserDataContext);
+  const context = useContext(UserDataContext);
 
-    if (!context) {
-        throw new Error("useUserData must be used within UserDataContextProvider");
-    }
+  if (!context) {
+    throw new Error(
+      "useUserData must be used within UserDataContextProvider"
+    );
+  }
 
-    return context;
+  return context;
 };
 
 export default UserDataContextProvider;

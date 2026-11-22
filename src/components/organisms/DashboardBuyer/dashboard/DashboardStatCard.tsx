@@ -63,9 +63,7 @@ const DashboardStatCard = ({ card }: IDashboardStatCardProps) => {
           />
         </div>
 
-        <span className="text-[14px] font-normal text-muted">
-          {t("view")}
-        </span>
+        <span className="text-[14px] font-normal text-muted">{t("view")}</span>
       </div>
     </div>
   );

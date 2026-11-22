@@ -1,89 +1,42 @@
+
 "use client";
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { X } from "lucide-react";
+import { IBookingResponse } from "@/src/types/HousereservesType/BookingType";
+import { ICustomerBooking } from "@/src/types/Seller_Dashboard/customer-booking";
 
 type ReservationListModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  selectedAccommodation: IBookingResponse| ICustomerBooking | null;
 };
 
 const ReservationListModal = ({
   isOpen,
   onClose,
+  selectedAccommodation,
 }: ReservationListModalProps) => {
   const t = useTranslations("BookingManagementSection");
   const locale = useLocale();
 
   const [isPassengersOpen, setIsPassengersOpen] = useState(false);
-  const [selectedReservationId, setSelectedReservationId] = useState<number | null>(null);
 
+  if (!isOpen || !selectedAccommodation) return null;
 
+  const reservation = selectedAccommodation;
+  const travelers = reservation.traveler_details ?? [];
 
-const reservations = [
-  {
-    id: 1,
-    date: "۱۲ مرداد - ۱۴۰۱ تا ۱۶ مرداد - ۱۴۰۱",
-    passengers: [
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString(
+      locale === "fa" ? "fa-IR" : "en-US",
       {
-        id: 1,
-        name: "امیر محمد مالیی",
-        nationalCode: "۱۲۳۴۵۶۷۸۹",
-        gender: "مرد",
-        birthDate: "۱۲ مرداد - ۱۴۰۱",
-      },
-      {
-        id: 2,
-        name: "سارا محمدی",
-        nationalCode: "۹۸۷۶۵۴۳۲۱",
-        gender: "زن",
-        birthDate: "۱۵ مهر - ۱۳۷۸",
-      },
-    ],
-  },
-  {
-    id: 2,
-    date: "۱۲ مرداد - ۱۴۰۱ تا ۱۶ مرداد - ۱۴۰۱",
-    passengers: [
-      {
-        id: 1,
-        name: "محمد احمدی",
-        nationalCode: "۱۲۳۴۵۶۷۸۹",
-        gender: "مرد",
-        birthDate: "۲۰ آبان - ۱۳۷۵",
-      },
-    ],
-  },
-  {
-    id: 3,
-    date: "۱۲ مرداد - ۱۴۰۱ تا ۱۶ مرداد - ۱۴۰۱",
-    passengers: [
-      {
-        id: 1,
-        name: "نگار اکبری",
-        nationalCode: "۹۸۷۶۵۴۳۲۱",
-        gender: "زن",
-        birthDate: "۱۰ خرداد - ۱۳۸۰",
-      },
-    ],
-  },
-  {
-    id: 4,
-    date: "۱۲ مرداد - ۱۴۰۱ تا ۱۶ مرداد - ۱۴۰۱",
-    passengers: [
-      {
-        id: 1,
-        name: "رضا حسینی",
-        nationalCode: "۱۲۳۴۵۶۷۸۹",
-        gender: "مرد",
-        birthDate: "۵ تیر - ۱۳۷۰",
-      },
-    ],
-  },
-];
-
-  if (!isOpen) return null;
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }
+    );
 
   const closeAll = () => {
     setIsPassengersOpen(false);
@@ -131,37 +84,25 @@ const reservations = [
               </button>
             </div>
 
-            <div className="p-[11px]">
+            <div className="space-y-3 p-[11px]">
               <div className="flex h-[29px] items-center rounded-lg bg-background px-3 text-xs font-medium text-foreground">
                 {t("reservationPeriod")}
               </div>
 
-              <div className="mt-1 space-y-1">
-                {reservations.map((reservation, index) => (
-                  <div
-                    key={reservation.id}
-                    className={`flex h-[29px] items-center justify-between rounded-lg px-3 ${
-                      index % 2 === 1
-                        ? "bg-background"
-                        : "bg-surface"
-                    }`}
-                  >
-                    <span className="whitespace-nowrap text-[9px] text-foreground">
-                      {reservation.date}
-                    </span>
+              <div className="flex h-[29px] items-center justify-between rounded-lg px-3 text-[9px] text-foreground">
+                <span>
+                  {reservation.reservedDates?.length === 2
+                    ? `${formatDate(reservation.reservedDates[0])} - ${formatDate(reservation.reservedDates[1])}`
+                    : "-"}
+                </span>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedReservationId(reservation.id);
-                        setIsPassengersOpen(true);
-                      }}
-                      className="whitespace-nowrap text-[9px] text-foreground transition hover:text-primary"
-                    >
-                      {t("passengerInformation")}
-                    </button>
-                  </div>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => setIsPassengersOpen(true)}
+                  className="whitespace-nowrap transition hover:text-primary"
+                >
+                  {t("passengerInformation")}
+                </button>
               </div>
             </div>
           </div>
@@ -215,34 +156,43 @@ const reservations = [
                 </thead>
 
                 <tbody>
-                  {reservations
-                    .find((reservation) => reservation.id === selectedReservationId)
-                    ?.passengers.map((passenger, index) => (
-                    <tr
-                      key={passenger.id}
-                      className={`h-[29px] text-[10px] text-foreground ${
-                        index % 2 === 1
-                          ? "bg-background"
-                          : "bg-surface"
-                      }`}
-                    >
-                      <td className="rounded-r-lg px-2 whitespace-nowrap">
-                        {passenger.name}
-                      </td>
+                  {travelers.length > 0 ? (
+                    travelers.map((passenger, index) => (
+                      <tr
+                        key={`${passenger.nationalId}-${index}`}
+                        className={`h-[29px] text-[10px] text-foreground ${
+                          index % 2 === 1
+                            ? "bg-background"
+                            : "bg-surface"
+                        }`}
+                      >
+                        <td className="rounded-r-lg px-2 whitespace-nowrap">
+                          {passenger.firstName} {passenger.lastName}
+                        </td>
 
-                      <td className="px-2 whitespace-nowrap">
-                        {passenger.nationalCode}
-                      </td>
+                        <td className="px-2 whitespace-nowrap">
+                          {passenger.nationalId}
+                        </td>
 
-                      <td className="px-2 whitespace-nowrap">
-                        {passenger.gender}
-                      </td>
+                        <td className="px-2 whitespace-nowrap">
+                          {passenger.gender}
+                        </td>
 
-                      <td className="rounded-l-lg px-2 whitespace-nowrap">
-                        {passenger.birthDate}
+                        <td className="rounded-l-lg px-2 whitespace-nowrap">
+                          {formatDate(passenger.birthDate)}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="py-6 text-xs text-muted"
+                      >
+                        {t("empty")}
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

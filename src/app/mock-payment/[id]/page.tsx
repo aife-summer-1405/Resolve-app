@@ -18,6 +18,7 @@ const MockPaymentPage = () => {
     const paymentId = params?.id;
     const houseId = searchParams?.get("houseId");
     const bookingId = searchParams?.get("bookingId");
+    const price = searchParams?.get("price");
 
     const [loading, setLoading] = useState<"success" | "failed" | null>(null);
 
@@ -74,7 +75,7 @@ const handlePayment = (status: "success" | "failed") => {
 
                         <div className="mt-2 flex items-baseline gap-2">
                             <span className="text-3xl font-bold text-foreground">
-                                ۱,۰۰۰
+                               {price ? new Intl.NumberFormat("fa-IR").format(Number(price)) : "-"}
                             </span>
                             <span className="text-sm text-muted">
                                 تومان

@@ -46,7 +46,7 @@ const OfferCard: FC<IOfferCardProps> = ({
       ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : 0;
 
-  const images = offer.photos?.length ? offer.photos : ["/images/offer.jpg"];
+  const images = offer.photos?.length ? offer.photos : ["/images/home.webp"];
 
   const image = images[activeImageIndex] || images[0];
 
@@ -113,7 +113,7 @@ const OfferCard: FC<IOfferCardProps> = ({
             <ImageFallback
               key={image}
               src={image}
-              fallbackSrc="/images/offer.jpg"
+              fallbackSrc="/images/slider.webp"
               alt={offer.title || t("propertyImage")}
               fill
               sizes="274px"

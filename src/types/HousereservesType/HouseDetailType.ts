@@ -1,3 +1,5 @@
+import type { TransactionType } from "@/src/types/Seller_Dashboard/SellerHousesType";
+
 export interface IHouseDetails {
     id: string;
     title: string;
@@ -21,11 +23,11 @@ export interface IHouseDetails {
     rooms: number;
     yard_type: string;
     num_comments: number;
-    transaction_type: string;
+    transaction_type: TransactionType;
     sellerId: string;
     sellerName: string;
     caption: string;
-    favoriteId: string | null;
+    favoriteId?: number;
     bookings: number;
     isFavorite: boolean;
 }

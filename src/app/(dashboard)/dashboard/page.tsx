@@ -1,24 +1,66 @@
+import { Suspense } from "react";
+import { getUserAction } from "@/src/actions/authActions";
 import DashboardOverviewSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardOverviewSection";
 import DashboardRecentReservationsSection from "@/src/components/organisms/DashboardBuyer/dashboard/DashboardRecentReservationsSection";
-import { getBookings } from "@/src/hooks/dashboard/getBookings";
-import { IHouseFilters } from "@/src/types/HousereservesType/HouseFilterType";
-import {
-  QueryClient,
-  dehydrate,
-  HydrationBoundary,
-} from "@tanstack/react-query";
+import SellerDashboardOverviewSection from "@/src/components/organisms/DashboardSeller/dashboard/SellerDashboardOverviewSection";
+import AdminDashboardOverviewSection from "@/src/components/organisms/DashboardAdmin/dashboard/AdminDashboardOverviewSection";
+import Loading from "@/src/Loading";
 
-const Page =  () => {      
+interface IPageProps {
+  searchParams: Promise<{ view?: string }>;
+}
 
+const DashboardContent = async ({ searchParams }: IPageProps) => {
+  const { view } = await searchParams;
 
+  const profile = await getUserAction();
+  const role = profile?.user.role;
 
+  const isBuyerView =
+    view === "buyer" && (role === "seller" || role === "admin");
+
+  const isSellerView =
+    view === "seller" && (role === "seller" || role === "admin");
 
   return (
+    <div className="mt-5 flex flex-col gap-5">
+      {role === "seller" ? (
+        isBuyerView ? (
+          <>
+            <DashboardOverviewSection />
+            <DashboardRecentReservationsSection />
+          </>
+        ) : (
+          <SellerDashboardOverviewSection />
+        )
+      ) : role === "buyer" ? (
+        <>
+          <DashboardOverviewSection />
+          <DashboardRecentReservationsSection />
+        </>
+      ) : role === "admin" ? (
+        isSellerView ? (
+          <SellerDashboardOverviewSection />
+        ) : isBuyerView ? (
+          <>
+            <DashboardOverviewSection />
+            <DashboardRecentReservationsSection />
+          </>
+        ) : (
+          <AdminDashboardOverviewSection />
+        )
+      ) : (
+        <p>نقش کاربر مشخص نیست.</p>
+      )}
+    </div>
+  );
+};
 
-      <div className="mt-5 flex flex-col gap-5">
-        <DashboardOverviewSection/>
-        <DashboardRecentReservationsSection />
-      </div>
+const Page = ({ searchParams }: IPageProps) => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <DashboardContent searchParams={searchParams} />
+    </Suspense>
   );
 };
 

@@ -4,9 +4,10 @@ import { FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight, Star } from "lucide-react";
-import Image from "next/image";
+
 import FileContainer from "../../Ui/FileContainer";
 import { House } from "@/src/services/houseService";
+import ImageFallback from "../ImageFallBack/ImageFallBack";
 
 interface IDestinationCardProps {
   destination: House & {
@@ -33,7 +34,7 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
 
   const photos = destination.photos ?? [];
 
-  const image = photos[2] || photos[0] || "/images/offer.jpg";
+  const image = photos[2] || photos[0] || null;
 
   return (
     <article
@@ -85,8 +86,9 @@ const DestinationCard: FC<IDestinationCardProps> = ({ destination }) => {
       >
         <div className="relative h-full px-[16px] pt-[22px]">
           <div className="relative h-[150px] w-full overflow-hidden rounded-[22px] bg-[#444444]">
-            <Image
+            <ImageFallback
               src={image}
+              fallbackSrc="/images/slider.webp"
               alt={destination.title || "تصویر مقصد"}
               fill
               sizes="(max-width: 768px) 260px, 274px"

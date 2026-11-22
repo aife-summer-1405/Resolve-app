@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import "leaflet/dist/leaflet.css";
 :root {
   color-scheme: light;
 
@@ -142,4 +142,14 @@ body .rmdp-wrapper .rmdp-day.rmdp-disabled span {
 body .rmdp-wrapper .rmdp-month-picker div:hover,
 body .rmdp-wrapper .rmdp-year-picker div:hover {
   background: #555555 !important;
+}
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

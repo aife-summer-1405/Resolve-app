@@ -29,8 +29,8 @@ const HeaderSlider = ({ result }: ISliderProps) => {
     };
 
     return (
-        <div className="flex h-[400px]  gap-3">
-            
+        <div className="flex h-[400px]  gap-3 justify-between">
+
 
             <Swiper
                 onSwiper={setThumbsSwiper}
@@ -49,23 +49,25 @@ const HeaderSlider = ({ result }: ISliderProps) => {
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <div className="md:grid w-48 grid-cols-2 gap-2 hidden ">
-                {photos.map((image, index) => (
-                    <button
-                        key={`${image}-${index}`}
-                        type="button"
-                        onClick={() => thumbsSwiper?.slideTo(index)}
-                        className="overflow-hidden rounded-lg"
-                    >
-                        <img
-                            src={image || DEFAULT_IMAGE}
-                            onError={handleImageError}
-                            alt={`تصویر کوچک ${index + 1}`}
-                            className="h-full w-full object-cover"
-                        />
-                    </button>
-                ))}
-            </div>
+           {photos.length > 1 && (
+  <div className="hidden w-48 grid-cols-2 gap-2 md:grid">
+    {photos.map((image, index) => (
+      <button
+        key={`${image}-${index}`}
+        type="button"
+        onClick={() => thumbsSwiper?.slideTo(index)}
+        className="overflow-hidden rounded-lg"
+      >
+        <img
+          src={image || DEFAULT_IMAGE}
+          onError={handleImageError}
+          alt={`تصویر کوچک ${index + 1}`}
+          className="h-full w-full object-cover"
+        />
+      </button>
+    ))}
+  </div>
+)}
         </div>
     );
 };

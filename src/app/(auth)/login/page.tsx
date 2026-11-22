@@ -26,43 +26,43 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
   });
-const { setUserLogin } = useUserData();
-const onSubmit = async (data: ILoginForm) => {
+  const { setUserLogin ,setUserData } = useUserData();
+  const onSubmit = async (data: ILoginForm) => {
     setServerError("");
 
     try {
-        const result = await actionLogin(data);
+      const result = await actionLogin(data);
 
-        if (!result.success) {
-            setServerError(result.message || "ورود انجام نشد.");
-            return;
-        }
+      if (!result.success) {
+        setServerError(result.message || "ورود انجام نشد.");
+        return;
+      }
 
-        const user = await getUserAction();
+      const user = await getUserAction();
 
-        if (!user) {
-            setServerError("اطلاعات کاربر دریافت نشد.");
-            return;
-        }
+      if (!user) {
+        setServerError("اطلاعات کاربر دریافت نشد.");
+        return;
+      }
 
-        setUserLogin(true);
-
-        router.push("/");
-        router.refresh();
+      setUserLogin(true);
+      setUserData(user.user);
+      router.push("/");
+      router.refresh();
     } catch {
-        setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+      setServerError("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
     }
-};
+  };
   return (
     <AuthLayout>
       <div className="text-right">
-      <div className="text-xs text-white/50">
-    <Link href="/" className="transition hover:text-primary">
-        خانه
-    </Link>
-    ‹　
-    <span className="text-primary">ورود به حساب کاربری</span>
-</div>
+        <div className="text-xs text-white/50">
+          <Link href="/" className="transition hover:text-primary">
+            خانه
+          </Link>
+          ‹
+          <span className="text-primary">ورود به حساب کاربری</span>
+        </div>
 
         <div className="mt-8 text-sm font-medium text-primary">
           !خوش برگشتی

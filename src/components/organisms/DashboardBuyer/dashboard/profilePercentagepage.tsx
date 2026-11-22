@@ -1,16 +1,15 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useUser } from "@/src/hooks/useUser";
+import { useUserData } from "@/src/providers/UserDataContextProvider";
 
 const ProfilePercentagePage = () => {
   const t = useTranslations("DashboardOverviewSection");
   const locale = useLocale();
 
-  const { data: user } = useUser();
-  
+  const { userData } = useUserData();
 
-  const profilePercentage = user?.additionalPercentage ?? 0;
+  const profilePercentage = userData?.additionalPercentage ?? 0;
 
   return (
     <div

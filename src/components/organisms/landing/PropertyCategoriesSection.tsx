@@ -7,6 +7,7 @@ import Image from "next/image";
 import FileContainer from "@/src/components/Ui/FileContainer";
 import type { ICategory } from "@/src/types/HousereservesType/CategoriesType";
 import { getCategories } from "@/src/services/getCategoryService";
+import { getCategoriesAction } from "@/src/actions/categoryActions";
 
 const PropertyCategoriesSection = () => {
   const t = useTranslations("PropertyCategoriesSection");
@@ -18,7 +19,7 @@ const PropertyCategoriesSection = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await getCategories();
+        const response = await getCategoriesAction();
         setCategories(response.data);
       } catch (error) {
         console.error("دریافت دسته‌بندی‌ها ناموفق بود", error);
