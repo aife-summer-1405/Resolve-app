@@ -84,7 +84,7 @@ async function HouseReserveContent({ searchParams }: IPageProps) {
                     />
                 </div>
 
-                <div className="lg:min-h-0 lg:flex-1">
+                <div className="lg:min-h-0 lg:flex-1 bg-[#303030]">
                     <MainPart
                         filters={filters}
                         categories={categoriesResponse.data}
