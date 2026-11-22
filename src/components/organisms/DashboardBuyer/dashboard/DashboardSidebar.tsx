@@ -17,6 +17,7 @@ import {
   Building2,
   Landmark,
   MessageSquare,
+  CalendarDays,
   ChevronDown,
 } from "lucide-react";
 import { useUser } from "@/src/hooks/useUser";
@@ -91,6 +92,11 @@ console.log("payments",payments)
             title: t("houses"),
             href: "/dashboard/adminHouses",
             icon: Building2,
+          },
+          {
+            title: t("bookings"),
+            href: "/dashboard/adminBookings",
+            icon: CalendarDays,
           },
         ]
       : [
