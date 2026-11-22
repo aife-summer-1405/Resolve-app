@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   Search,
   Building2,
-  SlidersHorizontal,
-  Home,
+  Tag,
+  MessageCircle,
   MoreHorizontal,
   Pencil,
   Trash2,
@@ -15,10 +15,17 @@ import {
   Bath,
   CarFront,
   ChevronDown,
+  AlertTriangle,
 } from "lucide-react";
+
 import Pagination from "@/src/components/common/Pagination";
-import { useGetAdminHouses } from "@/src/hooks/dashboard_Admin/useGetAdminHouses";
 import HouseImage from "@/src/components/molecules/HouseImage";
+
+import { useGetAdminHouses } from "@/src/hooks/dashboard_Admin/useGetAdminHouses";
+import { useDeleteAdminHouse } from "@/src/hooks/dashboard_Admin/useDeleteAdminHouse";
+import type { IAdminHouse } from "@/src/types/Admin_Dashboard/AdminHouses";
+import { getAllComments } from "@/src/services/getAllComments";
+import EditHouseModal from "./EditHouseModal";
 
 const AdminHousesSection = () => {
   const t = useTranslations("AdminHouses");
@@ -27,19 +34,40 @@ const AdminHousesSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTransaction, setSelectedTransaction] = useState("");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedHouse, setSelectedHouse] = useState<IAdminHouse | null>(null);
+  const [houseToDelete, setHouseToDelete] = useState<IAdminHouse | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalComments, setTotalComments] = useState<number | null>(null);
 
   const limit = 10;
 
-  const { data, isPending, isError } = useGetAdminHouses({
-    page: currentPage,
-    limit,
-  });
+  const { data, isPending, isError } = useGetAdminHouses();
+  const deleteHouse = useDeleteAdminHouse();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchComments = async () => {
+      try {
+        const response = await getAllComments();
+
+        if (isMounted) {
+          setTotalComments(response.totalCount);
+        }
+      } catch (error) {
+        console.error("دریافت تعداد نظرات ناموفق بود:", error);
+      }
+    };
+
+    fetchComments();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const houses = data?.data ?? [];
-  const totalCount = data?.totalCount ?? 1;
-
-  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+  const totalCount = data?.totalCount ?? 0;
 
   const filteredHouses = houses.filter((house) => {
     const matchesSearch =
@@ -55,8 +83,15 @@ const AdminHousesSection = () => {
     return matchesSearch && matchesCategory && matchesTransaction;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filteredHouses.length / limit));
+
+  const paginatedHouses = filteredHouses.slice(
+    (currentPage - 1) * limit,
+    currentPage * limit,
+  );
+
   const discountedHouses = houses.filter(
-    (house) => house.discounted_price !== null,
+    (house) => house.discounted_price != null,
   ).length;
 
   const formatPrice = (price: string) => {
@@ -72,10 +107,36 @@ const AdminHousesSection = () => {
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
+    setCurrentPage(1);
   };
 
   const handleTransactionChange = (value: string) => {
     setSelectedTransaction(value);
+    setCurrentPage(1);
+  };
+
+  const handleEditHouse = (house: IAdminHouse) => {
+    setSelectedHouse(house);
+    setOpenMenuId(null);
+  };
+
+  const handleDeleteClick = (house: IAdminHouse) => {
+    setHouseToDelete(house);
+    setOpenMenuId(null);
+  };
+
+  const handleDeleteHouse = () => {
+    if (!houseToDelete) return;
+
+    deleteHouse.mutate(houseToDelete.id, {
+      onSuccess: () => {
+        setHouseToDelete(null);
+
+        if (currentPage > 1 && paginatedHouses.length === 1) {
+          setCurrentPage((prev) => prev - 1);
+        }
+      },
+    });
   };
 
   return (
@@ -87,14 +148,13 @@ const AdminHousesSection = () => {
           مشاهده، جست‌وجو و مدیریت املاک ثبت‌شده در سایت
         </p>
       </div>
-
-      {/* Statistics */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="flex items-center justify-between rounded-xl bg-surface p-5">
           <div className="flex flex-col gap-3">
             <span className="text-sm text-muted">تعداد کل املاک</span>
+
             <span className="text-3xl font-bold text-foreground">
-              {totalCount}
+              {isPending ? "..." : totalCount}
             </span>
           </div>
 
@@ -105,36 +165,35 @@ const AdminHousesSection = () => {
 
         <div className="flex items-center justify-between rounded-xl bg-surface p-5">
           <div className="flex flex-col gap-3">
-            <span className="text-sm text-muted">
-              املاک دریافت‌شده در این صفحه
-            </span>
+            <span className="text-sm text-muted">املاک دارای تخفیف</span>
+
             <span className="text-3xl font-bold text-foreground">
-              {houses.length}
+              {isPending ? "..." : discountedHouses}
             </span>
           </div>
 
           <div className="flex size-14 items-center justify-center rounded-xl bg-[#91FF45] text-black">
-            <Home size={26} />
+            <Tag size={25} />
           </div>
         </div>
 
         <div className="flex items-center justify-between rounded-xl bg-surface p-5">
           <div className="flex flex-col gap-3">
-            <span className="text-sm text-muted">
-              املاک دارای تخفیف در این صفحه
-            </span>
+            <span className="text-sm text-muted">مجموع نظرات ثبت‌شده</span>
+
             <span className="text-3xl font-bold text-foreground">
-              {discountedHouses}
+              {totalComments === null
+                ? "..."
+                : totalComments.toLocaleString("en-US")}
             </span>
           </div>
 
           <div className="flex size-14 items-center justify-center rounded-xl bg-[#91FF45] text-black">
-            <SlidersHorizontal size={25} />
+            <MessageCircle size={25} />
           </div>
         </div>
       </div>
 
-      {/* Houses List */}
       <div className="flex flex-col gap-5 rounded-xl bg-surface p-4 sm:p-5">
         <div className="flex flex-col gap-4 border-b border-dashed border-border pb-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -195,8 +254,6 @@ const AdminHousesSection = () => {
             </div>
           </div>
         </div>
-
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[950px] table-fixed border-separate border-spacing-y-2 text-sm">
             <thead>
@@ -246,7 +303,7 @@ const AdminHousesSection = () => {
                     دریافت اطلاعات املاک با خطا مواجه شد.
                   </td>
                 </tr>
-              ) : filteredHouses.length === 0 ? (
+              ) : paginatedHouses.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -256,7 +313,7 @@ const AdminHousesSection = () => {
                   </td>
                 </tr>
               ) : (
-                filteredHouses.map((house) => (
+                paginatedHouses.map((house) => (
                   <tr key={house.id} className="bg-background text-foreground">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -288,7 +345,7 @@ const AdminHousesSection = () => {
                           className="text-xs font-semibold text-foreground"
                           dir="ltr"
                         >
-                          {formatPrice(house.price)}
+                          {formatPrice(house.discounted_price || house.price)}
                         </span>
 
                         <span className="text-[10px] text-muted">تومان</span>
@@ -350,7 +407,7 @@ const AdminHousesSection = () => {
                             <div className="absolute end-8 top-0 z-20 w-36 overflow-hidden rounded-xl bg-surface p-1 text-start shadow-xl">
                               <button
                                 type="button"
-                                onClick={() => setOpenMenuId(null)}
+                                onClick={() => handleEditHouse(house)}
                                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-foreground transition hover:bg-card hover:text-[#91FF45]"
                               >
                                 <Pencil size={15} />
@@ -359,7 +416,7 @@ const AdminHousesSection = () => {
 
                               <button
                                 type="button"
-                                onClick={() => setOpenMenuId(null)}
+                                onClick={() => handleDeleteClick(house)}
                                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-500 transition hover:bg-card"
                               >
                                 <Trash2 size={15} />
@@ -376,13 +433,10 @@ const AdminHousesSection = () => {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination */}
         <div className="mt-2 flex flex-col-reverse items-center justify-between gap-3 pt-4 sm:flex-row">
           <span className="text-xs text-muted">
             {t("page")} {currentPage} / {totalPages}
           </span>
-
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -390,6 +444,72 @@ const AdminHousesSection = () => {
           />
         </div>
       </div>
+      {selectedHouse && (
+        <EditHouseModal
+          house={selectedHouse}
+          onClose={() => setSelectedHouse(null)}
+        />
+      )}
+      {houseToDelete && (
+        <div
+          dir="rtl"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+          onClick={() => {
+            if (!deleteHouse.isPending) {
+              setHouseToDelete(null);
+            }
+          }}
+        >
+          <div
+            className="flex w-full max-w-[390px] flex-col items-center rounded-[22px] bg-surface px-5 py-6 text-foreground shadow-2xl sm:px-6 sm:py-7"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <AlertTriangle
+              size={62}
+              strokeWidth={1.8}
+              className="mb-7 fill-[#FFB800] text-black sm:mb-9"
+            />
+
+            <h3 className="mb-4 text-center text-sm font-bold sm:text-base">
+              حذف ملک
+            </h3>
+
+            <p className="mb-7 text-center text-xs leading-6 text-muted sm:mb-8">
+              آیا از حذف این ملک اطمینان دارید؟ این عملیات قابل بازگشت نیست.
+            </p>
+
+            <span className="mb-7 text-xs font-medium text-foreground">
+              {houseToDelete.title}
+            </span>
+
+            {deleteHouse.isError && (
+              <p className="mb-4 text-xs text-red-500">
+                حذف ملک با خطا مواجه شد. لطفاً دوباره تلاش کنید.
+              </p>
+            )}
+
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                disabled={deleteHouse.isPending}
+                onClick={handleDeleteHouse}
+                className="rounded-lg bg-[#FF9500] px-5 py-2 text-[11px] text-black transition hover:bg-[#E98500] disabled:opacity-50"
+              >
+                {deleteHouse.isPending ? "در حال حذف..." : "بله، حذف شود"}
+              </button>
+
+              <button
+                type="button"
+                disabled={deleteHouse.isPending}
+                onClick={() => setHouseToDelete(null)}
+                className="text-[11px] text-foreground transition hover:opacity-70 disabled:opacity-50"
+              >
+                انصراف
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

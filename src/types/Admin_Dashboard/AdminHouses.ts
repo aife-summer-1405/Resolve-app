@@ -36,3 +36,27 @@ export interface IGetAdminHousesParams {
   page: number;
   limit: number;
 }
+export interface IUpdateAdminHousePayload {
+  title: string;
+  address: string;
+  rate: number;
+  price: number;
+  photos: string[];
+  tags: string[];
+  last_updated: string;
+  capacity: number;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  categories: {
+    name: string;
+  };
+  bathrooms: number;
+  parking: number;
+  rooms: number;
+  yard_type: string;
+  num_comments: number;
+  transaction_type: "rental" | "mortgage" | "reservation" | "direct_purchase";
+  caption: string | null;
+}

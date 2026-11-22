@@ -234,7 +234,7 @@
     "loading": "Loading...",
     "error": "Failed to load reservations",
     "empty": "No reservations have been made yet",
-        "approved": "Approved",
+    "approved": "Approved",
     "pending": "Pending",
     "cancelled": "Cancelled"
   },
@@ -393,7 +393,7 @@
     "activeReservations": "Active Reservations",
     "pendingReservations": "Pending Reservations",
     "todayViews": "Today's Views",
-        "approved": "Approved",
+    "approved": "Approved",
     "pending": "Pending",
     "cancelled": "Cancelled"
   },
@@ -635,7 +635,68 @@
     "deleteError": "Failed to delete user.",
     "searchPlaceholder": "Enter the user's full email..."
   },
+
   "AdminHouses": {
+    "title": "Property Management",
+    "description": "View, search, and manage properties registered on the website",
+
+    "totalHouses": "Total Properties",
+    "discountedHouses": "Discounted Properties",
+    "totalComments": "Total Comments",
+
+    "housesList": "Properties List",
+    "searchPlaceholder": "Search by property name or address...",
+
+    "allCategories": "All Categories",
+    "allTransactions": "All Transaction Types",
+
+    "house": "Property",
+    "price": "Price",
+    "transactionType": "Transaction Type",
+    "facilities": "Facilities",
+    "rating": "Rating",
+    "actions": "Actions",
+
+    "editHouse": "Edit Property",
+    "deleteHouse": "Delete Property",
+
+    "loading": "Loading properties...",
+    "error": "Failed to load properties.",
+    "empty": "No properties found.",
+
+    "deleteTitle": "Delete Property",
+    "deleteDescription": "Are you sure you want to delete this property? This action cannot be undone.",
+    "deleteError": "Failed to delete the property. Please try again.",
+    "deleting": "Deleting...",
+    "confirmDelete": "Yes, Delete",
+    "cancel": "Cancel",
+
+    "currency": "Toman",
     "page": "Page"
+  },
+  "EditHouseModal": {
+    "title": "Edit Property",
+    "description": "Edit the information of the selected property.",
+    "houseTitle": "Property Title",
+    "address": "Address",
+    "price": "Price",
+    "rate": "Rating",
+    "category": "Category",
+    "transactionType": "Transaction Type",
+    "capacity": "Capacity",
+    "rooms": "Number of Rooms",
+    "bathrooms": "Number of Bathrooms",
+    "parking": "Number of Parking Spaces",
+    "yardType": "Yard Type",
+    "latitude": "Latitude (Lat)",
+    "longitude": "Longitude (Lng)",
+    "photos": "Images (one URL per line)",
+    "tags": "Tags (separate with commas)",
+    "caption": "Description",
+    "lastUpdated": "Last Updated",
+    "updateError": "Failed to update the property. Please check the information and try again.",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes"
   }
 }

@@ -178,17 +178,15 @@ const AdminUsersSection = () => {
           <h2 className="text-sm font-bold text-foreground">
             {t("usersList")}
           </h2>
-
           <div className="flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-3 transition focus-within:border-[#91FF45] sm:w-80">
+            <Search size={18} className="shrink-0 text-muted" />
             <input
               type="text"
               value={searchEmail}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder={t("searchPlaceholder")}
               className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted"
-              dir="ltr"
             />
-            <Search size={18} className="shrink-0 text-muted" />
           </div>
         </div>
 
