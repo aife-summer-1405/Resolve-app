@@ -74,6 +74,11 @@ const DashboardSidebar = () => {
             href: "/dashboard/users",
             icon: Users,
           },
+          {
+            title: t("houses"),
+            href: "/dashboard/adminHouses",
+            icon: Building2,
+          },
         ]
       : [
           {

@@ -27,8 +27,12 @@ export interface IAdminHouse {
   sellerName: string;
   caption: string;
 }
-
 export interface IAdminHousesResponse {
   data: IAdminHouse[];
   totalCount: number;
+}
+
+export interface IGetAdminHousesParams {
+  page: number;
+  limit: number;
 }
