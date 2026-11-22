@@ -233,7 +233,10 @@
     "unconfirmed": "Unconfirmed",
     "loading": "Loading...",
     "error": "Failed to load reservations",
-    "empty": "No reservations have been made yet"
+    "empty": "No reservations have been made yet",
+        "approved": "Approved",
+    "pending": "Pending",
+    "cancelled": "Cancelled"
   },
   "UserInformation": {
     "profileImage": "Your Profile Picture",
@@ -389,7 +392,10 @@
     "totalProperties": "Total Properties",
     "activeReservations": "Active Reservations",
     "pendingReservations": "Pending Reservations",
-    "todayViews": "Today's Views"
+    "todayViews": "Today's Views",
+        "approved": "Approved",
+    "pending": "Pending",
+    "cancelled": "Cancelled"
   },
   "sellerProperties": {
     "title": "My Properties",

@@ -233,7 +233,10 @@
     "unconfirmed": "تأیید نشده",
     "loading": "در حال دریافت اطلاعات...",
     "error": "خطا در دریافت رزروها",
-    "empty": "هنوز رزروی ثبت نشده است"
+    "empty": "هنوز رزروی ثبت نشده است",
+   "approved": "تایید شده",
+    "pending": "در انتظار",
+    "cancelled": "لغو شده"
   },
   "UserInformation": {
     "profileImage": "عکس نمایه شما",
@@ -391,7 +394,10 @@
     "totalProperties": "کل املاک‌ها",
     "activeReservations": "رزروهای فعال",
     "pendingReservations": "رزروهای در انتظار",
-    "todayViews": "بازدیدهای امروز"
+    "todayViews": "بازدیدهای امروز",
+       "approved": "تایید شده",
+    "pending": "در انتظار",
+    "cancelled": "لغو شده"
   },
   "sellerProperties": {
     "title": "لیست املاک من",
