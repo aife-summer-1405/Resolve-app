@@ -178,7 +178,7 @@ const FinalApprovalPropertySection = () => {
       );
     }
 
-    router.push("/dashboard/properties");
+    router.push("/dashboard/properties?view=seller");
   };
 
   return (
