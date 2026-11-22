@@ -13,7 +13,12 @@ import {
   ICustomerBookingsApiResponse,
   IGetCustomerBookingsParams,
 } from "../types/Seller_Dashboard/customer-booking";
-import type { IAdminBookingsResponse } from "@/src/types/Admin_Dashboard/AdminBookings";
+import type {
+  IAdminBookingDetails,
+  IAdminBookingsResponse,
+  IGetAdminBookingsParams,
+  IUpdateAdminBookingPayload,
+} from "@/src/types/Admin_Dashboard/AdminBookings";
 
 export async function createBookingAction(
   data: IBookingData,
@@ -45,19 +50,21 @@ export async function getBookingsAction(params: IGetBookingsParams = {}) {
   }
 }
 
-export const getAdminBookingsAction =
-  async (): Promise<IAdminBookingsResponse> => {
-    try {
-      const { data } = await apiServer.get<IAdminBookingsResponse>(
-        "/api/admin/bookings",
-      );
+export const getAdminBookingsAction = async (
+  params: IGetAdminBookingsParams = {},
+): Promise<IAdminBookingsResponse> => {
+  try {
+    const { data } = await apiServer.get<IAdminBookingsResponse>(
+      "/api/admin/bookings",
+      { params },
+    );
 
-      return data;
-    } catch (error) {
-      console.error("getAdminBookingsAction error:", error);
-      throw error;
-    }
-  };
+    return data;
+  } catch (error) {
+    console.error("getAdminBookingsAction error:", error);
+    throw error;
+  }
+};
 
 export const deleteBookingAction = async (id: string | number) => {
   const { data } = await apiServer.delete(`/api/bookings/${id}`);
@@ -72,7 +79,7 @@ export const getCustomerBookingsAction = async (
     params: {
       page: 1,
       limit: 1000,
-      sort: "created_at",
+      sort: "createdAt",
       order: "DESC",
       ...params,
     },
@@ -81,13 +88,11 @@ export const getCustomerBookingsAction = async (
   return data;
 };
 
-
-
 export const cancelBookingAction = async (
-  bookingId: number
+  bookingId: number,
 ): Promise<ICancelBookingResponse> => {
   const { data } = await apiServer.post<ICancelBookingResponse>(
-    `/api/bookings/${bookingId}/cancel`
+    `/api/bookings/${bookingId}/cancel`,
   );
 
   return data;
@@ -97,4 +102,47 @@ export const continueBookingAction = async (id: number | string) => {
   const { data } = await apiServer.post(`/api/bookings/${id}/continue`);
 
   return data;
+};
+
+export const getAdminBookingByIdAction = async (
+  id: number,
+): Promise<IAdminBookingDetails> => {
+  try {
+    const { data } = await apiServer.get<IAdminBookingDetails>(
+      `/api/admin/bookings/${id}`,
+    );
+
+    return data;
+  } catch (error) {
+    console.error("getAdminBookingByIdAction error:", error);
+    throw error;
+  }
+};
+
+export const updateAdminBookingAction = async (
+  id: number,
+  payload: IUpdateAdminBookingPayload,
+): Promise<IAdminBookingDetails> => {
+  try {
+    const { data } = await apiServer.put<IAdminBookingDetails>(
+      `/api/admin/bookings/${id}`,
+      payload,
+    );
+
+    return data;
+  } catch (error) {
+    console.error("updateAdminBookingAction error:", error);
+    throw error;
+  }
+};
+
+export const deleteAdminBookingAction = async (id: number) => {
+  try {
+    const { data } = await apiServer.delete(`/api/admin/bookings/${id}`);
+
+    return data;
+  } catch (error) {
+    console.error("deleteAdminBookingAction error:", error);
+    throw error;
+  }
 };

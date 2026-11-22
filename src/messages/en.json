@@ -205,7 +205,8 @@
     "viewNewReviews": "View Reviews",
     "backToAdmin": "Back to Admin Panel",
     "users": "User Management",
-    "houses": "Houses Management"
+    "houses": "Houses Management",
+    "bookings": "Booking Management"
   },
   "DashboardStatCard": {
     "view": "View"
@@ -698,5 +699,41 @@
     "cancel": "Cancel",
     "saving": "Saving...",
     "saveChanges": "Save Changes"
+  },
+  "AdminBookingsSection": {
+    "title": "Booking Management",
+    "description": "View, search, and manage website bookings",
+    "cards": {
+      "total": "Total Bookings",
+      "pending": "Pending Bookings",
+      "confirmed": "Confirmed Bookings",
+      "canceled": "Canceled Bookings"
+    },
+    "listTitle": "Bookings List",
+    "searchPlaceholder": "Search by booking ID, user, or property...",
+    "table": {
+      "bookingId": "Booking ID",
+      "userId": "User ID",
+      "houseId": "Property ID",
+      "reservedDates": "Reserved Dates",
+      "status": "Status",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "canceled": "Canceled"
+    },
+    "actions": {
+      "details": "View Details",
+      "edit": "Edit Booking",
+      "delete": "Delete Booking"
+    },
+    "loading": "Loading bookings...",
+    "error": "Failed to load bookings.",
+    "empty": "No bookings found.",
+    "closeMenu": "Close menu",
+    "pagination": "Page {currentPage} / {totalPages}"
   }
 }

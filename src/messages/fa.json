@@ -205,7 +205,8 @@
     "viewNewReviews": "مشاهده نظرات",
     "backToAdmin": "بازگشت به پنل ادمین",
     "users": "مدیریت کاربران",
-    "houses": "مدیریت املاک"
+    "houses": "مدیریت املاک",
+    "bookings": "مدیریت رزروها"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
@@ -701,5 +702,42 @@
     "cancel": "انصراف",
     "saving": "در حال ذخیره...",
     "saveChanges": "ذخیره تغییرات"
+  },
+
+  "AdminBookingsSection": {
+    "title": "مدیریت رزروها",
+    "description": "مشاهده، جست‌وجو و مدیریت رزروهای ثبت‌شده در سایت",
+    "cards": {
+      "total": "تعداد کل رزروها",
+      "pending": "رزروهای در انتظار",
+      "confirmed": "رزروهای تأییدشده",
+      "canceled": "رزروهای لغوشده"
+    },
+    "listTitle": "لیست رزروها",
+    "searchPlaceholder": "جست‌وجوی شناسه رزرو، کاربر یا ملک...",
+    "table": {
+      "bookingId": "شناسه رزرو",
+      "userId": "شناسه کاربر",
+      "houseId": "شناسه ملک",
+      "reservedDates": "تاریخ اقامت",
+      "status": "وضعیت",
+      "createdAt": "تاریخ ثبت",
+      "actions": "عملیات"
+    },
+    "statuses": {
+      "pending": "در انتظار تأیید",
+      "confirmed": "تأیید شده",
+      "canceled": "لغو شده"
+    },
+    "actions": {
+      "details": "مشاهده جزئیات",
+      "edit": "ویرایش رزرو",
+      "delete": "حذف رزرو"
+    },
+    "loading": "در حال دریافت اطلاعات رزروها...",
+    "error": "دریافت اطلاعات رزروها با خطا مواجه شد.",
+    "empty": "رزروی پیدا نشد.",
+    "closeMenu": "بستن منو",
+    "pagination": "صفحه {currentPage} / {totalPages}"
   }
 }

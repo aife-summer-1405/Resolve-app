@@ -16,6 +16,7 @@ import {
   Building2,
   Landmark,
   MessageSquare,
+  CalendarDays,
 } from "lucide-react";
 import { useUser } from "@/src/hooks/useUser";
 
@@ -78,6 +79,11 @@ const DashboardSidebar = () => {
             title: t("houses"),
             href: "/dashboard/adminHouses",
             icon: Building2,
+          },
+          {
+            title: t("bookings"),
+            href: "/dashboard/adminBookings",
+            icon: CalendarDays,
           },
         ]
       : [
