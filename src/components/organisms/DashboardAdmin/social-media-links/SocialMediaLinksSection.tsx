@@ -30,6 +30,8 @@ import { useCreateSocialMediaLink } from "@/src/hooks/dashboard_Admin/useCreateS
 import { useUpdateSocialMediaLink } from "@/src/hooks/dashboard_Admin/useUpdateSocialMediaLink";
 import { useDeleteSocialMediaLink } from "@/src/hooks/dashboard_Admin/useDeleteSocialMediaLink";
 
+// گزینه‌های قابل انتخاب در منوی افزودن و ویرایش
+// Twitter عمداً در این لیست نیست.
 const platformOptions = [
   { value: "instagram" },
   { value: "whatsapp" },
@@ -37,11 +39,26 @@ const platformOptions = [
   { value: "youtube" },
   { value: "telegram" },
   { value: "facebook" },
-  { value: "twitter" },
-  { value: "other" },
   { value: "pinterest" },
   { value: "tiktok" },
   { value: "aparat" },
+  { value: "other" },
+];
+
+// تمام شبکه‌هایی که امکان ترجمه نام آن‌ها وجود دارد
+// Twitter در این لیست باقی می‌ماند تا اطلاعات قبلی API ترجمه شود.
+const translatedPlatforms = [
+  "instagram",
+  "whatsapp",
+  "linkedin",
+  "youtube",
+  "telegram",
+  "facebook",
+  "twitter",
+  "pinterest",
+  "tiktok",
+  "aparat",
+  "other",
 ];
 
 const platformIcons: Record<string, ComponentType<any>> = {
@@ -52,6 +69,9 @@ const platformIcons: Record<string, ComponentType<any>> = {
   telegram: Send,
   facebook: Globe,
   twitter: Globe,
+  pinterest: Globe,
+  tiktok: Globe,
+  aparat: Globe,
   other: Share2,
 };
 
@@ -100,12 +120,11 @@ const SocialMediaLinksSection = () => {
   const totalPages = Math.max(1, Math.ceil(totalCount / limit));
   const paginatedLinks = filteredLinks;
 
+  // ترجمه نام شبکه اجتماعی بدون وابستگی به گزینه‌های منو
   const getPlatformLabel = (platform: string) => {
-    const isKnownPlatform = platformOptions.some(
-      (item) => item.value === platform,
-    );
-
-    return isKnownPlatform ? t(platform) : platform;
+    return translatedPlatforms.includes(platform)
+      ? t(platform)
+      : platform;
   };
 
   const openAddModal = () => {
