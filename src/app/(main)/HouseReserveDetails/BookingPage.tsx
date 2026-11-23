@@ -151,7 +151,7 @@ const BookingPage = ({
                     );
                 })}
             </div>
-            <div className="md:h-200 h-350">
+            <div className="w-full">
                 {level === "traveler-info" && (
                     <TravelerInfo
                         reservationDetail={reservationDetail}
