@@ -10,18 +10,17 @@ import {
   Users,
   CirclePlus,
   Heart,
-  CreditCard,
   Bell,
   LogOut,
   Wallet,
   Building2,
-  Landmark,
   MessageSquare,
   CalendarDays,
   ChevronDown,
   Share2,
   Tags,
-  TicketPercent
+  TicketPercent,
+  MapPin,
 } from "lucide-react";
 import { useUser } from "@/src/hooks/useUser";
 import ReservationPaymentsModal from "../reservations/modals/ReservationPaymentsModal";
@@ -112,10 +111,15 @@ const DashboardSidebar = () => {
             href: "/dashboard/categories",
             icon: Tags,
           },
-          { 
+          {
             title: t("discountCodes"),
             href: "/dashboard/discount-codes",
             icon: TicketPercent,
+          },
+          {
+            title: t("locations"),
+            href: "/dashboard/locations",
+            icon: MapPin,
           },
         ]
       : [

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo, useState } from "react";
@@ -16,12 +15,7 @@ import {
   X,
   AlertTriangle,
 } from "lucide-react";
-import {
-  FaInstagram,
-  FaWhatsapp,
-  FaLinkedin,
-  FaYoutube,
-} from "react-icons/fa";
+import { FaInstagram, FaWhatsapp, FaLinkedin, FaYoutube } from "react-icons/fa";
 import type { ComponentType } from "react";
 import Pagination from "@/src/components/common/Pagination";
 import { useGetSocialMediaLinks } from "@/src/hooks/dashboard_Admin/useGetSocialMediaLinks";
@@ -30,8 +24,6 @@ import { useCreateSocialMediaLink } from "@/src/hooks/dashboard_Admin/useCreateS
 import { useUpdateSocialMediaLink } from "@/src/hooks/dashboard_Admin/useUpdateSocialMediaLink";
 import { useDeleteSocialMediaLink } from "@/src/hooks/dashboard_Admin/useDeleteSocialMediaLink";
 
-// گزینه‌های قابل انتخاب در منوی افزودن و ویرایش
-// Twitter عمداً در این لیست نیست.
 const platformOptions = [
   { value: "instagram" },
   { value: "whatsapp" },
@@ -45,8 +37,6 @@ const platformOptions = [
   { value: "other" },
 ];
 
-// تمام شبکه‌هایی که امکان ترجمه نام آن‌ها وجود دارد
-// Twitter در این لیست باقی می‌ماند تا اطلاعات قبلی API ترجمه شود.
 const translatedPlatforms = [
   "instagram",
   "whatsapp",
@@ -83,10 +73,8 @@ const SocialMediaLinksSection = () => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingLink, setEditingLink] =
-    useState<ISocialMediaLink | null>(null);
-  const [deleteLink, setDeleteLink] =
-    useState<ISocialMediaLink | null>(null);
+  const [editingLink, setEditingLink] = useState<ISocialMediaLink | null>(null);
+  const [deleteLink, setDeleteLink] = useState<ISocialMediaLink | null>(null);
 
   const [formPlatform, setFormPlatform] = useState("instagram");
   const [formUrl, setFormUrl] = useState("");
@@ -120,11 +108,8 @@ const SocialMediaLinksSection = () => {
   const totalPages = Math.max(1, Math.ceil(totalCount / limit));
   const paginatedLinks = filteredLinks;
 
-  // ترجمه نام شبکه اجتماعی بدون وابستگی به گزینه‌های منو
   const getPlatformLabel = (platform: string) => {
-    return translatedPlatforms.includes(platform)
-      ? t(platform)
-      : platform;
+    return translatedPlatforms.includes(platform) ? t(platform) : platform;
   };
 
   const openAddModal = () => {
@@ -201,21 +186,15 @@ const SocialMediaLinksSection = () => {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
-        <h1 className="text-lg font-bold text-foreground">
-          {t("title")}
-        </h1>
+        <h1 className="text-lg font-bold text-foreground">{t("title")}</h1>
 
-        <p className="text-xs text-muted">
-          {t("description")}
-        </p>
+        <p className="text-xs text-muted">{t("description")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <div className="flex w-full items-center justify-between rounded-xl bg-surface p-5">
           <div className="flex flex-col gap-3">
-            <span className="text-sm text-muted">
-              {t("totalLinks")}
-            </span>
+            <span className="text-sm text-muted">{t("totalLinks")}</span>
 
             <span className="text-3xl font-bold text-foreground">
               {totalCount}
@@ -519,9 +498,7 @@ const SocialMediaLinksSection = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium">
-                {t("platform")}
-              </label>
+              <label className="text-xs font-medium">{t("platform")}</label>
 
               <select
                 value={formPlatform}
@@ -541,9 +518,7 @@ const SocialMediaLinksSection = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium">
-                {t("url")}
-              </label>
+              <label className="text-xs font-medium">{t("url")}</label>
 
               <input
                 type="url"
