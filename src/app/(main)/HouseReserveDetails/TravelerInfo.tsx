@@ -208,7 +208,7 @@ const TravelerInfo = ({
         <form
             dir="rtl"
             onSubmit={handleSubmit(onValid, onInvalid)}
-            className="mx-auto w-full space-y-5 pb-10"
+            className="mx-auto w-full max-w-[1490px] space-y-5 pb-10"
         >
             <div className="grid grid-cols-1 gap-4 rounded-2xl bg-card p-5 md:grid-cols-[1.2fr_1fr_1fr]">
                 <div className="flex items-center gap-3">
