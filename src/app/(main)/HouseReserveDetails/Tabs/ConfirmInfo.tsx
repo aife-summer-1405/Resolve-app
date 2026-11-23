@@ -70,7 +70,7 @@ const ConfirmInfo = ({
             : reservationDetail.total;
 
     return (
-        <div dir="rtl" className="mt-4 flex flex-col gap-4">
+        <div dir="rtl" className="mt-4 flex flex-col gap-4 max-w-[1490px] mx-auto">
             <section className={`${cardClass} p-4`}>
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="flex items-center gap-2 text-sm font-semibold text-foreground">

@@ -125,19 +125,10 @@ const handlePayment = (status: "success" | "failed") => {
                             <CheckCircle2 size={19} />
                             {loading === "success"
                                 ? "در حال انتقال..."
-                                : "شبیه‌سازی پرداخت موفق"}
+                                : " پرداخت "}
                         </button>
 
-                        <button
-                            disabled={loading !== null || !houseId}
-                            onClick={() => handlePayment("failed")}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3.5 font-semibold text-foreground transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <XCircle size={19} />
-                            {loading === "failed"
-                                ? "در حال انتقال..."
-                                : "شبیه‌سازی پرداخت ناموفق"}
-                        </button>
+                        
                     </div>
 
                     <div className="rounded-xl bg-surface p-3 text-center">
