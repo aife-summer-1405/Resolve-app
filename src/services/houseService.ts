@@ -49,7 +49,7 @@ export async function getHouses(
 
   const query = {
     page: 1,
-    limit: 10,
+    limit: 1000,
     ...filters,
   };
 

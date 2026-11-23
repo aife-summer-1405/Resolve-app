@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   experimental: {
     serverActions: {
-      bodySizeLimit: "5mb",
+      bodySizeLimit: "10mb",
     },
   },
   turbopack: {
@@ -25,6 +25,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "aife-api.hexorix.net",
         pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.mos.cms.futurecdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
       },
     ],
   },

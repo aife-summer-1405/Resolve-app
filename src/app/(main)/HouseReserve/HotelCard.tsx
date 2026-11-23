@@ -4,6 +4,7 @@
 import { Building2, Clock3, MapPin, Star } from "lucide-react";
 import type { House } from "@/src/services/houseService";
 import Link from "next/link";
+import ImageFallback from "@/src/components/molecules/ImageFallBack/ImageFallBack";
 
 interface HotelCardProps {
     house: House;
@@ -16,10 +17,17 @@ const HotelCard = ({ house }: HotelCardProps) => {
             className="flex w-full flex-col gap-5 border-b border-gray-700 bg-[#303030] p-5 text-white md:flex-row md:items-center md:gap-6 md:px-8 md:py-5"
         >
             <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-2xl border-2 border-lime-400 md:h-[138px] md:w-[148px]">
-                <img
-                    src={house?.photos?.[0] || "/images/hotel.jpg"} alt={house?.title}
-                    className="h-full w-full object-cover"
-                />
+              
+
+
+                <ImageFallback
+              src={house?.photos?.[0] }
+              fallbackSrc="/images/slider.webp"
+              alt={house?.title || "تصویر مقصد"}
+              fill
+              sizes="(max-width: 768px) 260px, 274px"
+              className="object-cover"
+            />
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col gap-3">
@@ -49,7 +57,7 @@ const HotelCard = ({ house }: HotelCardProps) => {
                 </div>
 
                 <div className="text-sm text-gray-400">
-                    {house.categories.name}
+                   {house.categories?.name ?? "—"}
                 </div>
             </div>
 

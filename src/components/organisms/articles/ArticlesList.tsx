@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { ChevronLeft, Clock3 } from "lucide-react";
 import FileContainer from "@/src/components/Ui/FileContainer";
 import { getArticles } from "@/src/services/articleService";
 import type { IArticle } from "@/src/types/ArticleType/ArticleType";
+import ImageFallback from "../../molecules/ImageFallBack/ImageFallBack";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -142,7 +144,16 @@ export default function ArticlesList() {
                 }
               >
                 <div className="h-full px-3 pt-[14px]">
-                  <div className="h-[160px] w-full rounded-[20px] bg-[#444444]" />
+                  <div className="relative h-[160px] w-full overflow-hidden rounded-[20px]">
+                    <ImageFallback
+                      src="/images/slider.webp"
+                      fallbackSrc="/images/slider.webp"
+                      alt={article.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </FileContainer>
 

@@ -1,3 +1,4 @@
+
 import {
   ChevronLeft,
   CalendarDays,
@@ -8,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ArticleReviews from "./reviews/ArticleReviews";
 import { getArticleById } from "@/src/services/articleService";
+import ImageFallback from "../../molecules/ImageFallBack/ImageFallBack";
 
 interface ArticleDetailsProps {
   id: string;
@@ -100,8 +102,9 @@ export default async function ArticleDetails({ id }: ArticleDetailsProps) {
         </section>
 
         <div className="relative mb-6 h-[210px] w-full overflow-hidden rounded-[35px] sm:h-[290px] lg:h-[360px]">
-          <Image
-            src="/images/Rectangle 6641.png"
+          <ImageFallback
+            src="/images/slider.webp"
+            fallbackSrc="/images/slider.webp"
             alt="عکس مقاله"
             fill
             priority
@@ -142,8 +145,8 @@ export default async function ArticleDetails({ id }: ArticleDetailsProps) {
             <div className="order-2 space-y-2 text-right text-xs leading-[2.8] text-white/90 sm:text-[13px] lg:order-1">
               <p>
                 لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و
-                مجله در ستون و سطرآنچنان که لازم است.
+                استفاده از طراحان گرافیک است. متون بلکه روزنامه و مجله در ستون
+                و سطرآنچنان که لازم است.
               </p>
               <p>
                 متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است. لورم
@@ -167,8 +170,9 @@ export default async function ArticleDetails({ id }: ArticleDetailsProps) {
             </div>
 
             <div className="relative order-1 h-[230px] w-full overflow-hidden rounded-[40px] sm:h-[290px] lg:order-2 lg:h-[290px]">
-              <Image
+              <ImageFallback
                 src="/images/Rectangle 6642.png"
+                fallbackSrc="/images/slider.webp"
                 alt="تصویر مقاله"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"

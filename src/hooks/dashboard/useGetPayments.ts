@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPaymentsAction } from "@/src/actions/paymentActions";
 import { IGetPaymentsParams } from "@/src/types/dashboard/payment";
 
-export const useGetPayments = (params: IGetPaymentsParams) => {
+export const useGetPayments = (params: IGetPaymentsParams ) => {
   return useQuery({
     queryKey: ["payments", params],
     queryFn: () => getPaymentsAction(params),

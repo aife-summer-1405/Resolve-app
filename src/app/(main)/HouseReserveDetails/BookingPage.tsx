@@ -100,6 +100,7 @@ const BookingPage = ({
                             const paymentUrl = new URL(paymentResponse.paymentUrl);
                             paymentUrl.searchParams.set("houseId", String(result.id));
                             paymentUrl.searchParams.set("bookingId", String(booking.id));
+                            paymentUrl.searchParams.set("price", String(result.price));
 
                             window.location.assign(paymentUrl.toString());
                         },
@@ -116,42 +117,61 @@ const BookingPage = ({
 
     return (
         <>
-            <div className="flex my-5 items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-card p-4 mt-20">
-                {steps.map((step, index) => {
-                    const isCompleted = index < currentStep;
-                    const isActive = index === currentStep;
+            <div className="mx-auto my-5 mt-20 w-full max-w-[1490px] overflow-x-auto rounded-2xl  bg-card p-4 md:p-5">
+                <div className="flex min-w-[650px] items-center justify-between gap-2">
+                    {steps.map((step, index) => {
+                        const isCompleted = index < currentStep;
+                        const isActive = index === currentStep;
 
-                    return (
-                        <div key={step} className="flex shrink-0 items-center gap-2">
+                        return (
                             <div
-                                className={`flex items-center gap-2 whitespace-nowrap text-xs ${isCompleted
-                                    ? "text-primary"
-                                    : isActive
-                                        ? "text-foreground"
-                                        : "text-muted"
-                                    }`}
+                                key={step}
+                                className="flex flex-1 items-center last:flex-none"
                             >
-                                <span
-                                    className={`flex size-7 items-center justify-center rounded-full border ${isCompleted
-                                        ? "border-primary bg-primary text-black"
-                                        : isActive
-                                            ? "border-primary text-primary"
-                                            : "border-border"
+                                <div className="flex shrink-0 items-center gap-2">
+                                    <span
+                                        className={`flex size-9 items-center justify-center rounded-full border text-sm font-bold transition-all ${
+                                            isCompleted
+                                                ? "border-primary bg-primary text-black"
+                                                : isActive
+                                                ? "border-primary bg-primary/10 text-primary ring-4 ring-primary/10"
+                                                : "border-border text-muted"
                                         }`}
-                                >
-                                    {isCompleted ? <Check size={14} /> : index + 1}
-                                </span>
-                                {step}
-                            </div>
+                                    >
+                                        {isCompleted ? (
+                                            <Check size={17} />
+                                        ) : (
+                                            index + 1
+                                        )}
+                                    </span>
 
-                            {index !== steps.length - 1 && (
-                                <div className="h-px w-5 border-t border-dashed border-border" />
-                            )}
-                        </div>
-                    );
-                })}
+                                    <span
+                                        className={`whitespace-nowrap text-xs font-medium md:text-sm ${
+                                            isCompleted || isActive
+                                                ? "text-foreground"
+                                                : "text-muted"
+                                        }`}
+                                    >
+                                        {step}
+                                    </span>
+                                </div>
+
+                                {index !== steps.length - 1 && (
+                                    <div
+                                        className={`mx-3 h-0.5 min-w-4 flex-1 rounded-full ${
+                                            isCompleted
+                                                ? "bg-primary"
+                                                : "bg-border"
+                                        }`}
+                                    />
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-            <div className="md:h-200 h-350">
+
+            <div className="w-full">
                 {level === "traveler-info" && (
                     <TravelerInfo
                         reservationDetail={reservationDetail}
@@ -180,7 +200,7 @@ const BookingPage = ({
                             رزرو بلیط شما با موفقیت انجام شد !                    </h2>
                         <div className="flex flex-col md:flex-row gap-5 justify-center mt-3">
                             <button onClick={onBack} className="text-white border border-white rounded-full p-2">بازگشت به صفحه اصلی</button>
-                            <button className="text-primary border border-primary rounded-full p-2">بلیط های من</button>
+                            {/* <button className="text-primary border border-primary rounded-full p-2">بلیط های من</button> */}
                         </div>
                     </div>
                 )}

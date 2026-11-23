@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getHouseByIdAction } from "@/src/actions/houseActions";
 
 export const useGetHouseById = (id: number, enabled = true) => {
-    console.log(333333)
   return useQuery({
     queryKey: ["house", id],
     queryFn: () => getHouseByIdAction(id),

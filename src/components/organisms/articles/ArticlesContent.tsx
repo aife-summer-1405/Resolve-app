@@ -1,9 +1,11 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, Clock3 } from "lucide-react";
 import { getArticles } from "@/src/services/articleService";
 import FileContainer from "../../Ui/FileContainer";
-import { IArticlesResponse } from "@/src/types/ArticleType/ArticleType";
+import type { IArticlesResponse } from "@/src/types/ArticleType/ArticleType";
+import ImageFallback from "../../molecules/ImageFallBack/ImageFallBack";
 
 type Article = IArticlesResponse["data"][number];
 
@@ -155,10 +157,18 @@ function ArticleCard({
                     : "h-[125px]"
               }`}
             >
+              <ImageFallback
+                src="/images/slider.webp"
+                alt={`تصویر مقاله ${article.title}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
+
               <div className="absolute left-3 top-3 flex items-center justify-center rounded-lg">
                 <Image
                   src="/images/Group 9949.png"
-                  alt="مقاله منتخب"
+                  alt="نشان مقاله"
                   width={50}
                   height={12}
                 />

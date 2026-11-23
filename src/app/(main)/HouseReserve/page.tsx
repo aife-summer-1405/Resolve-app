@@ -16,7 +16,7 @@ interface IPageProps {
 const ALLOWED_SORTS: readonly string[] = ["last_updated", "price"];
 const DEFAULT_SORT = "last_updated";
 const DEFAULT_LIMIT = 10;
-const MAX_LIMIT = 50;
+const MAX_LIMIT = 1000;
 
 const getString = (value: SearchParamValue): string =>
     (Array.isArray(value) ? value[0] : value) ?? "";
@@ -84,7 +84,7 @@ async function HouseReserveContent({ searchParams }: IPageProps) {
                     />
                 </div>
 
-                <div className="lg:min-h-0 lg:flex-1">
+                <div className="lg:min-h-0 lg:flex-1 bg-[#303030]">
                     <MainPart
                         filters={filters}
                         categories={categoriesResponse.data}

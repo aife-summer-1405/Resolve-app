@@ -17,7 +17,7 @@ interface IPageProps {
 
 const ALLOWED_SORTS: readonly string[] = ["last_updated", "price"];
 const DEFAULT_SORT = "last_updated";
-const DEFAULT_LIMIT = 2;
+const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
 
 const getString = (value: SearchParamValue): string =>

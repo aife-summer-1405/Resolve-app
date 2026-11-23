@@ -27,7 +27,6 @@ interface IConfirmInfoProps {
 
 type TravelerRecord = Record<string, unknown>;
 
-// نام فیلدهای مسافر را از IBookingData چک کن؛ اینجا چند نام رایج را امتحان می‌کند
 const pick = (traveler: TravelerRecord, keys: string[], fallback = "-") => {
     for (const key of keys) {
         const value = traveler[key];
@@ -72,7 +71,6 @@ const ConfirmInfo = ({
 
     return (
         <div dir="rtl" className="mt-4 flex flex-col gap-4">
-            {/* مشخصات مسافران */}
             <section className={`${cardClass} p-4`}>
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="flex items-center gap-2 text-sm font-semibold text-foreground">
@@ -182,7 +180,6 @@ const ConfirmInfo = ({
                 </div>
             </section>
 
-            {/* توضیحات / هزینه جانبی */}
             <section className={`${cardClass} p-4`}>
                 <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                     <Info size={17} />
@@ -195,7 +192,6 @@ const ConfirmInfo = ({
                 </p>
             </section>
 
-            {/* اطلاعات تماس */}
             <section className={`${cardClass} p-4`}>
                 <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold text-foreground">
                     <Phone size={17} />
@@ -224,7 +220,6 @@ const ConfirmInfo = ({
                 </div>
             </section>
 
-            {/* کد تخفیف */}
             <section className={`${cardClass} p-4`}>
                 <button
                     type="button"
@@ -262,7 +257,7 @@ const ConfirmInfo = ({
                         <button
                             type="button"
                             disabled={!discountCode.trim()}
-                            // TODO: وصل به API کد تخفیف
+                          
                             className="h-11 rounded-xl border border-primary px-4 text-xs text-primary transition hover:bg-primary hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             اعمال کد تخفیف
@@ -271,7 +266,6 @@ const ConfirmInfo = ({
                 )}
             </section>
 
-            {/* قیمت و دکمه‌ها */}
             <section className="flex flex-col gap-4 rounded-2xl border-2 border-dashed border-border p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2 text-sm text-foreground">
                     <Wallet size={18} />

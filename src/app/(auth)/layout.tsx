@@ -1,4 +1,5 @@
-import Footer from "@/src/components/molecules/Footer/footer";
+
+// import Footer from "@/src/components/molecules/Footer/footer";
 import type { ReactNode } from "react";
 
 type AuthLayoutProps = {
@@ -7,7 +8,10 @@ type AuthLayoutProps = {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className="min-h-screen bg-[#11120F] text-white">
+    <main
+      dir="ltr"
+      className="min-h-screen bg-[#11120F] text-white"
+    >
       {children}
       {/* <Footer /> */}
     </main>

@@ -12,26 +12,28 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useGetHouseById } from "@/src/hooks/useGetHouseById";
-
+import { useSearchParams } from "next/navigation";
 type ReservationDetailsModalProps = {
   isOpen: boolean;
   onClose: () => void;
   accommodationId: number;
   onPayments: () => void;
   onReservations: () => void;
+  onHistory: () => void;
 };
-
 const ReservationDetailsModal = ({
   isOpen,
   onClose,
   accommodationId,
   onPayments,
   onReservations,
+  onHistory,
 }: ReservationDetailsModalProps) => {
   const t = useTranslations("BookingManagementSection");
   const locale = useLocale();
   const isPersian = locale === "fa";
-
+  const searchParams = useSearchParams();
+  const isSellerView = searchParams?.get("view") === "seller";
   const {
     data: house,
     isLoading,
@@ -276,6 +278,15 @@ const ReservationDetailsModal = ({
             >
               {t("reservations")}
             </button>
+            {isSellerView && (
+              <button
+                type="button"
+                onClick={onHistory}
+                className="rounded-lg bg-primary px-4 py-2 text-xs font-medium text-black transition hover:opacity-90"
+              >
+                {isPersian ? "تاریخچه تغییرات" : "Change History"}
+              </button>
+            )}
           </div>
 
           <div className="flex items-center justify-between gap-4 rounded-lg bg-card px-3 py-2 text-[10px] text-foreground sm:min-w-[220px]">

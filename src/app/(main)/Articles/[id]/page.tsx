@@ -16,7 +16,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const { id } = await params;
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen mt-15">
       <ArticleDetails id={id} />
     </main>
   );
