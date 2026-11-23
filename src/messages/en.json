@@ -209,7 +209,8 @@
     "bookings": "Booking Management",
     "socialMediaLinks": "Social Media Links",
     "categories": "Categories",
-    "discountCodes": "Discount Codes"
+    "discountCodes": "Discount Codes",
+    "locations": "Locations Management"
   },
   "DashboardStatCard": {
     "view": "View"
@@ -821,6 +822,4 @@
     "eco-lodge": "Eco Lodge",
     "categories": "Categories"
   }
-
-
 }

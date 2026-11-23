@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "10mb",
     },
   },
+  async rewrites() {
+    return [
+      {
+        source: "/backend/:path*",
+        destination: `${process.env.API_URL}/:path*`,
+      },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {

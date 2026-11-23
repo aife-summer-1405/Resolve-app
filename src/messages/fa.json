@@ -216,7 +216,8 @@
     "walletTerms": "برداشت وجه",
     "recentTransactions": "تراکنش‌های اخیر شما",
     "socialMediaLinks": "شبکه‌های اجتماعی",
-    "discountCodes": "کدهای تخفیف"
+    "discountCodes": "کدهای تخفیف",
+    "locations": "مدیریت مناطق"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
@@ -832,6 +833,4 @@
     "eco-lodge": "اقامتگاه بوم‌گردی",
     "categories": "دسته‌بندی‌ها"
   }
-
-
 }
