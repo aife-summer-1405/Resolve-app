@@ -1,8 +1,7 @@
 
 import { NextResponse } from "next/server";
 
-const MODEL = "google/gemini-2.5-flash";
-
+const MODEL = "baidu/ernie-5.5-flash-preview:free";
 const SYSTEM_PROMPT = `
 تو «دستیار سفر» یک سایت رزرو اقامتگاه هستی.
 فقط درباره سفر و گردشگری در ایران جواب بده: شهرها، جاذبه‌ها، بهترین فصل سفر،
