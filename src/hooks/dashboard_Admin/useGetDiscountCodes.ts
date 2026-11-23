@@ -8,5 +8,7 @@ export const useGetDiscountCodes = (params: IGetDiscountCodesParams) => {
   return useQuery({
     queryKey: ["discount-codes", params],
     queryFn: () => getDiscountCodesAction(params),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };

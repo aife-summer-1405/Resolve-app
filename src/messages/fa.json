@@ -207,13 +207,14 @@
     "users": "مدیریت کاربران",
     "houses": "مدیریت املاک",
     "bookings": "مدیریت رزروها",
-     "walletBalance": "شارژ کردن کیف پول",
-  "walletTerms": "برداشت وجه",
-  "recentTransactions": "تراکنش‌های اخیر شما",
     "walletBalance": "شارژ کردن کیف پول",
     "walletTerms": "برداشت وجه",
     "recentTransactions": "تراکنش‌های اخیر شما",
-    "socialMediaLinks": "شبکه‌های اجتماعی"
+    "walletBalance": "شارژ کردن کیف پول",
+    "walletTerms": "برداشت وجه",
+    "recentTransactions": "تراکنش‌های اخیر شما",
+    "socialMediaLinks": "شبکه‌های اجتماعی",
+    "discountCodes": "کدهای تخفیف"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
