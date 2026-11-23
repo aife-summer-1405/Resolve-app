@@ -1,29 +1,45 @@
 "use server";
+
 import apiServer from "@/lib/server";
+
 import type {
   IDiscountCodesResponse,
   IGetDiscountCodesParams,
-} from "@/src/types/Admin_Dashboard/DiscountCodes";
+  IDiscountCodePayload,
+} from "../types/Admin_Dashboard/DiscountCodes";
 
 export const getDiscountCodesAction = async (
   params: IGetDiscountCodesParams,
+): Promise<IDiscountCodesResponse> => {
+  const response = await apiServer.get<IDiscountCodesResponse>(
+    "/api/discount-codes",
+    { params },
+  );
+
+  return response.data;
+};
+
+export const createDiscountCodeAction = async (data: IDiscountCodePayload) => {
+  const response = await apiServer.post("/api/discount-codes", data, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+
+  return response.data;
+};
+
+export const updateDiscountCodeAction = async (
+  id: string,
+  data: IDiscountCodePayload,
 ) => {
-  try {
-    const queryParams = new URLSearchParams();
+  const response = await apiServer.put(`/api/discount-codes/${id}`, data);
 
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== "") {
-        queryParams.append(key, String(value));
-      }
-    });
+  return response.data;
+};
+export const deleteDiscountCodeAction = async (id: string) => {
+  const response = await apiServer.delete(`/api/discount-codes/${id}`);
 
-    const response = await apiServer.get<IDiscountCodesResponse>(
-      `/api/discount-codes?${queryParams.toString()}`,
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("getDiscountCodesAction error:", error);
-    throw error;
-  }
+  return response.data;
 };

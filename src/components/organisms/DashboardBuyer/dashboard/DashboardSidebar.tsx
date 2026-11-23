@@ -20,6 +20,7 @@ import {
   CalendarDays,
   ChevronDown,
   Share2,
+  TicketPercent,
 } from "lucide-react";
 import { useUser } from "@/src/hooks/useUser";
 import ReservationPaymentsModal from "../reservations/modals/ReservationPaymentsModal";
@@ -32,12 +33,13 @@ const DashboardSidebar = () => {
 
   const { data: user } = useUser();
   const role = user?.user.role;
-const { data:payments } = useGetPayments({
-  page: 1,
-  limit:5,
- 
-});
-console.log("payments",payments)
+
+  const { data: payments } = useGetPayments({
+    page: 1,
+    limit: 5,
+  });
+
+  console.log("payments", payments);
 
   const [isWalletMenuOpen, setIsWalletMenuOpen] = useState(false);
   const [isPaymentsModalOpen, setIsPaymentsModalOpen] = useState(false);
@@ -104,6 +106,11 @@ console.log("payments",payments)
             href: "/dashboard/social-media-links",
             icon: Share2,
           },
+          {
+            title: t("discountCodes"),
+            href: "/dashboard/discount-codes",
+            icon: TicketPercent,
+          },
         ]
       : [
           {
@@ -130,12 +137,12 @@ console.log("payments",payments)
             href: reservationsHref,
             icon: CirclePlus,
           },
-    {
-      title: t("notifications"),
-      href: "/dashboard/notifications",
-      icon: Bell,
-    },
-  ];
+          {
+            title: t("notifications"),
+            href: "/dashboard/notifications",
+            icon: Bell,
+          },
+        ];
 
   return (
     <>
@@ -170,8 +177,8 @@ console.log("payments",payments)
 
             const isActive = Boolean(
               pathname === item.href ||
-                (item.href !== "/dashboard" &&
-                  pathname.startsWith(`${item.href}/`)),
+              (item.href !== "/dashboard" &&
+                pathname.startsWith(`${item.href}/`)),
             );
 
             return (
