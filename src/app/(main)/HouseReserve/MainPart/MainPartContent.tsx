@@ -32,8 +32,8 @@ export const MainPartContent = async ({
     }));
 
   return (
-    <div className="rounded-3xl bg-[#303030] lg:h-[calc(100vh-80px)] lg:min-h-0 lg:overflow-hidden pb-20 max-w-[1600px]">
-      <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-4 p-3 sm:p-5 lg:min-h-0 lg:flex-row lg:gap-6 lg:p-6 xl:gap-8">
+    <div className="rounded-3xl  lg:h-[calc(100vh-80px)] lg:min-h-0 lg:overflow-hidden pb-20 m-auto">
+      <div className="m-auto flex h-full max-w-[1440px]  flex-col gap-4 p-3 sm:p-5 lg:min-h-0 lg:flex-row lg:gap-6 lg:p-6 xl:gap-8">
 
         <div className="flex min-h-0 min-w-0 flex-col lg:w-3/5 lg:flex-none">
           <div className="shrink-0">

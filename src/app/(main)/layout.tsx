@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Header from "@/src/components/molecules/Header/Header";
 import Footer from "@/src/components/molecules/Footer/footer";
+import ChatBot from "@/src/components/molecules/ChatBot/ChatBot";
 
 type MainLayoutProps = {
     children: ReactNode;
@@ -16,8 +17,12 @@ function MainLayoutContent({ children }: MainLayoutProps) {
     return (
         <>
             <Header isOverlay={pathname === "/"} />
-<div className="mx-auto w-full  ">    {children}
-</div>
+            <div className="mx-auto w-full  ">    {children}
+            </div>
+            <div className="mb-10">
+                <ChatBot />
+            </div>
+
             <Footer />
         </>
     );
