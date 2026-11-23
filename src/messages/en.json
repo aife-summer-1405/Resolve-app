@@ -208,7 +208,8 @@
     "houses": "Houses Management",
     "bookings": "Booking Management",
     "socialMediaLinks": "Social Media Links",
-    "categories": "Categories"
+    "categories": "Categories",
+    "discountCodes": "Discount Codes"
   },
   "DashboardStatCard": {
     "view": "View"

@@ -33,12 +33,13 @@ const DashboardSidebar = () => {
 
   const { data: user } = useUser();
   const role = user?.user.role;
-const { data:payments } = useGetPayments({
-  page: 1,
-  limit:5,
- 
-});
-console.log("payments",payments)
+
+  const { data: payments } = useGetPayments({
+    page: 1,
+    limit: 5,
+  });
+
+  console.log("payments", payments);
 
   const [isWalletMenuOpen, setIsWalletMenuOpen] = useState(false);
   const [isPaymentsModalOpen, setIsPaymentsModalOpen] = useState(false);
@@ -109,6 +110,9 @@ console.log("payments",payments)
             title: t("categories"),
             href: "/dashboard/categories",
             icon: Tags,
+            title: t("discountCodes"),
+            href: "/dashboard/discount-codes",
+            icon: TicketPercent,
           },
         ]
       : [
@@ -136,12 +140,12 @@ console.log("payments",payments)
             href: reservationsHref,
             icon: CirclePlus,
           },
-    {
-      title: t("notifications"),
-      href: "/dashboard/notifications",
-      icon: Bell,
-    },
-  ];
+          {
+            title: t("notifications"),
+            href: "/dashboard/notifications",
+            icon: Bell,
+          },
+        ];
 
   return (
     <>
@@ -176,8 +180,8 @@ console.log("payments",payments)
 
             const isActive = Boolean(
               pathname === item.href ||
-                (item.href !== "/dashboard" &&
-                  pathname.startsWith(`${item.href}/`)),
+              (item.href !== "/dashboard" &&
+                pathname.startsWith(`${item.href}/`)),
             );
 
             return (
