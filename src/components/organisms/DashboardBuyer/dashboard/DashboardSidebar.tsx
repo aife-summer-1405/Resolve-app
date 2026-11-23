@@ -20,7 +20,8 @@ import {
   CalendarDays,
   ChevronDown,
   Share2,
-  TicketPercent,
+  Tags,
+  TicketPercent
 } from "lucide-react";
 import { useUser } from "@/src/hooks/useUser";
 import ReservationPaymentsModal from "../reservations/modals/ReservationPaymentsModal";
@@ -107,6 +108,11 @@ const DashboardSidebar = () => {
             icon: Share2,
           },
           {
+            title: t("categories"),
+            href: "/dashboard/categories",
+            icon: Tags,
+          },
+          { 
             title: t("discountCodes"),
             href: "/dashboard/discount-codes",
             icon: TicketPercent,

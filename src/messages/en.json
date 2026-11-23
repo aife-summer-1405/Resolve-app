@@ -208,6 +208,7 @@
     "houses": "Houses Management",
     "bookings": "Booking Management",
     "socialMediaLinks": "Social Media Links",
+    "categories": "Categories",
     "discountCodes": "Discount Codes"
   },
   "DashboardStatCard": {
@@ -780,6 +781,46 @@
     "pinterest": "Pinterest",
     "tiktok": "TikTok",
     "aparat": "Aparat"
+  },
+
+  "AdminCategories": {
+    "title": "Categories Management",
+    "description": "Manage and organize property categories",
+    "totalCategories": "Total Categories",
+    "listTitle": "Categories List",
+    "searchPlaceholder": "Search categories...",
+    "add": "Add Category",
+    "name": "Category Name",
+    "namePlaceholder": "Enter category name",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "closeMenu": "Close menu",
+    "loading": "Loading data...",
+    "error": "Failed to load data",
+    "empty": "No categories found",
+    "page": "Page {currentPage} of {totalPages}",
+    "addTitle": "Add New Category",
+    "editTitle": "Edit Category",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "create": "Create Category",
+    "deleteTitle": "Delete Category",
+    "deleteDescription": "Are you sure you want to delete this category? This action cannot be undone.",
+    "confirmDelete": "Yes, Delete",
+    "deleting": "Deleting...",
+    "apartment": "Apartment",
+    "suite": "Suite",
+    "villa": "Villa",
+    "garden-villa": "Garden Villa",
+    "villa-house": "Villa House",
+    "house": "House",
+    "traditional-house": "Traditional House",
+    "cottage": "Cottage",
+    "eco-lodge": "Eco Lodge",
+    "categories": "Categories"
   }
+
 
 }
