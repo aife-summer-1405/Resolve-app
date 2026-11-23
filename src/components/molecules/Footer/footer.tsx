@@ -437,10 +437,10 @@ export default function Footer() {
           size="lg"
           width="100%"
           direction={direction}
-          labelWidth="min(320px, 65%)"
+          labelWidth="320px"
           labelHeight="88px"
           classNames={{
-            base: "w-full",
+            base: "w-full [&_[class*='skew-x']]:!skew-x-[-35deg]",
             innerLabel: "flex h-full items-center p-3!",
           }}
           label={logo}
