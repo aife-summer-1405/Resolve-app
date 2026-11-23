@@ -2,6 +2,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Search,
   Share2,
@@ -10,7 +11,6 @@ import {
   Pencil,
   Trash2,
   ExternalLink,
-  MessageCircle,
   Send,
   Globe,
   X,
@@ -24,44 +24,24 @@ import {
 } from "react-icons/fa";
 import type { ComponentType } from "react";
 import Pagination from "@/src/components/common/Pagination";
-
-interface ISocialMediaLink {
-  id: string;
-  platform: string;
-  url: string;
-}
-
-const initialLinks: ISocialMediaLink[] = [
-  {
-    id: "1",
-    platform: "instagram",
-    url: "https://www.instagram.com/delta_realestate",
-  },
-  {
-    id: "3",
-    platform: "whatsapp",
-    url: "https://wa.me/989121234567",
-  },
-  {
-    id: "4",
-    platform: "linkedin",
-    url: "https://www.linkedin.com/company/delta-realestate",
-  },
-  {
-    id: "5",
-    platform: "youtube",
-    url: "https://www.youtube.com/@delta_realestate",
-  },
-];
+import { useGetSocialMediaLinks } from "@/src/hooks/dashboard_Admin/useGetSocialMediaLinks";
+import type { ISocialMediaLink } from "@/src/types/Admin_Dashboard/SocialMediaLinks";
+import { useCreateSocialMediaLink } from "@/src/hooks/dashboard_Admin/useCreateSocialMediaLink";
+import { useUpdateSocialMediaLink } from "@/src/hooks/dashboard_Admin/useUpdateSocialMediaLink";
+import { useDeleteSocialMediaLink } from "@/src/hooks/dashboard_Admin/useDeleteSocialMediaLink";
 
 const platformOptions = [
-  { value: "instagram", label: "اینستاگرام" },
-  { value: "whatsapp", label: "واتساپ" },
-  { value: "linkedin", label: "لینکدین" },
-  { value: "youtube", label: "یوتیوب" },
-  { value: "telegram", label: "تلگرام" },
-  { value: "facebook", label: "فیسبوک" },
-  { value: "other", label: "سایر" },
+  { value: "instagram" },
+  { value: "whatsapp" },
+  { value: "linkedin" },
+  { value: "youtube" },
+  { value: "telegram" },
+  { value: "facebook" },
+  { value: "twitter" },
+  { value: "other" },
+  { value: "pinterest" },
+  { value: "tiktok" },
+  { value: "aparat" },
 ];
 
 const platformIcons: Record<string, ComponentType<any>> = {
@@ -71,11 +51,13 @@ const platformIcons: Record<string, ComponentType<any>> = {
   youtube: FaYoutube,
   telegram: Send,
   facebook: Globe,
+  twitter: Globe,
   other: Share2,
 };
 
 const SocialMediaLinksSection = () => {
-  const [links, setLinks] = useState(initialLinks);
+  const t = useTranslations("AdminSocialMediaLinks");
+
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -89,7 +71,19 @@ const SocialMediaLinksSection = () => {
   const [formPlatform, setFormPlatform] = useState("instagram");
   const [formUrl, setFormUrl] = useState("");
 
-  const limit = 3;
+  const limit = 5;
+
+  const createSocialMediaLink = useCreateSocialMediaLink();
+  const updateSocialMediaLink = useUpdateSocialMediaLink();
+  const deleteSocialMediaLink = useDeleteSocialMediaLink();
+
+  const { data, isLoading, isError } = useGetSocialMediaLinks({
+    page: currentPage,
+    limit,
+  });
+
+  const links = data?.data ?? [];
+  const totalCount = data?.totalCount ?? 0;
 
   const filteredLinks = useMemo(() => {
     const value = search.trim().toLowerCase();
@@ -103,15 +97,16 @@ const SocialMediaLinksSection = () => {
     );
   }, [links, search]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredLinks.length / limit));
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+  const paginatedLinks = filteredLinks;
 
-  const paginatedLinks = filteredLinks.slice(
-    (currentPage - 1) * limit,
-    currentPage * limit,
-  );
+  const getPlatformLabel = (platform: string) => {
+    const isKnownPlatform = platformOptions.some(
+      (item) => item.value === platform,
+    );
 
-  const getPlatformLabel = (platform: string) =>
-    platformOptions.find((item) => item.value === platform)?.label || platform;
+    return isKnownPlatform ? t(platform) : platform;
+  };
 
   const openAddModal = () => {
     setEditingLink(null);
@@ -128,45 +123,52 @@ const SocialMediaLinksSection = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formUrl.trim()) return;
 
-    if (editingLink) {
-      setLinks((prev) =>
-        prev.map((link) =>
-          link.id === editingLink.id
-            ? {
-                ...link,
-                platform: formPlatform,
-                url: formUrl.trim(),
-              }
-            : link,
-        ),
-      );
-    } else {
-      setLinks((prev) => [
-        ...prev,
-        {
-          id: String(Date.now()),
+    try {
+      if (editingLink) {
+        await updateSocialMediaLink.mutateAsync({
+          id: editingLink.id,
           platform: formPlatform,
           url: formUrl.trim(),
-        },
-      ]);
-    }
+        });
+      } else {
+        await createSocialMediaLink.mutateAsync({
+          platform: formPlatform,
+          url: formUrl.trim(),
+        });
 
-    setCurrentPage(1);
-    setIsModalOpen(false);
-    setEditingLink(null);
+        setCurrentPage(1);
+      }
+
+      setFormPlatform("instagram");
+      setFormUrl("");
+      setIsModalOpen(false);
+      setEditingLink(null);
+    } catch (error) {
+      console.error(
+        editingLink
+          ? "Update social media link failed:"
+          : "Create social media link failed:",
+        error,
+      );
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!deleteLink) return;
 
-    setLinks((prev) => prev.filter((link) => link.id !== deleteLink.id));
-    setDeleteLink(null);
-    setOpenMenuId(null);
+    try {
+      await deleteSocialMediaLink.mutateAsync(deleteLink.id);
+
+      setDeleteLink(null);
+      setOpenMenuId(null);
+    } catch (error) {
+      console.error("Delete social media link failed:", error);
+    }
   };
 
   const handleSearch = (value: string) => {
@@ -174,14 +176,18 @@ const SocialMediaLinksSection = () => {
     setCurrentPage(1);
   };
 
+  const isSubmitting =
+    createSocialMediaLink.isPending || updateSocialMediaLink.isPending;
+
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <h1 className="text-lg font-bold text-foreground">
-          مدیریت شبکه‌های اجتماعی
+          {t("title")}
         </h1>
+
         <p className="text-xs text-muted">
-          مشاهده و مدیریت لینک شبکه‌های اجتماعی دلتا
+          {t("description")}
         </p>
       </div>
 
@@ -189,11 +195,11 @@ const SocialMediaLinksSection = () => {
         <div className="flex w-full items-center justify-between rounded-xl bg-surface p-5">
           <div className="flex flex-col gap-3">
             <span className="text-sm text-muted">
-              تعداد کل لینک‌ها
+              {t("totalLinks")}
             </span>
 
             <span className="text-3xl font-bold text-foreground">
-              {links.length}
+              {totalCount}
             </span>
           </div>
 
@@ -206,7 +212,7 @@ const SocialMediaLinksSection = () => {
       <div className="flex flex-col gap-5 rounded-xl bg-surface p-4 sm:p-5">
         <div className="flex flex-col gap-4 border-b border-dashed border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-bold text-foreground">
-            لیست شبکه‌های اجتماعی
+            {t("listTitle")}
           </h2>
 
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -217,7 +223,7 @@ const SocialMediaLinksSection = () => {
                 type="text"
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="جست‌وجوی شبکه یا لینک..."
+                placeholder={t("searchPlaceholder")}
                 className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted"
               />
             </div>
@@ -228,228 +234,244 @@ const SocialMediaLinksSection = () => {
               className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#91FF45] px-4 py-3 text-sm font-semibold text-black transition hover:bg-[#7ee833]"
             >
               <Plus size={18} />
-              افزودن شبکه اجتماعی
+              {t("add")}
             </button>
           </div>
         </div>
 
-        <div className="hidden overflow-x-auto md:block">
-          <table className="w-full min-w-[700px] table-fixed border-separate border-spacing-y-2 text-sm">
-            <thead>
-              <tr className="bg-background text-muted">
-                <th className="w-[25%] rounded-s-xl px-4 py-3 text-start font-medium">
-                  شبکه اجتماعی
-                </th>
+        {isLoading && (
+          <div className="py-10 text-center text-sm text-muted">
+            {t("loading")}
+          </div>
+        )}
 
-                <th className="w-[55%] px-4 py-3 text-start font-medium">
-                  آدرس لینک
-                </th>
+        {isError && (
+          <div className="py-10 text-center text-sm text-red-500">
+            {t("error")}
+          </div>
+        )}
 
-                <th className="w-[20%] rounded-e-xl px-4 py-3 text-center font-medium">
-                  عملیات
-                </th>
-              </tr>
-            </thead>
+        {!isLoading && !isError && (
+          <>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[700px] table-fixed border-separate border-spacing-y-2 text-sm">
+                <thead>
+                  <tr className="bg-background text-muted">
+                    <th className="w-[25%] rounded-s-xl px-4 py-3 text-start font-medium">
+                      {t("platform")}
+                    </th>
 
-            <tbody>
+                    <th className="w-[55%] px-4 py-3 text-start font-medium">
+                      {t("url")}
+                    </th>
+
+                    <th className="w-[20%] rounded-e-xl px-4 py-3 text-center font-medium">
+                      {t("actions")}
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {paginatedLinks.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="rounded-xl bg-background px-4 py-12 text-center text-muted"
+                      >
+                        {t("empty")}
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedLinks.map((link) => {
+                      const Icon = platformIcons[link.platform] || Globe;
+
+                      return (
+                        <tr
+                          key={link.id}
+                          className="bg-background text-foreground"
+                        >
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card text-foreground">
+                                <Icon size={21} />
+                              </div>
+
+                              <span className="text-xs font-medium">
+                                {getPlatformLabel(link.platform)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-4 py-4">
+                            <a
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              dir="ltr"
+                              className="inline-flex max-w-full items-center gap-2 text-xs text-muted transition hover:text-[#91FF45]"
+                            >
+                              <span className="truncate">{link.url}</span>
+                              <ExternalLink size={14} className="shrink-0" />
+                            </a>
+                          </td>
+
+                          <td className="px-4 py-4 text-center">
+                            <div className="relative inline-flex">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setOpenMenuId(
+                                    openMenuId === link.id ? null : link.id,
+                                  )
+                                }
+                                className="rounded-lg p-2 text-muted transition hover:bg-card hover:text-[#91FF45]"
+                              >
+                                <MoreHorizontal size={20} />
+                              </button>
+
+                              {openMenuId === link.id && (
+                                <>
+                                  <button
+                                    type="button"
+                                    aria-label={t("closeMenu")}
+                                    onClick={() => setOpenMenuId(null)}
+                                    className="fixed inset-0 z-10 cursor-default"
+                                  />
+
+                                  <div className="absolute end-10 top-0 z-20 w-36 overflow-hidden rounded-xl bg-surface p-1 text-start shadow-xl">
+                                    <button
+                                      type="button"
+                                      onClick={() => openEditModal(link)}
+                                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-foreground transition hover:bg-card hover:text-[#91FF45]"
+                                    >
+                                      <Pencil size={15} />
+                                      {t("edit")}
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setDeleteLink(link);
+                                        setOpenMenuId(null);
+                                      }}
+                                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-500 transition hover:bg-card"
+                                    >
+                                      <Trash2 size={15} />
+                                      {t("delete")}
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex flex-col gap-3 md:hidden">
               {paginatedLinks.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="rounded-xl bg-background px-4 py-12 text-center text-muted"
-                  >
-                    موردی برای نمایش وجود ندارد.
-                  </td>
-                </tr>
+                <div className="rounded-xl bg-background px-4 py-10 text-center text-xs text-muted">
+                  {t("empty")}
+                </div>
               ) : (
                 paginatedLinks.map((link) => {
                   const Icon = platformIcons[link.platform] || Globe;
 
                   return (
-                    <tr
+                    <div
                       key={link.id}
-                      className="bg-background text-foreground"
+                      className="flex items-center gap-3 rounded-xl bg-background p-3"
                     >
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card text-foreground">
-                            <Icon size={21} />
-                          </div>
+                      <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-card">
+                        <Icon size={22} />
+                      </div>
 
-                          <span className="text-xs font-medium">
-                            {getPlatformLabel(link.platform)}
-                          </span>
-                        </div>
-                      </td>
+                      <div className="flex min-w-0 flex-1 flex-col gap-2">
+                        <span className="text-xs font-semibold text-foreground">
+                          {getPlatformLabel(link.platform)}
+                        </span>
 
-                      <td className="px-4 py-4">
                         <a
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           dir="ltr"
-                          className="inline-flex max-w-full items-center gap-2 text-xs text-muted transition hover:text-[#91FF45]"
+                          className="truncate text-start text-[11px] text-muted"
                         >
-                          <span className="truncate">{link.url}</span>
-                          <ExternalLink size={14} className="shrink-0" />
+                          {link.url}
                         </a>
-                      </td>
+                      </div>
 
-                      <td className="px-4 py-4 text-center">
-                        <div className="relative inline-flex">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setOpenMenuId(
-                                openMenuId === link.id ? null : link.id,
-                              )
-                            }
-                            className="rounded-lg p-2 text-muted transition hover:bg-card hover:text-[#91FF45]"
-                          >
-                            <MoreHorizontal size={20} />
-                          </button>
+                      <div className="relative shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenMenuId(
+                              openMenuId === link.id ? null : link.id,
+                            )
+                          }
+                          className="rounded-lg p-2 text-muted hover:bg-card"
+                        >
+                          <MoreHorizontal size={20} />
+                        </button>
 
-                          {openMenuId === link.id && (
-                            <>
+                        {openMenuId === link.id && (
+                          <>
+                            <button
+                              type="button"
+                              aria-label={t("closeMenu")}
+                              onClick={() => setOpenMenuId(null)}
+                              className="fixed inset-0 z-10"
+                            />
+
+                            <div className="absolute end-8 top-0 z-20 w-32 rounded-xl bg-surface p-1 shadow-xl">
                               <button
                                 type="button"
-                                aria-label="بستن منو"
-                                onClick={() => setOpenMenuId(null)}
-                                className="fixed inset-0 z-10 cursor-default"
-                              />
+                                onClick={() => openEditModal(link)}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs hover:bg-card"
+                              >
+                                <Pencil size={14} />
+                                {t("edit")}
+                              </button>
 
-                              <div className="absolute end-10 top-0 z-20 w-36 overflow-hidden rounded-xl bg-surface p-1 text-start shadow-xl">
-                                <button
-                                  type="button"
-                                  onClick={() => openEditModal(link)}
-                                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-foreground transition hover:bg-card hover:text-[#91FF45]"
-                                >
-                                  <Pencil size={15} />
-                                  ویرایش
-                                </button>
-
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setDeleteLink(link);
-                                    setOpenMenuId(null);
-                                  }}
-                                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-500 transition hover:bg-card"
-                                >
-                                  <Trash2 size={15} />
-                                  حذف
-                                </button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setDeleteLink(link);
+                                  setOpenMenuId(null);
+                                }}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-500 hover:bg-card"
+                              >
+                                <Trash2 size={14} />
+                                {t("delete")}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   );
                 })
               )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex flex-col gap-3 md:hidden">
-          {paginatedLinks.length === 0 ? (
-            <div className="rounded-xl bg-background px-4 py-10 text-center text-xs text-muted">
-              موردی برای نمایش وجود ندارد.
             </div>
-          ) : (
-            paginatedLinks.map((link) => {
-              const Icon = platformIcons[link.platform] || Globe;
 
-              return (
-                <div
-                  key={link.id}
-                  className="flex items-center gap-3 rounded-xl bg-background p-3"
-                >
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-card">
-                    <Icon size={22} />
-                  </div>
+            <div className="mt-2 flex flex-col-reverse items-center justify-between gap-3 pt-4 sm:flex-row">
+              <span className="text-xs text-muted">
+                {t("page", { currentPage, totalPages })}
+              </span>
 
-                  <div className="flex min-w-0 flex-1 flex-col gap-2">
-                    <span className="text-xs font-semibold text-foreground">
-                      {getPlatformLabel(link.platform)}
-                    </span>
-
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      dir="ltr"
-                      className="truncate text-start text-[11px] text-muted"
-                    >
-                      {link.url}
-                    </a>
-                  </div>
-
-                  <div className="relative shrink-0">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenMenuId(
-                          openMenuId === link.id ? null : link.id,
-                        )
-                      }
-                      className="rounded-lg p-2 text-muted hover:bg-card"
-                    >
-                      <MoreHorizontal size={20} />
-                    </button>
-
-                    {openMenuId === link.id && (
-                      <>
-                        <button
-                          type="button"
-                          aria-label="بستن منو"
-                          onClick={() => setOpenMenuId(null)}
-                          className="fixed inset-0 z-10"
-                        />
-
-                        <div className="absolute end-8 top-0 z-20 w-32 rounded-xl bg-surface p-1 shadow-xl">
-                          <button
-                            type="button"
-                            onClick={() => openEditModal(link)}
-                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs hover:bg-card"
-                          >
-                            <Pencil size={14} />
-                            ویرایش
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setDeleteLink(link);
-                              setOpenMenuId(null);
-                            }}
-                            className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-red-500 hover:bg-card"
-                          >
-                            <Trash2 size={14} />
-                            حذف
-                          </button>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-
-        <div className="mt-2 flex flex-col-reverse items-center justify-between gap-3 pt-4 sm:flex-row">
-          <span className="text-xs text-muted">
-            صفحه {currentPage} از {totalPages}
-          </span>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {isModalOpen && (
@@ -465,7 +487,7 @@ const SocialMediaLinksSection = () => {
           >
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold">
-                {editingLink ? "ویرایش شبکه اجتماعی" : "افزودن شبکه اجتماعی"}
+                {editingLink ? t("editTitle") : t("addTitle")}
               </h3>
 
               <button
@@ -479,7 +501,7 @@ const SocialMediaLinksSection = () => {
 
             <div className="flex flex-col gap-2">
               <label className="text-xs font-medium">
-                انتخاب شبکه اجتماعی
+                {t("platform")}
               </label>
 
               <select
@@ -493,7 +515,7 @@ const SocialMediaLinksSection = () => {
                     value={item.value}
                     className="bg-surface"
                   >
-                    {item.label}
+                    {t(item.value)}
                   </option>
                 ))}
               </select>
@@ -501,7 +523,7 @@ const SocialMediaLinksSection = () => {
 
             <div className="flex flex-col gap-2">
               <label className="text-xs font-medium">
-                آدرس لینک
+                {t("url")}
               </label>
 
               <input
@@ -509,7 +531,7 @@ const SocialMediaLinksSection = () => {
                 required
                 value={formUrl}
                 onChange={(e) => setFormUrl(e.target.value)}
-                placeholder="https://example.com"
+                placeholder={t("urlPlaceholder")}
                 dir="ltr"
                 className="w-full rounded-xl border border-border bg-background px-3 py-3 text-left text-sm text-foreground outline-none transition focus:border-[#91FF45] placeholder:text-muted"
               />
@@ -521,14 +543,19 @@ const SocialMediaLinksSection = () => {
                 onClick={() => setIsModalOpen(false)}
                 className="rounded-lg px-4 py-2.5 text-xs text-muted transition hover:bg-background"
               >
-                انصراف
+                {t("cancel")}
               </button>
 
               <button
                 type="submit"
-                className="rounded-lg bg-[#91FF45] px-5 py-2.5 text-xs font-semibold text-black transition hover:bg-[#7ee833]"
+                disabled={isSubmitting}
+                className="rounded-lg bg-[#91FF45] px-5 py-2.5 text-xs font-semibold text-black transition hover:bg-[#7ee833] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {editingLink ? "ذخیره تغییرات" : "ثبت لینک"}
+                {isSubmitting
+                  ? t("saving")
+                  : editingLink
+                    ? t("save")
+                    : t("create")}
               </button>
             </div>
           </form>
@@ -552,11 +579,11 @@ const SocialMediaLinksSection = () => {
             />
 
             <h3 className="mb-4 text-center text-sm font-bold">
-              حذف شبکه اجتماعی
+              {t("deleteTitle")}
             </h3>
 
             <p className="mb-5 text-center text-xs leading-6 text-muted">
-              آیا از حذف این لینک اطمینان دارید؟
+              {t("deleteDescription")}
             </p>
 
             <span className="mb-7 text-xs font-medium">
@@ -567,9 +594,12 @@ const SocialMediaLinksSection = () => {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="rounded-lg bg-[#FF9500] px-5 py-2 text-[11px] text-black transition hover:bg-[#E98500]"
+                disabled={deleteSocialMediaLink.isPending}
+                className="rounded-lg bg-[#FF9500] px-5 py-2 text-[11px] text-black transition hover:bg-[#E98500] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                بله، حذف شود
+                {deleteSocialMediaLink.isPending
+                  ? t("deleting")
+                  : t("confirmDelete")}
               </button>
 
               <button
@@ -577,7 +607,7 @@ const SocialMediaLinksSection = () => {
                 onClick={() => setDeleteLink(null)}
                 className="text-[11px] text-foreground transition hover:opacity-70"
               >
-                انصراف
+                {t("cancel")}
               </button>
             </div>
           </div>
