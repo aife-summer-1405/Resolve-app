@@ -124,40 +124,14 @@ console.log("payments",payments)
             href: reservationsHref,
             icon: CirclePlus,
           },
-          ...(dashboardView === "buyer"
-            ? [
-                {
-                  title: t("favorites"),
-                  href: "/dashboard/favorites",
-                  icon: Heart,
-                },
-                {
-                  title: t("payments"),
-                  href: "/dashboard/payments",
-                  icon: CreditCard,
-                },
-              ]
-            : []),
-          ...(dashboardView === "seller"
-            ? [
-                {
-                  title: t("financialManagement"),
-                  href: "/dashboard/financial-management",
-                  icon: Landmark,
-                },
-                {
-                  title: t("reviewsManagement"),
-                  href: "/dashboard/reviews",
-                  icon: MessageSquare,
-                },
-              ]
-            : []),
-          {
-            title: t("notifications"),
-            href: "/dashboard/notifications",
-            icon: Bell,
-          },
-        ];
+        ]
+      : []),
+    {
+      title: t("notifications"),
+      href: "/dashboard/notifications",
+      icon: Bell,
+    },
+  ];
 
   return (
     <>
