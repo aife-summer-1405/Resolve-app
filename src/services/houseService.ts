@@ -46,8 +46,8 @@ export async function getHouses(
   filters: IHouseFilters = {},
 ): Promise<HousesResponse> {
   const params = new URLSearchParams();
-
-  const query = {
+console.log(2232222222,params) 
+ const query = {
     page: 1,
     limit: 1000,
     ...filters,
