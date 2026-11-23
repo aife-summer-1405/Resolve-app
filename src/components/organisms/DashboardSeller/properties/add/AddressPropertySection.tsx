@@ -1,15 +1,13 @@
+
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { IProperty } from "@/src/schemas/properties/propertySchema";
 import { FieldError } from "./FieldError";
-import { stepHref } from "../steps";
 import { useAddProperty } from "@/src/providers/AddPropertyFormProvider";
 
 const MapLoading = () => {
@@ -22,14 +20,17 @@ const MapLoading = () => {
   );
 };
 
-const PropertyLocationMap = dynamic(() => import("./PropertyLocationMap"), {
-  ssr: false,
-  loading: () => <MapLoading />,
-});
+const PropertyLocationMap = dynamic(
+  () => import("./PropertyLocationMap"),
+  {
+    ssr: false,
+    loading: () => <MapLoading />,
+  }
+);
 
 const AddressPropertySection = () => {
   const t = useTranslations("addProperty");
-const { completeStep, goToStep } = useAddProperty();
+  const { completeStep, goToStep } = useAddProperty();
 
   const {
     register,
@@ -40,9 +41,14 @@ const { completeStep, goToStep } = useAddProperty();
   } = useFormContext<IProperty>();
 
   const location = watch("location");
+  const address = watch("address") ?? "";
+
   const hasLocation = location.lat !== 0 || location.lng !== 0;
 
-  const handleLocationChange = (loc: { lat: number; lng: number }) => {
+  const handleLocationChange = (loc: {
+    lat: number;
+    lng: number;
+  }) => {
     setValue("location", loc, {
       shouldValidate: true,
       shouldDirty: true,
@@ -50,12 +56,20 @@ const { completeStep, goToStep } = useAddProperty();
     });
   };
 
+  const handleAddressChange = (value: string) => {
+    setValue("address", value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
   const onNext = async () => {
-    const ok = await trigger(["address", "location"]);
-    if (!ok) return;
+    const isValid = await trigger(["address", "location"]);
+
+    if (!isValid) return;
 
     completeStep(1);
-  
   };
 
   return (
@@ -67,7 +81,9 @@ const { completeStep, goToStep } = useAddProperty();
         <div className="relative order-2 h-[280px] overflow-hidden rounded-2xl border border-border sm:h-[360px] lg:order-1">
           <PropertyLocationMap
             location={hasLocation ? location : null}
+            address={address}
             onLocationChange={handleLocationChange}
+            onAddressChange={handleAddressChange}
           />
         </div>
 
@@ -110,8 +126,9 @@ const { completeStep, goToStep } = useAddProperty();
           </div>
 
           <div
-            className={`rounded-2xl border bg-background px-4 py-3 ${errors.location ? "border-red-500" : "border-border"
-              }`}
+            className={`rounded-2xl border bg-background px-4 py-3 ${
+              errors.location ? "border-red-500" : "border-border"
+            }`}
           >
             <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-primary">
               <MapPin size={17} />
@@ -125,21 +142,24 @@ const { completeStep, goToStep } = useAddProperty();
             </p>
 
             <FieldError
-              message={errors.location?.message ?? errors.location?.root?.message}
+              message={
+                errors.location?.message ??
+                errors.location?.root?.message
+              }
             />
           </div>
         </div>
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-start gap-3">
-      <button
-  type="button"
-  onClick={() => goToStep(0)}
-  className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
->
-  <ChevronRight size={15} />
-  {t("previousStep")}
-</button>
+        <button
+          type="button"
+          onClick={() => goToStep(0)}
+          className="flex h-9 items-center gap-2 rounded-xl border border-border bg-background px-4 text-xs text-foreground transition hover:border-primary"
+        >
+          <ChevronRight size={15} />
+          {t("previousStep")}
+        </button>
 
         <button
           type="button"
