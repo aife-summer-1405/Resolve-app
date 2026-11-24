@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
-const MODEL = "baidu/ernie-5.5-flash-preview:free";
+// const MODEL = "baidu/ernie-5.5-flash-preview:free";
+// const MODEL = "particle-ai/particle-1:free";
+const MODEL = "gemma-4-26b-a4b-it:free";
 const MAX_HOUSES = 30;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
@@ -25,7 +27,6 @@ type IHouse = {
   tags?: string[];
 };
 
-/* ---------- کش ساده در حافظه سرور (۵ دقیقه) ---------- */
 let cache: { at: number; houses: IHouse[] } | null = null;
 const CACHE_MS = 5 * 60 * 1000;
 
@@ -52,7 +53,6 @@ const getHouses = async (): Promise<IHouse[]> => {
   }
 };
 
-/* ---------- انتخاب آگهی‌های مرتبط با سوال ---------- */
 const pickRelevant = (houses: IHouse[], question: string) => {
   const words = question
     .toLowerCase()

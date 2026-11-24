@@ -37,6 +37,8 @@ const MortgageList = async ({ filters }: IMortgageListProps) => {
   console.log("filters", filters)
 
   const result = await getHouses(filters);
+
+  console.log("result",result)
   const limit = filters.limit ?? 10;
   const totalPages = Math.max(1, Math.ceil((result.totalCount ?? 0) / limit));
   const houses = result.houses ?? [];
@@ -106,6 +108,7 @@ export default function MortgageContent({
         filters={filters}
         locations={locations}
         categories={categories}
+        
       />
 
       <div className="mt-10">

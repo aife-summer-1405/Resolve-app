@@ -425,9 +425,8 @@ export default function HeroSection({ locations }: IHeroSectionProps) {
             type="button"
             onClick={handleSearch}
             disabled={
-              activeTab === "mortgage"
-                ? false
-                : !destination && !checkIn && !checkOut
+              
+            !destination && !checkIn && !checkOut
             }
             className="flex items-center justify-center gap-2 rounded-xl bg-[#91FF45] px-7 py-4 text-xs font-bold text-black transition hover:opacity-90 disabled:opacity-40"
           >

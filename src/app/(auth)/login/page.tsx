@@ -15,6 +15,7 @@ import { actionLogin, getUserAction } from "@/src/actions/authActions";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/src/store/userStore";
 import { useUserData } from "@/src/providers/UserDataContextProvider";
+import { ChevronsRight } from "lucide-react";
 export default function LoginPage() {
   const [serverError, setServerError] = useState("");
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function LoginPage() {
       }
 
       setUserLogin(true);
-      setUserData(user.user);
+      setUserData(user);
       router.push("/");
       router.refresh();
     } catch {
@@ -56,12 +57,13 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <div className="text-right">
-        <div className="text-xs text-white/50">
-          <Link href="/" className="transition hover:text-primary">
+        <div className="text-xs flex items-center justify-end text-white/50">
+         
+          <span className="text-primary">ورود به حساب کاربری</span>
+          <ChevronsRight/>
+           <Link href="/" className="transition hover:text-primary">
             خانه
           </Link>
-          ‹
-          <span className="text-primary">ورود به حساب کاربری</span>
         </div>
 
         <div className="mt-8 text-sm font-medium text-primary">
