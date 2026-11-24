@@ -10,7 +10,9 @@ interface IUploadHousePhotosParams {
 
 export const useUploadHousePhotos = () => {
   return useMutation({
-    mutationFn: ({ id, formData }: IUploadHousePhotosParams) =>
-      uploadHousePhotosAction(id, formData),
+    mutationFn: ({ id, formData }: IUploadHousePhotosParams) => {
+      console.log(formData);
+      return uploadHousePhotosAction(id, formData);
+    },
   });
 };

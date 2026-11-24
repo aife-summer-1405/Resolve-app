@@ -518,12 +518,7 @@ export async function getUserAction(): Promise<IUserProfileResponse | null> {
         };
     } catch (error) {
         if (isAxiosError(error)) {
-            console.error("Get user error:", {
-                message: error.message,
-                status: error.response?.status,
-                code: error.code,
-                url: error.config?.url,
-            });
+         
         } else {
             console.error("Unexpected error:", error);
         }

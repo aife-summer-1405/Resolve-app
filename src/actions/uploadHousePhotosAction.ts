@@ -6,7 +6,7 @@ export const uploadHousePhotosAction = async (
   id: number | string,
   formData: FormData
 ) => {
-  const response = await apiServer.put(
+  const response = await apiServer.post(
     `/api/houses/upload/photos/${id}`,
     formData
   );

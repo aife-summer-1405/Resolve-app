@@ -100,7 +100,7 @@ const FinalApprovalPropertySection = () => {
     images.forEach((image) => {
       formData.append("photos", image);
     });
-
+console.log("formData",formData);
     try {
       await uploadImages({ id, formData });
       return true;
@@ -178,7 +178,7 @@ const FinalApprovalPropertySection = () => {
       );
     }
 
-    router.push("/dashboard/properties?view=seller");
+    // router.push("/dashboard/properties?view=seller");
   };
 
   return (
