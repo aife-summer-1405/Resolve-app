@@ -391,7 +391,7 @@ export default function MortgageFilters({
             <span>
               تعداد آگهی:{" "}
               <span className="font-bold">
-                {propertyCount.toLocaleString("en-US")}
+                30
               </span>
             </span>
           </div>
