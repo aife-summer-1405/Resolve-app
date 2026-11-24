@@ -102,6 +102,11 @@ const DashboardSidebar = () => {
             icon: CalendarDays,
           },
           {
+            title: t("comments"),
+            href: "/dashboard/adminComments",
+            icon: MessageSquare,
+          },
+          {
             title: t("socialMediaLinks"),
             href: "/dashboard/social-media-links",
             icon: Share2,

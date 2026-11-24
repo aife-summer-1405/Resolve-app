@@ -210,7 +210,8 @@
     "socialMediaLinks": "Social Media Links",
     "categories": "Categories",
     "discountCodes": "Discount Codes",
-    "locations": "Locations Management"
+    "locations": "Locations Management",
+    "comments": "Comments"
   },
   "DashboardStatCard": {
     "view": "View"

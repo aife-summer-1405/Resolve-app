@@ -217,7 +217,8 @@
     "recentTransactions": "تراکنش‌های اخیر شما",
     "socialMediaLinks": "شبکه‌های اجتماعی",
     "discountCodes": "کدهای تخفیف",
-    "locations": "مدیریت مناطق"
+    "locations": "مدیریت مناطق",
+    "comments": "نظرات"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
