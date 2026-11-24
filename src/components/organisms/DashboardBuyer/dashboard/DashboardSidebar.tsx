@@ -124,8 +124,6 @@ console.log("payments",payments)
             href: reservationsHref,
             icon: CirclePlus,
           },
-        ]
-      : []),
     {
       title: t("notifications"),
       href: "/dashboard/notifications",
