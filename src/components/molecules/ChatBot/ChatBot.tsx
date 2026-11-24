@@ -55,7 +55,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div dir="rtl" className="fixed bottom-4 left-12 z-[70]">
+    <div dir="rtl" className="fixed bottom-4 right-12 z-[70]">
       {open && (
         <div className="mb-3 flex h-[460px] w-[calc(100vw-2rem)] max-w-[360px] flex-col overflow-hidden rounded-2xl border border-border bg-surface text-foreground shadow-2xl">
           <div className="flex items-center justify-between bg-blue-600 px-4 py-3 text-[#202020]">
