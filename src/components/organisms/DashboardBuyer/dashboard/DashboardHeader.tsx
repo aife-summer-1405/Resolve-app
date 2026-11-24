@@ -34,7 +34,7 @@ const DashboardHeader = () => {
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const [notifications, setNotifications] = useState([true, false, true, true]);
-
+  const avatar = user?.profilePicture || "/images/user.png";
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
     setMounted(true);
@@ -124,7 +124,12 @@ const DashboardHeader = () => {
                 <span className="text-[9px] text-muted">{user?.role}</span>
               </div>
 
-              <div className="h-[30px] w-[30px] shrink-0 rounded-md bg-[#D9D9D9]" />
+            <img
+                src={avatar}
+                alt="profile image"
+                className="h-8 w-8 rounded-full border border-border object-cover sm:h-9 sm:w-9"
+              />
+
 
               <ChevronDown
                 size={12}
@@ -140,7 +145,11 @@ const DashboardHeader = () => {
                 className="absolute left-0 top-full z-50 mt-3 w-[270px] max-w-[calc(100vw-24px)] overflow-hidden rounded-xl bg-surface text-foreground shadow-xl"
               >
                 <div className="flex items-center gap-2 border-b border-border px-4 py-3">
-                  <div className="flex h-[30px] w-[30px] shrink-0 rounded-md bg-[#D9D9D9]" />
+<img
+                src={avatar}
+                alt="profileImage"
+                className="h-8 w-8 rounded-full border border-border object-cover sm:h-9 sm:w-9"
+              />
 
                   <div className="flex min-w-0 flex-col">
                     <span className="text-[11px] font-medium">
