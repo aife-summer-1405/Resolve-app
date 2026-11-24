@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 // const MODEL = "baidu/ernie-5.5-flash-preview:free";
 // const MODEL = "particle-ai/particle-1:free";
-const MODEL = "gemma-4-26b-a4b-it:free";
+// const MODEL = "gemma-4-26b-a4b-it:free";
+const MODEL = "google/gemini-2.5-flash";
 const MAX_HOUSES = 30;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
