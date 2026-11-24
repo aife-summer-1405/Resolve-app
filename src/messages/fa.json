@@ -213,7 +213,8 @@
     "walletBalance": "شارژ کردن کیف پول",
     "walletTerms": "برداشت وجه",
     "recentTransactions": "تراکنش‌های اخیر شما",
-    "socialMediaLinks": "شبکه‌های اجتماعی"
+    "socialMediaLinks": "شبکه‌های اجتماعی",
+    "categories": "دسته‌بندی‌ها"
   },
   "DashboardStatCard": {
     "view": "مشاهده"
@@ -789,6 +790,46 @@
     "pinterest": "پینترست",
     "tiktok": "تیک‌تاک",
     "aparat": "آپارات"
+  },
+
+  "AdminCategories": {
+    "title": "مدیریت دسته‌بندی‌ها",
+    "description": "مدیریت و سازمان‌دهی دسته‌بندی‌های املاک",
+    "totalCategories": "تعداد کل دسته‌بندی‌ها",
+    "listTitle": "لیست دسته‌بندی‌ها",
+    "searchPlaceholder": "جستجوی دسته‌بندی...",
+    "add": "افزودن دسته‌بندی",
+    "name": "نام دسته‌بندی",
+    "namePlaceholder": "نام دسته‌بندی را وارد کنید",
+    "actions": "عملیات",
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "closeMenu": "بستن منو",
+    "loading": "در حال دریافت اطلاعات...",
+    "error": "خطا در دریافت اطلاعات",
+    "empty": "دسته‌بندی‌ای یافت نشد",
+    "page": "صفحه {currentPage} از {totalPages}",
+    "addTitle": "افزودن دسته‌بندی جدید",
+    "editTitle": "ویرایش دسته‌بندی",
+    "cancel": "انصراف",
+    "save": "ذخیره تغییرات",
+    "saving": "در حال ذخیره...",
+    "create": "ایجاد دسته‌بندی",
+    "deleteTitle": "حذف دسته‌بندی",
+    "deleteDescription": "آیا از حذف این دسته‌بندی اطمینان دارید؟ این عملیات قابل بازگشت نیست.",
+    "confirmDelete": "بله، حذف شود",
+    "deleting": "در حال حذف...",
+    "apartment": "آپارتمان",
+    "suite": "سوئیت",
+    "villa": "ویلا",
+    "garden-villa": "ویلای باغی",
+    "villa-house": "خانه ویلایی",
+    "house": "خانه",
+    "traditional-house": "خانه سنتی",
+    "cottage": "کلبه",
+    "eco-lodge": "اقامتگاه بوم‌گردی",
+    "categories": "دسته‌بندی‌ها"
   }
+
 
 }
