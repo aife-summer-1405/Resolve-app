@@ -20,7 +20,6 @@ export default function HouseImage({
 }: HouseImageProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
-  // اگر src عوض شد، خطای قبلی نادیده گرفته می‌شود
   const finalSrc = !src || failedSrc === src ? DEFAULT_IMAGE : src;
 
   return (

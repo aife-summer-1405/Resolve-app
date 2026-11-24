@@ -1,4 +1,3 @@
-// src/app/api/chat/route.ts
 import { NextResponse } from "next/server";
 
 const MODEL = "baidu/ernie-5.5-flash-preview:free";
@@ -35,7 +34,7 @@ const getHouses = async (): Promise<IHouse[]> => {
 
   try {
     const res = await fetch(
-      `${process.env.API_URL}/api/houses?page=1&limit=100`, // endpoint عمومی خودت
+      `${process.env.API_URL}/api/houses?page=1&limit=100`, 
       { cache: "no-store" }
     );
     if (!res.ok) throw new Error(`status ${res.status}`);
@@ -66,7 +65,6 @@ const pickRelevant = (houses: IHouse[], question: string) => {
     return { h, score };
   });
 
-  // اول آگهی‌های مرتبط، بعد بقیه تا سقف
   return scored
     .sort((a, b) => b.score - a.score)
     .slice(0, MAX_HOUSES)
@@ -128,7 +126,6 @@ export async function POST(req: Request) {
     content: String(m.content).slice(0, 1000),
   }));
 
-  // آخرین سوال کاربر برای انتخاب آگهی‌های مرتبط
   const lastUserMessage =
     [...input].reverse().find((m) => m.role === "user")?.content ?? "";
 

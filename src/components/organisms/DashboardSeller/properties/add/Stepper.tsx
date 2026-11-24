@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 
 type Props = {
-  currentStep: number; // از ۰ شروع می‌شود
-  maxStep?: number; // دورترین مرحله مجاز
+  currentStep: number; 
+  maxStep?: number;
   onStepClick?: (index: number) => void;
 };
 
