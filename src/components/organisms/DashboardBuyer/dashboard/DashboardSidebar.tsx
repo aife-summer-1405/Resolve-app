@@ -100,11 +100,6 @@ const DashboardSidebar = () => {
             href: "/dashboard/financial-management",
             icon: Landmark,
           },
-          {
-            title: t("reviewsManagement"),
-            href: "/dashboard/reviews",
-            icon: MessageSquare,
-          },
         ]
       : []),
     {
