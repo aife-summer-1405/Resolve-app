@@ -36,7 +36,6 @@ const ImagesPropertySection = () => {
     return () => urls.forEach((url) => URL.revokeObjectURL(url));
   }, [images]);
 
-  // همه تصاویر برای نمایش: اول قدیمی‌ها (URL سرور)، بعد جدیدها (پیش‌نمایش فایل)
   const slots = [
     ...existingPhotos.map((src, i) => ({
       kind: "existing" as const,

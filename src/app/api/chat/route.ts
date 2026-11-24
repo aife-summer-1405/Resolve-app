@@ -1,7 +1,8 @@
-// src/app/api/chat/route.ts
 import { NextResponse } from "next/server";
 
-const MODEL = "baidu/ernie-5.5-flash-preview:free";
+// const MODEL = "baidu/ernie-5.5-flash-preview:free";
+// const MODEL = "particle-ai/particle-1:free";
+const MODEL = "gemma-4-26b-a4b-it:free";
 const MAX_HOUSES = 30;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
@@ -26,7 +27,6 @@ type IHouse = {
   tags?: string[];
 };
 
-/* ---------- کش ساده در حافظه سرور (۵ دقیقه) ---------- */
 let cache: { at: number; houses: IHouse[] } | null = null;
 const CACHE_MS = 5 * 60 * 1000;
 
@@ -35,7 +35,7 @@ const getHouses = async (): Promise<IHouse[]> => {
 
   try {
     const res = await fetch(
-      `${process.env.API_URL}/api/houses?page=1&limit=100`, // endpoint عمومی خودت
+      `${process.env.API_URL}/api/houses?page=1&limit=100`, 
       { cache: "no-store" }
     );
     if (!res.ok) throw new Error(`status ${res.status}`);
@@ -53,7 +53,6 @@ const getHouses = async (): Promise<IHouse[]> => {
   }
 };
 
-/* ---------- انتخاب آگهی‌های مرتبط با سوال ---------- */
 const pickRelevant = (houses: IHouse[], question: string) => {
   const words = question
     .toLowerCase()
@@ -66,7 +65,6 @@ const pickRelevant = (houses: IHouse[], question: string) => {
     return { h, score };
   });
 
-  // اول آگهی‌های مرتبط، بعد بقیه تا سقف
   return scored
     .sort((a, b) => b.score - a.score)
     .slice(0, MAX_HOUSES)
@@ -128,7 +126,6 @@ export async function POST(req: Request) {
     content: String(m.content).slice(0, 1000),
   }));
 
-  // آخرین سوال کاربر برای انتخاب آگهی‌های مرتبط
   const lastUserMessage =
     [...input].reverse().find((m) => m.role === "user")?.content ?? "";
 
