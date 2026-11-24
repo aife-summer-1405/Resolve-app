@@ -484,11 +484,11 @@ export async function actionResetPassword(
         };
     }
 }
+
 export async function getUserAction(): Promise<IUserProfileResponse | null> {
     try {
         const cookieStore = await cookies();
         const userId = cookieStore.get("userId")?.value;
-        console.log(444555555555);
 
         if (!userId || !/^\d+$/.test(userId)) {
             return null;
@@ -521,7 +521,6 @@ export async function getUserAction(): Promise<IUserProfileResponse | null> {
             console.error("Get user error:", {
                 message: error.message,
                 status: error.response?.status,
-                data: error.response?.data,
                 code: error.code,
                 url: error.config?.url,
             });
@@ -529,7 +528,7 @@ export async function getUserAction(): Promise<IUserProfileResponse | null> {
             console.error("Unexpected error:", error);
         }
 
-        throw error;
+        return null;
     }
 }
 
@@ -550,11 +549,6 @@ export async function logoutAction() {
         cookieStore.delete("userId");
     }
 }
-
-
-
-
-
 
 interface IRefreshResponse {
     accessToken: string;
@@ -625,50 +619,50 @@ export async function refreshTokenAction(): Promise<string> {
         throw error;
     }
 }
+
 export const updateUserAction = async (
-  id: string,
-  payload: IUpdateUserPayload
+    id: string,
+    payload: IUpdateUserPayload
 ): Promise<IUser> => {
-  const { data } = await apiServer.put(`api/users/${id}`, payload);
+    const { data } = await apiServer.put(`api/users/${id}`, payload);
 
-  return data.user ?? data;
+    return data.user ?? data;
 };
-
 
 export const changePasswordAction = async (
-  payload: IChangePasswordPayload
+    payload: IChangePasswordPayload
 ) => {
-  const response = await apiServer.put(
-    "api/users/change-password",
-    payload
-  );
-
-  return response.data;
-};
-
-export const uploadProfilePictureAction = async (picture: File) => {
-  const formData = new FormData();
-  formData.append("picture", picture);
-
-  try {
     const response = await apiServer.put(
-      "api/users/upload/picture",
-      formData,
-      {
-        headers: {
-          "Content-Type": undefined,
-        },
-      }
+        "api/users/change-password",
+        payload
     );
 
     return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log("Status:", error.response?.status);
-      console.log("Response:", error.response?.data);
-      console.log("Message:", error.message);
-    }
+};
 
-    throw error;
-  }
+export const uploadProfilePictureAction = async (picture: File) => {
+    const formData = new FormData();
+    formData.append("picture", picture);
+
+    try {
+        const response = await apiServer.put(
+            "api/users/upload/picture",
+            formData,
+            {
+                headers: {
+                    "Content-Type": undefined,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("Status:", error.response?.status);
+            console.log("Response:", error.response?.data);
+            console.log("Message:", error.message);
+        }
+
+        throw error;
+    }
 };
