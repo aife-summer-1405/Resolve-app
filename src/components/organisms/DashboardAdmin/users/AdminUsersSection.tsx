@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Search,
@@ -12,19 +13,27 @@ import {
   BadgeCheck,
   Pencil,
   Trash2,
+  Eye,
   AlertTriangle,
 } from "lucide-react";
 import { useGetAdminUsers } from "@/src/hooks/dashboard_Admin/useGetAdminUsers";
 import { useDeleteAdminUser } from "@/src/hooks/dashboard_Admin/useDeleteAdminUser";
-import type { IAdminUser } from "@/src/types/Admin_Dashboard/AdminUsers";
+import type {
+  IAdminUser,
+  AdminUserRole,
+} from "@/src/types/Admin_Dashboard/AdminUsers";
 import Pagination from "@/src/components/common/Pagination";
 import EditAdminUserModal from "./EditAdminUserModal";
 
+export const ADMIN_USER_STORAGE_KEY = (id: string | number) =>
+  `admin-user:${id}`;
+
 const AdminUsersSection = () => {
   const t = useTranslations("AdminUsers");
+  const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState("buyer");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [searchEmail, setSearchEmail] = useState("");
   const [debouncedEmail, setDebouncedEmail] = useState("");
@@ -47,9 +56,7 @@ const AdminUsersSection = () => {
     page: currentPage,
     limit,
     email: debouncedEmail || undefined,
-    role: selectedRole
-      ? (selectedRole as "admin" | "user" | "seller")
-      : undefined,
+   role: selectedRole ? (selectedRole as AdminUserRole) : undefined,
   });
 
   const deleteUser = useDeleteAdminUser();
@@ -79,6 +86,18 @@ const AdminUsersSection = () => {
     setCurrentPage(1);
   };
 
+  const handleViewUser = (user: IAdminUser) => {
+    try {
+      sessionStorage.setItem(
+        ADMIN_USER_STORAGE_KEY(user.id),
+        JSON.stringify(user),
+      );
+    } catch {
+    }
+    setOpenMenuId(null);
+    router.push(`/dashboard/users/${user.id}`);
+  };
+
   const handleDeleteUser = () => {
     if (!selectedDeleteUser) return;
 
@@ -91,6 +110,19 @@ const AdminUsersSection = () => {
         }
       },
     });
+  };
+
+  const roleLabel = (role: string) => {
+    switch (role) {
+      case "admin":
+        return t("adminRole");
+      case "seller":
+        return t("sellerRole");
+      case "buyer":
+        return t("buyerRole");
+      default:
+        return role || "-";
+    }
   };
 
   return (
@@ -123,17 +155,15 @@ const AdminUsersSection = () => {
               onChange={(e) => handleRoleChange(e.target.value)}
               className="w-full cursor-pointer bg-transparent text-sm text-foreground outline-none"
             >
-              <option value="" className="bg-surface text-foreground">
-                {t("allRoles")}
-              </option>
+             
               <option value="admin" className="bg-surface text-foreground">
-                {t("adminRole")}
-              </option>
-              <option value="user" className="bg-surface text-foreground">
-                {t("userRole")}
+               admin
               </option>
               <option value="seller" className="bg-surface text-foreground">
-                {t("sellerRole")}
+                seller
+              </option>
+              <option value="buyer" className="bg-surface text-foreground">
+               buyer
               </option>
             </select>
           </div>
@@ -244,7 +274,11 @@ const AdminUsersSection = () => {
                 filteredUsers.map((user) => (
                   <tr key={user.id} className="bg-background text-foreground">
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleViewUser(user)}
+                        className="flex w-full items-center gap-3 text-start transition hover:opacity-80"
+                      >
                         <div className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-card">
                           {user.profilePicture ? (
                             <Image
@@ -271,15 +305,17 @@ const AdminUsersSection = () => {
                             {user.email || "-"}
                           </span>
                         </div>
-                      </div>
+                      </button>
+                    </td>
+
+                    <td className="px-4 py-3 text-xs text-muted" dir="ltr">
+                      <span className="block text-start">
+                        {user.phoneNumber || "-"}
+                      </span>
                     </td>
 
                     <td className="px-4 py-3 text-xs text-muted">
-                      {user.phoneNumber || "-"}
-                    </td>
-
-                    <td className="px-4 py-3 text-xs text-muted">
-                      {user.role || "-"}
+                      {roleLabel(user.role)}
                     </td>
 
                     <td className="px-4 py-3">
@@ -317,7 +353,16 @@ const AdminUsersSection = () => {
                               className="fixed inset-0 z-10 cursor-default"
                             />
 
-                            <div className="absolute end-10 top-0 z-20 w-36 overflow-hidden rounded-xl bg-surface p-1 text-start shadow-xl">
+                            <div className="absolute end-10 top-0 z-20 w-40 overflow-hidden rounded-xl bg-surface p-1 text-start shadow-xl">
+                              <button
+                                type="button"
+                                onClick={() => handleViewUser(user)}
+                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs text-foreground transition hover:bg-card hover:text-[#91FF45]"
+                              >
+                                <Eye size={15} />
+                                {t("viewDetails")}
+                              </button>
+
                               <button
                                 type="button"
                                 onClick={() => {

@@ -160,7 +160,6 @@ console.log("reviews", reviews);
                 ))}
             </Swiper>
 
-            {/* ارتفاع ثابت برای ناحیه‌ی دات‌ها تا با ظاهر شدنشان چیزی پایین نرود */}
             <div className="mt-8 flex h-2 justify-center gap-2">
                 {totalPages > 1 &&
                     Array.from({ length: totalPages }).map((_, index) => (

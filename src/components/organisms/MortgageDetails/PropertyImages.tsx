@@ -40,7 +40,6 @@ export default function PropertyImages({ result }: PropertyImagesProps) {
                 key={`empty-${slot}`}
                 className="h-[125px] min-h-0 flex-1 overflow-hidden rounded-[22px] bg-[#393939] sm:h-[150px] md:h-auto"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={DEFAULT_IMAGE}
                   alt=""
@@ -76,7 +75,6 @@ export default function PropertyImages({ result }: PropertyImagesProps) {
       </div>
 
       <div className="order-1 flex h-[260px] min-w-0 flex-1 flex-col overflow-hidden rounded-[24px] bg-[#393939] sm:h-[320px] md:order-2 md:h-auto">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={getSrc(activeIndex)}
           alt={result.title}

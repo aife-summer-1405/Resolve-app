@@ -1,6 +1,8 @@
+export type AdminUserRole = "admin" | "seller" | "buyer";
+
 export interface IAdminUser {
   id: string | number;
-  role: string;
+  role: AdminUserRole;
   email: string;
   firstName: string;
   lastName: string;
@@ -10,6 +12,7 @@ export interface IAdminUser {
   profilePicture: string | null;
   fullName: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface IAdminUsersResponse {
@@ -23,7 +26,7 @@ export interface IGetAdminUsersParams {
   sort?: string;
   order?: "ASC" | "DESC";
   email?: string;
-  role?: string;
+  role?: AdminUserRole;
   membershipDate?: string;
 }
 
@@ -36,4 +39,9 @@ export interface IUpdateAdminUserPayload {
   emailVerified: boolean;
   membershipDate: string | null;
   profilePicture: string | null;
+}
+
+export interface IUpdateAdminUserRolePayload {
+  id: string | number;
+  role: AdminUserRole;
 }

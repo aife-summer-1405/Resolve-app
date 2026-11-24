@@ -20,10 +20,8 @@ const PriceRangeSlider = ({ min, max, step = 1, value, onChange }: Props) => {
 
   return (
     <div className="range-dual relative h-6 w-full" dir="ltr">
-      {/* خط پایه */}
       <div className="absolute left-0 right-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-border" />
 
-      {/* بخش سبز بین دو دستگیره */}
       <div
         className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full"
         style={{

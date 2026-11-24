@@ -364,7 +364,6 @@ const CommentsSection = () => {
               </table>
             </div>
 
-            {/* Mobile Cards */}
             <div className="flex flex-col gap-3 md:hidden">
               {filteredComments.length === 0 ? (
                 <div className="rounded-xl bg-background px-4 py-10 text-center text-xs text-muted">

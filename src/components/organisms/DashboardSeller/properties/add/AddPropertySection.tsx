@@ -134,8 +134,7 @@ const AddPropertySection = () => {
           <label htmlFor="category" className={labelClass}>
             {t("propertyType")}
           </label>
-          {/* value کنترل‌شده است تا بعد از refresh و لود شدن async گزینه‌ها،
-              مقدار ذخیره‌شده درست انتخاب شود */}
+     
           <select
             id="category"
             aria-invalid={!!errors.categories?.name}

@@ -13,7 +13,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       className="min-h-screen bg-[#11120F] text-white"
     >
       {children}
-      {/* <Footer /> */}
     </main>
   );
 }

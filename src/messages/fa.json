@@ -649,7 +649,23 @@
     "confirmDelete": "بله، حذف شود",
     "deleting": "در حال حذف...",
     "deleteError": "حذف کاربر با خطا مواجه شد.",
-    "searchPlaceholder": "ایمیل کامل کاربر را وارد کنید..."
+    "searchPlaceholder": "ایمیل کامل کاربر را وارد کنید...",
+    "buyerRole": "خریدار",
+  "viewDetails": "مشاهده جزییات",
+  "userDetails": "جزییات کاربر",
+  "userDetailsDescription": "اطلاعات کامل کاربر و مدیریت نقش او",
+  "userNotFound": "اطلاعات کاربر یافت نشد. لطفاً از صفحه لیست وارد شوید.",
+  "backToList": "بازگشت به لیست کاربران",
+  "back": "بازگشت",
+
+  "createdAt": "تاریخ ایجاد",
+  "updatedAt": "آخرین بروزرسانی",
+  "changeRole": "تغییر نقش کاربر",
+  "changeRoleDescription": "نقش جدید را انتخاب کنید و سپس ذخیره را بزنید",
+  "saveRole": "ذخیره نقش",
+ 
+  "roleUpdateSuccess": "نقش کاربر با موفقیت بروزرسانی شد",
+  "roleUpdateError": "خطا در بروزرسانی نقش کاربر"
   },
 
   "AdminHouses": {
