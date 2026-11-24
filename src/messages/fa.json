@@ -212,7 +212,8 @@
   "recentTransactions": "تراکنش‌های اخیر شما",
     "walletBalance": "شارژ کردن کیف پول",
     "walletTerms": "برداشت وجه",
-    "recentTransactions": "تراکنش‌های اخیر شما"
+    "recentTransactions": "تراکنش‌های اخیر شما",
+    "socialMediaLinks": "شبکه‌های اجتماعی"
   },
   "DashboardStatCard": {
     "view": "مشاهده"

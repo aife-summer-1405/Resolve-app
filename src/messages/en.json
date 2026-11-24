@@ -206,7 +206,8 @@
     "backToAdmin": "Back to Admin Panel",
     "users": "User Management",
     "houses": "Houses Management",
-    "bookings": "Booking Management"
+    "bookings": "Booking Management",
+    "socialMediaLinks": "Social Media Links"
   },
   "DashboardStatCard": {
     "view": "View"

@@ -19,6 +19,7 @@ import {
   MessageSquare,
   CalendarDays,
   ChevronDown,
+  Share2,
 } from "lucide-react";
 import { useUser } from "@/src/hooks/useUser";
 import ReservationPaymentsModal from "../reservations/modals/ReservationPaymentsModal";
@@ -97,6 +98,11 @@ console.log("payments",payments)
             title: t("bookings"),
             href: "/dashboard/adminBookings",
             icon: CalendarDays,
+          },
+          {
+            title: t("socialMediaLinks"),
+            href: "/dashboard/social-media-links",
+            icon: Share2,
           },
         ]
       : [
