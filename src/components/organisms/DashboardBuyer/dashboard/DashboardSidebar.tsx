@@ -152,11 +152,11 @@ const DashboardSidebar = () => {
             href: reservationsHref,
             icon: CirclePlus,
           },
-          {
-            title: t("notifications"),
-            href: "/dashboard/notifications",
-            icon: Bell,
-          },
+          // {
+          //   title: t("notifications"),
+          //   href: "/dashboard/notifications",
+          //   icon: Bell,
+          // },
         ];
 
   return (
